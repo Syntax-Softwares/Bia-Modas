@@ -30,7 +30,10 @@
     transition: all 0.3s;
     display: inline-block;
     border: 2px solid white;
-    margin-left: 15px;
+}
+
+.product-buttons .btn-outline-custom {
+    margin-left: 0;
 }
 
 .btn-outline-custom:hover {
