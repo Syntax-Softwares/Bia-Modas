@@ -26,21 +26,22 @@
     }
 
     .hero-section {
-        height: 70vh;
-        min-height: 520px;
+        height: 55vh;
+        min-height: 380px;
+        max-height: 520px;
     }
 
     .hero-content h1 {
-        font-size: 2.2rem;
-        line-height: 1.15;
+        font-size: 2rem;
+        line-height: 1.2;
     }
 
     .hero-content p {
-        font-size: 1.05rem;
+        font-size: 1rem;
     }
 
     .hero-overlay {
-        padding: 40px 0;
+        padding: 30px 15px;
     }
 
     .btn-primary-custom,
@@ -140,20 +141,21 @@
     }
 
     .hero-section {
-        height: 65vh;
-        min-height: 480px;
+        height: 50vh;
+        min-height: 350px;
+        max-height: 480px;
     }
 
     .hero-content h1 {
-        font-size: 1.75rem;
+        font-size: 1.6rem;
     }
 
     .hero-content p {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
     }
 
     .hero-overlay {
-        padding: 30px 0;
+        padding: 25px 15px;
     }
 
     .btn-primary-custom,
