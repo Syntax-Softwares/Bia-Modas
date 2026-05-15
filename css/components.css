@@ -60,7 +60,7 @@
 .product-image {
     position: relative;
     overflow: hidden;
-    height: 350px;
+    aspect-ratio: 3 / 4;
 }
 
 .product-image img {
@@ -179,7 +179,7 @@
     position: relative;
     overflow: hidden;
     border-radius: 15px;
-    height: 400px;
+    aspect-ratio: 3 / 4;
     margin-bottom: 30px;
 }
 
@@ -429,6 +429,8 @@
     opacity: 0;
     transition: all 0.3s ease;
     white-space: nowrap;
+    max-width: 90vw;
+    text-align: center;
 }
 
 .toast-notification.show {

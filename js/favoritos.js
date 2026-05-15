@@ -64,7 +64,7 @@ function renderFavorites() {
     let html = '';
     favorites.forEach(item => {
         html += `
-            <div class="col-lg-3 col-md-4 col-6">
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                 <div class="product-card">
                     <div class="product-image">
                         <a href="./produto.html?nome=${encodeURIComponent(item.name)}&preco=${encodeURIComponent(item.price)}&imagem=${encodeURIComponent(item.image)}&categoria=${encodeURIComponent(item.category || 'Plus Size')}">
