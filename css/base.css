@@ -1,0 +1,23 @@
+:root {
+    --color-primary: #d1001f;
+    --color-primary-dark: #ae031c;
+    --color-secondary: #f8f9fa;
+    --color-dark: #212529;
+    --color-gray: #6c757d;
+    --color-light-gray: #e9ecef;
+    --font-primary: 'Poppins', sans-serif;
+    --font-display: 'Playfair Display', serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-primary);
+    color: var(--color-dark);
+    background-color: #ffffff;
+    line-height: 1.6;
+}
