@@ -18,6 +18,27 @@
     color: white;
 }
 
+.btn-primary-solid {
+    background-color: var(--color-primary);
+    color: white;
+    padding: 15px 40px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s;
+    display: inline-block;
+    border: 2px solid var(--color-primary);
+    cursor: pointer;
+}
+
+.btn-primary-solid:hover {
+    background-color: var(--color-primary-dark);
+    color: white;
+    border-color: var(--color-primary-dark);
+}
+
 .btn-outline-custom {
     background-color: transparent;
     color: white;
