@@ -34,7 +34,8 @@ function initCarousel(id) {
 function getItemsPerView() {
     if (window.innerWidth >= 992) return 4;
     if (window.innerWidth >= 768) return 3;
-    return 2;
+    if (window.innerWidth >= 576) return 2;
+    return 1;
 }
 
 function moveCarousel(id, direction) {
