@@ -12,6 +12,8 @@ function updateCartUI() {
     const cartFooter = document.getElementById('cart-footer');
     const cartTotal = document.getElementById('cart-total');
 
+    if (!cartCount || !cartItems) return;
+
     cartCount.textContent = cart.length;
 
     if (cart.length === 0) {
