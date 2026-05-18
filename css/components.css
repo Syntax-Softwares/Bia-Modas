@@ -18,6 +18,27 @@
     color: white;
 }
 
+.btn-primary-solid {
+    background-color: var(--color-primary);
+    color: white;
+    padding: 15px 40px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s;
+    display: inline-block;
+    border: 2px solid var(--color-primary);
+    cursor: pointer;
+}
+
+.btn-primary-solid:hover {
+    background-color: var(--color-primary-dark);
+    color: white;
+    border-color: var(--color-primary-dark);
+}
+
 .btn-outline-custom {
     background-color: transparent;
     color: white;
@@ -30,7 +51,10 @@
     transition: all 0.3s;
     display: inline-block;
     border: 2px solid white;
-    margin-left: 15px;
+}
+
+.product-buttons .btn-outline-custom {
+    margin-left: 0;
 }
 
 .btn-outline-custom:hover {
@@ -60,7 +84,7 @@
 .product-image {
     position: relative;
     overflow: hidden;
-    height: 350px;
+    aspect-ratio: 3 / 4;
 }
 
 .product-image img {
@@ -179,7 +203,7 @@
     position: relative;
     overflow: hidden;
     border-radius: 15px;
-    height: 400px;
+    aspect-ratio: 3 / 4;
     margin-bottom: 30px;
 }
 
@@ -429,6 +453,8 @@
     opacity: 0;
     transition: all 0.3s ease;
     white-space: nowrap;
+    max-width: 90vw;
+    text-align: center;
 }
 
 .toast-notification.show {
