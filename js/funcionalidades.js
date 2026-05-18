@@ -185,7 +185,7 @@ function renderRecomendados() {
 
 function applyCategoryFilter(category) {
     const allSections = document.querySelectorAll('.products-section');
-    const filterResult = document.getElementById('filter-result');
+    const filterResult = document.getElementById('filter-result-section');
     const filterTitle = document.getElementById('filter-title');
     const filterCount = document.getElementById('filter-count');
     const btnClear = document.getElementById('btn-clear-filter');
@@ -273,7 +273,7 @@ function initCategoryFilter() {
 
 function applyPromocoesFilter() {
     const allSections = document.querySelectorAll('.products-section');
-    const filterResult = document.getElementById('filter-result');
+    const filterResult = document.getElementById('filter-result-section');
     const filterTitle = document.getElementById('filter-title');
     const filterCount = document.getElementById('filter-count');
     const btnClear = document.getElementById('btn-clear-filter');
