@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Crie sua conta na Bia Modas e tenha uma experiência personalizada." />
+    <title>Criar Conta | Bia Modas</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/layout.css">
+    <link rel="stylesheet" href="./css/components.css">
+    <link rel="stylesheet" href="./css/auth.css">
+</head>
+<body class="auth-page">
+
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-3 col-md-3 col-6">
+                    <a href="./index.html" class="logo">
+                        <img src="./img/logoBiaModas.png" alt="Bia Modas - Moda Feminina">
+                    </a>
+                </div>
+                <div class="col-lg-6 col-md-6 d-none d-md-block">
+                    <div class="search-box mx-auto">
+                        <input type="text" placeholder="O que você procura?" aria-label="Pesquisar produtos">
+                        <button type="button" aria-label="Buscar"><i class="bi bi-search"></i></button>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-6 text-end">
+                    <div class="header-actions justify-content-end">
+                        <a href="#" aria-label="Minha conta"><i class="bi bi-person"></i></a>
+                        <a href="./favoritos.html" aria-label="Favoritos"><i class="bi bi-heart"></i></a>
+                        <a href="#" aria-label="Carrinho" onclick="openCart(); return false;">
+                            <i class="bi bi-bag"></i>
+                            <span class="badge-count" id="cart-count">0</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Registration Wizard -->
+    <div class="auth-container">
+        <div class="auth-card auth-card-wide">
+            <div class="auth-card-header">
+                <h1>Criar sua conta</h1>
+                <p>Personalize sua experiência de compra na Bia Modas</p>
+            </div>
+            <div class="auth-card-body">
+
+                <!-- Progress -->
+                <div class="wizard-progress">
+                    <div class="wizard-step-indicator active" data-step="1">
+                        <div class="wizard-step-dot">1</div>
+                        <span class="wizard-step-label">Conta</span>
+                    </div>
+                    <div class="wizard-step-indicator" data-step="2">
+                        <div class="wizard-step-dot">2</div>
+                        <span class="wizard-step-label">Endereço</span>
+                    </div>
+                    <div class="wizard-step-indicator" data-step="3">
+                        <div class="wizard-step-dot">3</div>
+                        <span class="wizard-step-label">Medidas</span>
+                    </div>
+                    <div class="wizard-step-indicator" data-step="4">
+                        <div class="wizard-step-dot">4</div>
+                        <span class="wizard-step-label">Preferências</span>
+                    </div>
+                </div>
+
+                <form class="auth-form" id="registro-form" novalidate>
+
+                    <!-- Step 1: Dados da Conta -->
+                    <div class="wizard-step active" data-step="1">
+                        <div class="row">
+                            <div class="col-md-12 form-group">
+                                <label for="reg-nome">Nome Completo <span class="required">*</span></label>
+                                <input type="text" class="form-control" id="reg-nome" placeholder="Maria Silva" required>
+                                <div class="invalid-feedback">Digite seu nome completo.</div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="reg-email">E-mail <span class="required">*</span></label>
+                                <input type="email" class="form-control" id="reg-email" placeholder="maria@email.com" required>
+                                <div class="invalid-feedback" id="reg-email-error">Digite um e-mail válido.</div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="reg-telefone">Telefone <span class="required">*</span></label>
+                                <input type="tel" class="form-control" id="reg-telefone" placeholder="(14) 99999-9999" maxlength="15" required>
+                                <div class="invalid-feedback">Digite um telefone válido.</div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="reg-senha">Senha <span class="required">*</span></label>
+                                <div class="password-field">
+                                    <input type="password" class="form-control" id="reg-senha" placeholder="Mínimo 6 caracteres" required>
+                                    <button type="button" class="password-toggle" onclick="togglePassword('reg-senha', this)" aria-label="Mostrar senha">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="password-strength" id="password-strength" style="display: none;">
+                                    <div class="password-strength-bar">
+                                        <div class="password-strength-segment"></div>
+                                        <div class="password-strength-segment"></div>
+                                        <div class="password-strength-segment"></div>
+                                        <div class="password-strength-segment"></div>
+                                    </div>
+                                    <div class="password-strength-label" id="password-strength-label"></div>
+                                </div>
+                                <div class="invalid-feedback">A senha deve ter no mínimo 6 caracteres.</div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="reg-senha-confirmar">Confirmar Senha <span class="required">*</span></label>
+                                <div class="password-field">
+                                    <input type="password" class="form-control" id="reg-senha-confirmar" placeholder="Repita a senha" required>
+                                    <button type="button" class="password-toggle" onclick="togglePassword('reg-senha-confirmar', this)" aria-label="Mostrar senha">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="invalid-feedback" id="reg-senha-match-error">As senhas não coincidem.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Endereço -->
+                    <div class="wizard-step" data-step="2">
+                        <div class="row">
+                            <div class="col-md-4 form-group">
+                                <label for="reg-cep">CEP</label>
+                                <input type="text" class="form-control" id="reg-cep" placeholder="17201-320" maxlength="9">
+                            </div>
+                            <div class="col-md-8 form-group">
+                                <label for="reg-endereco">Endereço</label>
+                                <input type="text" class="form-control" id="reg-endereco" placeholder="Rua, Avenida...">
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <label for="reg-numero">Número</label>
+                                <input type="text" class="form-control" id="reg-numero" placeholder="123">
+                            </div>
+                            <div class="col-md-8 form-group">
+                                <label for="reg-bairro">Bairro</label>
+                                <input type="text" class="form-control" id="reg-bairro" placeholder="Centro">
+                            </div>
+                            <div class="col-md-8 form-group">
+                                <label for="reg-cidade">Cidade</label>
+                                <input type="text" class="form-control" id="reg-cidade" placeholder="Jaú">
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <label for="reg-estado">Estado</label>
+                                <input type="text" class="form-control" id="reg-estado" placeholder="SP" maxlength="2">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Medidas -->
+                    <div class="wizard-step" data-step="3">
+                        <p class="form-text" style="margin-bottom: 20px; color: var(--color-gray);">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Suas medidas nos ajudam a sugerir o tamanho ideal. Fique à vontade para pular se preferir.
+                        </p>
+                        <div class="row">
+                            <div class="col-md-4 form-group">
+                                <label for="reg-busto">Busto (cm) <span class="help-icon" data-tip="Meia volta do busto com fita métrica"><i class="bi bi-question"></i></span></label>
+                                <input type="number" class="form-control" id="reg-busto" placeholder="96" min="50" max="200">
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <label for="reg-cintura">Cintura (cm) <span class="help-icon" data-tip="Cintura mais fina, logo acima do umbigo"><i class="bi bi-question"></i></span></label>
+                                <input type="number" class="form-control" id="reg-cintura" placeholder="78" min="40" max="200">
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <label for="reg-quadril">Quadril (cm) <span class="help-icon" data-tip="Parte mais larga do quadril"><i class="bi bi-question"></i></span></label>
+                                <input type="number" class="form-control" id="reg-quadril" placeholder="102" min="50" max="200">
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <label for="reg-altura">Altura (cm)</label>
+                                <input type="number" class="form-control" id="reg-altura" placeholder="165" min="100" max="220">
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <label for="reg-blusa">Tamanho de Blusa</label>
+                                <select class="form-control" id="reg-blusa">
+                                    <option value="">Selecione</option>
+                                    <option value="PP">PP</option>
+                                    <option value="P">P</option>
+                                    <option value="M">M</option>
+                                    <option value="G">G</option>
+                                    <option value="GG">GG</option>
+                                    <option value="XG">XG</option>
+                                    <option value="XXG">XXG</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <label for="reg-calca">Tamanho de Calça</label>
+                                <select class="form-control" id="reg-calca">
+                                    <option value="">Selecione</option>
+                                    <option value="34">34</option>
+                                    <option value="36">36</option>
+                                    <option value="38">38</option>
+                                    <option value="40">40</option>
+                                    <option value="42">42</option>
+                                    <option value="44">44</option>
+                                    <option value="46">46</option>
+                                    <option value="48">48</option>
+                                    <option value="50">50</option>
+                                    <option value="52">52</option>
+                                    <option value="54">54</option>
+                                    <option value="56">56</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <label for="reg-vestido">Tamanho de Vestido</label>
+                                <select class="form-control" id="reg-vestido">
+                                    <option value="">Selecione</option>
+                                    <option value="34">34</option>
+                                    <option value="36">36</option>
+                                    <option value="38">38</option>
+                                    <option value="40">40</option>
+                                    <option value="42">42</option>
+                                    <option value="44">44</option>
+                                    <option value="46">46</option>
+                                    <option value="48">48</option>
+                                    <option value="50">50</option>
+                                    <option value="52">52</option>
+                                    <option value="54">54</option>
+                                    <option value="56">56</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Preferências -->
+                    <div class="wizard-step" data-step="4">
+                        <div class="form-group">
+                            <label>Cores Favoritas</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-tag">
+                                    <input type="checkbox" id="cor-preto" value="Preto" name="cores">
+                                    <label for="cor-preto"><i class="bi bi-palette-fill" style="color: #212529;"></i> Preto</label>
+                                </div>
+                                <div class="checkbox-tag">
+                                    <input type="checkbox" id="cor-branco" value="Branco" name="cores">
+                                    <label for="cor-branco"><i class="bi bi-palette-fill" style="color: #f8f9fa; text-shadow: 0 0 1px #aaa;"></i> Branco</label>
+                                </div>
+                                <div class="checkbox-tag">
+                                    <input type="checkbox" id="cor-vermelho" value="Vermelho" name="cores">
+                                    <label for="cor-vermelho"><i class="bi bi-palette-fill" style="color: #dc3545;"></i> Vermelho</label>
+                                </div>
+                                <div class="checkbox-tag">
+                                    <input type="checkbox" id="cor-azul" value="Azul" name="cores">
+                                    <label for="cor-azul"><i class="bi bi-palette-fill" style="color: #0d6efd;"></i> Azul</label>
+                                </div>
+                                <div class="checkbox-tag">
+                                    <input type="checkbox" id="cor-verde" value="Verde" name="cores">
+                                    <label for="cor-verde"><i class="bi bi-palette-fill" style="color: #198754;"></i> Verde</label>
+                                </div>
+                                <div class="checkbox-tag">
+                                    <input type="checkbox" id="cor-rosa" value="Rosa" name="cores">
+                                    <label for="cor-rosa"><i class="bi bi-palette-fill" style="color: #d63384;"></i> Rosa</label>
+                                </div>
+                                <div class="checkbox-tag">
+                                    <input type="checkbox" id="cor-estampado" value="Estampado" name="cores">
+                                    <label for="cor-estampado"><i class="bi bi-palette-fill" style="color: #fd7e14;"></i> Estampado</label>
+                                </div>
+                                <div class="checkbox-tag">
+                                    <input type="checkbox" id="cor-neutro" value="Neutro" name="cores">
+                                    <label for="cor-neutro"><i class="bi bi-palette-fill" style="color: #6c757d;"></i> Neutro</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Estilos Preferidos</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-tag">
+                                    <input type="checkbox" id="estilo-casual" value="Casual" name="estilos">
+                                    <label for="estilo-casual"><i class="bi bi-sunglasses"></i> Casual</label>
+                                </div>
+                                <div class="checkbox-tag">
+                                    <input type="checkbox" id="estilo-elegante" value="Elegante" name="estilos">
+                                    <label for="estilo-elegante"><i class="bi bi-gem"></i> Elegante</label>
+                                </div>
+                                <div class="checkbox-tag">
+                                    <input type="checkbox" id="estilo-esportivo" value="Esportivo" name="estilos">
+                                    <label for="estilo-esportivo"><i class="bi bi-bicycle"></i> Esportivo</label>
+                                </div>
+                                <div class="checkbox-tag">
+                                    <input type="checkbox" id="estilo-romantico" value="Romântico" name="estilos">
+                                    <label for="estilo-romantico"><i class="bi bi-heart"></i> Romântico</label>
+                                </div>
+                                <div class="checkbox-tag">
+                                    <input type="checkbox" id="estilo-vintage" value="Vintage" name="estilos">
+                                    <label for="estilo-vintage"><i class="bi bi-hourglass"></i> Vintage</label>
+                                </div>
+                                <div class="checkbox-tag">
+                                    <input type="checkbox" id="estilo-minimalista" value="Minimalista" name="estilos">
+                                    <label for="estilo-minimalista"><i class="bi bi-dash-lg"></i> Minimalista</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label for="reg-tipo-corpo">Tipo de Corpo</label>
+                                <select class="form-control" id="reg-tipo-corpo">
+                                    <option value="">Prefiro não informar</option>
+                                    <option value="ampulheta">Ampulheta</option>
+                                    <option value="triangulo">Triângulo (Pêra)</option>
+                                    <option value="triangulo-invertido">Triângulo Invertido</option>
+                                    <option value="retangulo">Retângulo</option>
+                                    <option value="oval">Oval (Maçã)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 10px;">
+                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 400;">
+                                <input type="checkbox" id="reg-newsletter" style="width: 20px; height: 20px; accent-color: var(--color-primary);">
+                                <span>Quero receber novidades, ofertas exclusivas e dicas de moda por e-mail.</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Navigation -->
+                    <div class="wizard-nav">
+                        <button type="button" class="btn btn-secondary" id="btn-prev" onclick="changeStep(-1)" style="visibility: hidden;">
+                            <i class="bi bi-arrow-left"></i> Voltar
+                        </button>
+                        <button type="button" class="btn btn-primary" id="btn-next" onclick="handleNextClick()">
+                            Próximo <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </div>
+                </form>
+
+                <div class="auth-footer">
+                    Já tem uma conta? <a href="./login.html">Entrar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Overlay -->
+    <div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+    <!-- Cart Offcanvas -->
+    <div class="cart-offcanvas" id="cart-offcanvas">
+        <div class="cart-header">
+            <h3><i class="bi bi-bag me-2"></i>Meu Carrinho</h3>
+            <button class="cart-close" onclick="closeCart()" aria-label="Fechar carrinho"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <div class="cart-empty">
+                <i class="bi bi-bag"></i>
+                <p>Seu carrinho está vazio</p>
+                <p style="font-size: 0.9rem;">Adicione produtos para continuar</p>
+            </div>
+        </div>
+        <div class="cart-footer" id="cart-footer" style="display: none;">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cart-total">R$ 0,00</span>
+            </div>
+            <button class="btn-checkout" onclick="finalizeOrder()">
+                <i class="bi bi-whatsapp"></i> Finalizar no WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-notification" id="toast-notification">
+        <i class="bi bi-check-circle"></i>
+        <span id="toast-message">Produto adicionado ao carrinho!</span>
+    </div>
+
+    <script src="./js/cart.js"></script>
+    <script src="./js/auth.js"></script>
+    <script src="./js/main.js"></script>
+    <script>
+    (function() {
+        if (isLoggedIn()) {
+            window.location.href = './index.html';
+            return;
+        }
+
+        let currentStep = 1;
+        const totalSteps = 4;
+
+        const telefoneInput = document.getElementById('reg-telefone');
+        const cepInput = document.getElementById('reg-cep');
+        const senhaInput = document.getElementById('reg-senha');
+
+        // Máscaras
+        telefoneInput.addEventListener('input', function() {
+            this.value = maskPhone(this.value);
+        });
+        cepInput.addEventListener('input', function() {
+            this.value = maskCEP(this.value);
+        });
+
+        // Força da senha
+        senhaInput.addEventListener('input', function() {
+            const strength = checkPasswordStrength(this.value);
+            const container = document.getElementById('password-strength');
+            const label = document.getElementById('password-strength-label');
+            const segments = container.querySelectorAll('.password-strength-segment');
+
+            if (this.value.length > 0) {
+                container.style.display = 'block';
+                let filled = 0;
+                if (strength.level === 'fraca') filled = 1;
+                else if (strength.level === 'media') filled = 2;
+                else filled = 4;
+
+                segments.forEach((seg, i) => {
+                    seg.style.background = i < filled ? strength.color : 'var(--color-light-gray)';
+                });
+                label.textContent = 'Força: ' + strength.label;
+                label.style.color = strength.color;
+            } else {
+                container.style.display = 'none';
+            }
+        });
+
+        // CEP auto-complete (ViaCEP)
+        cepInput.addEventListener('blur', function() {
+            const cep = this.value.replace(/\D/g, '');
+            if (cep.length === 8) {
+                fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                    .then(r => r.json())
+                    .then(data => {
+                        if (!data.erro) {
+                            document.getElementById('reg-endereco').value = data.logradouro || '';
+                            document.getElementById('reg-bairro').value = data.bairro || '';
+                            document.getElementById('reg-cidade').value = data.localidade || '';
+                            document.getElementById('reg-estado').value = data.uf || '';
+                            document.getElementById('reg-numero').focus();
+                        }
+                    })
+                    .catch(() => {});
+            }
+        });
+
+        window.handleNextClick = function() {
+            // Se estiver no último passo, submete o formulário
+            if (currentStep === totalSteps) {
+                document.getElementById('registro-form').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                return;
+            }
+            changeStep(1);
+        };
+
+        window.changeStep = function(dir) {
+            if (dir === 1 && !validateStep(currentStep)) return;
+
+            const newStep = currentStep + dir;
+            if (newStep < 1 || newStep > totalSteps) return;
+
+            // Update indicators
+            document.querySelectorAll('.wizard-step-indicator').forEach(el => {
+                const step = parseInt(el.dataset.step);
+                el.classList.remove('active', 'completed');
+                if (step === newStep) el.classList.add('active');
+                else if (step < newStep) el.classList.add('completed');
+            });
+
+            // Update steps
+            document.querySelectorAll('.wizard-step').forEach(el => {
+                el.classList.remove('active', 'prev');
+                if (parseInt(el.dataset.step) === newStep) {
+                    el.classList.add('active');
+                    if (dir === -1) el.classList.add('prev');
+                }
+            });
+
+            currentStep = newStep;
+            updateNavButtons();
+        };
+
+        function updateNavButtons() {
+            const prevBtn = document.getElementById('btn-prev');
+            const nextBtn = document.getElementById('btn-next');
+
+            prevBtn.style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+
+            if (currentStep === totalSteps) {
+                nextBtn.innerHTML = '<i class="bi bi-check-lg"></i> Finalizar Cadastro';
+            } else {
+                nextBtn.innerHTML = 'Próximo <i class="bi bi-arrow-right"></i>';
+            }
+        }
+
+        function validateStep(step) {
+            let valid = true;
+
+            if (step === 1) {
+                const nome = document.getElementById('reg-nome');
+                const email = document.getElementById('reg-email');
+                const telefone = document.getElementById('reg-telefone');
+                const senha = document.getElementById('reg-senha');
+                const senhaConfirmar = document.getElementById('reg-senha-confirmar');
+
+                if (nome.value.trim().length < 3) {
+                    nome.classList.add('is-invalid'); valid = false;
+                } else { nome.classList.remove('is-invalid'); nome.classList.add('is-valid'); }
+
+                if (!validateEmail(email.value.trim())) {
+                    email.classList.add('is-invalid');
+                    document.getElementById('reg-email-error').textContent = 'Digite um e-mail válido.';
+                    valid = false;
+                } else if (findUserByEmail(email.value.trim())) {
+                    email.classList.add('is-invalid');
+                    document.getElementById('reg-email-error').textContent = 'Este e-mail já está cadastrado.';
+                    valid = false;
+                } else { email.classList.remove('is-invalid'); email.classList.add('is-valid'); }
+
+                if (telefone.value.replace(/\D/g, '').length < 10) {
+                    telefone.classList.add('is-invalid'); valid = false;
+                } else { telefone.classList.remove('is-invalid'); telefone.classList.add('is-valid'); }
+
+                if (senha.value.length < 6) {
+                    senha.classList.add('is-invalid'); valid = false;
+                } else { senha.classList.remove('is-invalid'); senha.classList.add('is-valid'); }
+
+                if (senha.value !== senhaConfirmar.value || senhaConfirmar.value === '') {
+                    senhaConfirmar.classList.add('is-invalid');
+                    document.getElementById('reg-senha-match-error').style.display = 'block';
+                    valid = false;
+                } else { senhaConfirmar.classList.remove('is-invalid'); senhaConfirmar.classList.add('is-valid');
+                    document.getElementById('reg-senha-match-error').style.display = 'none'; }
+            }
+
+            return valid;
+        }
+
+        // Finalizar cadastro
+        document.getElementById('registro-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!validateStep(currentStep)) return;
+
+            // Coleta cores
+            const cores = [];
+            document.querySelectorAll('input[name="cores"]:checked').forEach(cb => cores.push(cb.value));
+
+            // Coleta estilos
+            const estilos = [];
+            document.querySelectorAll('input[name="estilos"]:checked').forEach(cb => estilos.push(cb.value));
+
+            const userData = {
+                nome: document.getElementById('reg-nome').value.trim(),
+                email: document.getElementById('reg-email').value.trim(),
+                telefone: document.getElementById('reg-telefone').value,
+                senha: document.getElementById('reg-senha').value,
+                endereco: {
+                    cep: document.getElementById('reg-cep').value,
+                    logradouro: document.getElementById('reg-endereco').value,
+                    numero: document.getElementById('reg-numero').value,
+                    bairro: document.getElementById('reg-bairro').value,
+                    cidade: document.getElementById('reg-cidade').value,
+                    estado: document.getElementById('reg-estado').value
+                },
+                medidas: {
+                    busto: document.getElementById('reg-busto').value,
+                    cintura: document.getElementById('reg-cintura').value,
+                    quadril: document.getElementById('reg-quadril').value,
+                    altura: document.getElementById('reg-altura').value,
+                    blusa: document.getElementById('reg-blusa').value,
+                    calca: document.getElementById('reg-calca').value,
+                    vestido: document.getElementById('reg-vestido').value
+                },
+                preferencias: {
+                    cores: cores,
+                    estilos: estilos,
+                    tipoCorpo: document.getElementById('reg-tipo-corpo').value,
+                    newsletter: document.getElementById('reg-newsletter').checked
+                }
+            };
+
+            const result = registerUser(userData);
+            if (result.success) {
+                showToast(result.message);
+                setTimeout(() => window.location.href = './index.html', 1000);
+            } else {
+                showToast(result.message);
+            }
+        });
+
+        window.togglePassword = function(id, btn) {
+            const input = document.getElementById(id);
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('bi-eye', 'bi-eye-slash');
+                btn.setAttribute('aria-label', 'Ocultar senha');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('bi-eye-slash', 'bi-eye');
+                btn.setAttribute('aria-label', 'Mostrar senha');
+            }
+        };
+    })();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0t3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
