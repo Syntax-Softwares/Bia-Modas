@@ -331,7 +331,7 @@
                         <button type="button" class="btn btn-secondary" id="btn-prev" onclick="changeStep(-1)" style="visibility: hidden;">
                             <i class="bi bi-arrow-left"></i> Voltar
                         </button>
-                        <button type="button" class="btn btn-primary" id="btn-next" onclick="changeStep(1)">
+                        <button type="button" class="btn btn-primary" id="btn-next" onclick="handleNextClick()">
                             Próximo <i class="bi bi-arrow-right"></i>
                         </button>
                     </div>
@@ -444,6 +444,15 @@
             }
         });
 
+        window.handleNextClick = function() {
+            // Se estiver no último passo, submete o formulário
+            if (currentStep === totalSteps) {
+                document.getElementById('registro-form').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                return;
+            }
+            changeStep(1);
+        };
+
         window.changeStep = function(dir) {
             if (dir === 1 && !validateStep(currentStep)) return;
 
@@ -479,10 +488,8 @@
 
             if (currentStep === totalSteps) {
                 nextBtn.innerHTML = '<i class="bi bi-check-lg"></i> Finalizar Cadastro';
-                nextBtn.type = 'submit';
             } else {
                 nextBtn.innerHTML = 'Próximo <i class="bi bi-arrow-right"></i>';
-                nextBtn.type = 'button';
             }
         }
 
