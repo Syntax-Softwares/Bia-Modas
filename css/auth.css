@@ -1,0 +1,636 @@
+/* =====================================================
+   Bia Modas — Sistema de Autenticação (Estilos)
+   ===================================================== */
+
+/* --- Header Avatar & Dropdown --- */
+.auth-avatar-logged {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: transform 0.3s;
+}
+
+.auth-avatar-logged:hover {
+    transform: scale(1.05);
+}
+
+.auth-dropdown {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    min-width: 260px;
+    z-index: 9999;
+    overflow: hidden;
+    animation: authDropdownIn 0.25s ease;
+}
+
+@keyframes authDropdownIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.auth-dropdown-header {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--color-secondary);
+}
+
+.auth-dropdown-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.auth-dropdown-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.auth-dropdown-info strong {
+    font-size: 0.95rem;
+    color: var(--color-dark);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.auth-dropdown-info span {
+    font-size: 0.8rem;
+    color: var(--color-gray);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.auth-dropdown-divider {
+    height: 1px;
+    background: var(--color-light-gray);
+}
+
+.auth-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    color: var(--color-dark);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.auth-dropdown-item:hover {
+    background: var(--color-secondary);
+    color: var(--color-primary);
+    padding-left: 24px;
+}
+
+.auth-dropdown-item i {
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+}
+
+/* --- Auth Pages Layout --- */
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, #fff5f5 0%, #ffffff 50%, #f8f9fa 100%);
+}
+
+.auth-page .main-header {
+    position: relative;
+}
+
+.auth-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.auth-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 520px;
+    overflow: hidden;
+}
+
+.auth-card-wide {
+    max-width: 800px;
+}
+
+.auth-card-header {
+    padding: 40px 40px 0;
+    text-align: center;
+}
+
+.auth-card-header .logo img {
+    max-height: 55px;
+    margin-bottom: 20px;
+}
+
+.auth-card-header h1 {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    color: var(--color-dark);
+    margin-bottom: 8px;
+}
+
+.auth-card-header p {
+    color: var(--color-gray);
+    font-size: 0.95rem;
+}
+
+.auth-card-body {
+    padding: 30px 40px 40px;
+}
+
+/* --- Wizard Progress --- */
+.wizard-progress {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 35px;
+    padding: 0 10px;
+}
+
+.wizard-step-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    position: relative;
+}
+
+.wizard-step-indicator:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 16px;
+    left: 60%;
+    width: 80%;
+    height: 3px;
+    background: var(--color-light-gray);
+    z-index: 0;
+}
+
+.wizard-step-indicator.completed:not(:last-child)::after {
+    background: var(--color-primary);
+}
+
+.wizard-step-dot {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--color-light-gray);
+    color: var(--color-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+    z-index: 1;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+}
+
+.wizard-step-indicator.active .wizard-step-dot {
+    background: var(--color-primary);
+    color: white;
+    box-shadow: 0 0 0 4px rgba(209, 0, 31, 0.15);
+}
+
+.wizard-step-indicator.completed .wizard-step-dot {
+    background: var(--color-primary);
+    color: white;
+}
+
+.wizard-step-label {
+    font-size: 0.75rem;
+    color: var(--color-gray);
+    font-weight: 500;
+    text-align: center;
+    transition: color 0.3s;
+}
+
+.wizard-step-indicator.active .wizard-step-label {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+/* --- Wizard Steps --- */
+.wizard-step {
+    display: none;
+    animation: stepFadeIn 0.35s ease;
+}
+
+.wizard-step.active {
+    display: block;
+}
+
+@keyframes stepFadeIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.wizard-step.prev {
+    animation: stepFadeInLeft 0.35s ease;
+}
+
+@keyframes stepFadeInLeft {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* --- Form Styles --- */
+.auth-form .form-group {
+    margin-bottom: 20px;
+}
+
+.auth-form label {
+    display: block;
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    color: var(--color-dark);
+}
+
+.auth-form label .required {
+    color: var(--color-primary);
+    margin-left: 2px;
+}
+
+.auth-form .form-control {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid var(--color-light-gray);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    transition: all 0.3s;
+    background: white;
+    font-family: var(--font-primary);
+}
+
+.auth-form .form-control:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px rgba(209, 0, 31, 0.08);
+}
+
+.auth-form .form-control.is-valid {
+    border-color: #28a745;
+}
+
+.auth-form .form-control.is-invalid {
+    border-color: #dc3545;
+}
+
+.auth-form .invalid-feedback {
+    font-size: 0.8rem;
+    color: #dc3545;
+    margin-top: 6px;
+    display: none;
+}
+
+.auth-form .invalid-feedback.show {
+    display: block;
+}
+
+.auth-form .form-text {
+    font-size: 0.8rem;
+    color: var(--color-gray);
+    margin-top: 6px;
+}
+
+/* Password field with toggle */
+.password-field {
+    position: relative;
+}
+
+.password-field .form-control {
+    padding-right: 50px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--color-gray);
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 5px;
+    transition: color 0.3s;
+}
+
+.password-toggle:hover {
+    color: var(--color-primary);
+}
+
+/* Password strength */
+.password-strength {
+    margin-top: 8px;
+}
+
+.password-strength-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--color-light-gray);
+    overflow: hidden;
+    display: flex;
+    gap: 4px;
+}
+
+.password-strength-segment {
+    flex: 1;
+    background: var(--color-light-gray);
+    border-radius: 2px;
+    transition: background 0.3s;
+}
+
+.password-strength-label {
+    font-size: 0.75rem;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+/* --- Checkboxes & Tags --- */
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.checkbox-tag {
+    position: relative;
+}
+
+.checkbox-tag input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.checkbox-tag label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    border: 2px solid var(--color-light-gray);
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    margin-bottom: 0;
+    color: var(--color-dark);
+}
+
+.checkbox-tag label:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.checkbox-tag input:checked + label {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+}
+
+.checkbox-tag input:checked + label i {
+    color: white;
+}
+
+/* --- Wizard Navigation --- */
+.wizard-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid var(--color-light-gray);
+    gap: 15px;
+}
+
+.wizard-nav .btn {
+    padding: 14px 32px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-primary);
+}
+
+.wizard-nav .btn-secondary {
+    background: white;
+    color: var(--color-dark);
+    border-color: var(--color-light-gray);
+}
+
+.wizard-nav .btn-secondary:hover {
+    border-color: var(--color-gray);
+}
+
+.wizard-nav .btn-primary {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+.wizard-nav .btn-primary:hover {
+    background: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
+}
+
+.wizard-nav .btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* --- Auth Footer Links --- */
+.auth-footer {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-light-gray);
+    color: var(--color-gray);
+    font-size: 0.9rem;
+}
+
+.auth-footer a {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* --- Help tooltip --- */
+.help-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--color-light-gray);
+    color: var(--color-gray);
+    font-size: 0.7rem;
+    margin-left: 6px;
+    cursor: help;
+    position: relative;
+}
+
+.help-icon:hover::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-dark);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    z-index: 100;
+    font-weight: 400;
+}
+
+.help-icon:hover::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 3px);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--color-dark);
+}
+
+/* --- Responsive --- */
+@media (max-width: 576px) {
+    .auth-card {
+        border-radius: 0;
+        box-shadow: none;
+        max-width: 100%;
+    }
+
+    .auth-card-header {
+        padding: 25px 20px 0;
+    }
+
+    .auth-card-body {
+        padding: 20px;
+    }
+
+    .wizard-progress {
+        padding: 0;
+    }
+
+    .wizard-step-label {
+        display: none;
+    }
+
+    .wizard-step-indicator:not(:last-child)::after {
+        left: 55%;
+        width: 90%;
+    }
+
+    .wizard-nav {
+        flex-direction: column-reverse;
+    }
+
+    .wizard-nav .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .auth-dropdown {
+        position: fixed;
+        top: auto;
+        right: 10px;
+        left: 10px;
+        bottom: 10px;
+        min-width: auto;
+        border-radius: 15px;
+    }
+}
+
+/* --- Perfil / Tabs --- */
+.profile-tabs {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--color-light-gray);
+    overflow-x: auto;
+    padding-bottom: 2px;
+}
+
+.profile-tab {
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    font-weight: 500;
+    color: var(--color-gray);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.3s;
+    font-family: var(--font-primary);
+    font-size: 0.9rem;
+}
+
+.profile-tab:hover {
+    color: var(--color-primary);
+}
+
+.profile-tab.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+    font-weight: 600;
+}
+
+.profile-tab-content {
+    display: none;
+    animation: stepFadeIn 0.3s ease;
+}
+
+.profile-tab-content.active {
+    display: block;
+}
