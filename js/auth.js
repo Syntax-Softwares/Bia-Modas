@@ -226,37 +226,38 @@ function initAuthHeader() {
     const container = document.querySelector('.header-actions');
     if (!container) return;
 
-    const avatarLink = container.querySelector('a[href="./usuario.html"]');
+    // Encontra o link do avatar (primeiro link do container, ou por ícone)
+    let avatarLink = container.querySelector('a[href="./usuario.html"]');
+    if (!avatarLink) {
+        avatarLink = container.querySelector('a:first-child');
+    }
     if (!avatarLink) return;
 
     const session = getSession();
 
     if (session) {
-        // Usuário logado — mostrar inicial
         const initial = session.nome ? session.nome.charAt(0).toUpperCase() : 'U';
         avatarLink.innerHTML = `<div class="auth-avatar-logged">${initial}</div>`;
         avatarLink.setAttribute('aria-label', `Minha conta: ${session.nome}`);
-        avatarLink.href = '#';
-        avatarLink.onclick = function(e) {
-            e.preventDefault();
-            toggleAuthDropdown();
-        };
     } else {
-        // Deslogado
         avatarLink.innerHTML = `<i class="bi bi-person"></i>`;
         avatarLink.setAttribute('aria-label', 'Entrar ou criar conta');
-        avatarLink.href = '#';
-        avatarLink.onclick = function(e) {
-            e.preventDefault();
-            toggleAuthDropdown();
-        };
     }
+
+    avatarLink.href = '#';
+    avatarLink.style.position = 'relative';
+    avatarLink.addEventListener('click', function(e) {
+        // Se clicou em um link/item dentro do dropdown, não interfere
+        if (e.target.closest('.auth-dropdown-item')) return;
+        e.preventDefault();
+        toggleAuthDropdown(this);
+    });
 }
 
-function toggleAuthDropdown() {
+function toggleAuthDropdown(avatarLink) {
     let dropdown = document.getElementById('auth-dropdown');
     if (dropdown) {
-        dropdown.classList.toggle('show');
+        dropdown.remove();
         return;
     }
 
@@ -291,9 +292,7 @@ function toggleAuthDropdown() {
         `;
     }
 
-    const avatarLink = document.querySelector('.header-actions a[aria-label*="conta"], .header-actions a[aria-label*="Entrar"]');
     if (avatarLink) {
-        avatarLink.style.position = 'relative';
         avatarLink.appendChild(dropdown);
     }
 
