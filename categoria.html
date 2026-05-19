@@ -20,25 +20,45 @@
     <style>
         /* Page Header */
         .page-header {
-            background: linear-gradient(135deg, var(--color-primary) 0%, #8b0015 100%);
-            color: white;
-            padding: 40px 0;
+            background: #fff;
+            border-bottom: 1px solid var(--color-light-gray);
+            padding: 50px 0 35px;
             text-align: center;
         }
         .page-header h1 {
             font-family: var(--font-display);
-            font-size: 2rem;
-            margin-bottom: 8px;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: var(--color-dark);
         }
         .page-header p {
-            opacity: 0.9;
+            color: var(--color-gray);
             font-size: 1rem;
             margin: 0;
+        }
+        .page-header .breadcrumb {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: var(--color-gray);
+            margin-bottom: 15px;
+        }
+        .page-header .breadcrumb a {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .page-header .breadcrumb a:hover {
+            text-decoration: underline;
         }
 
         /* Layout */
         .filter-page {
             padding: 40px 0 80px;
+        }
+        .filter-sidebar-desktop {
+            align-self: flex-start;
         }
         .filter-sidebar {
             background: white;
@@ -48,6 +68,7 @@
             height: fit-content;
             position: sticky;
             top: 20px;
+            align-self: flex-start;
         }
         .filter-sidebar h4 {
             font-size: 1rem;
@@ -443,6 +464,11 @@
     <!-- Page Header -->
     <section class="page-header">
         <div class="container">
+            <div class="breadcrumb">
+                <a href="./index.html"><i class="bi bi-house-door"></i> Início</a>
+                <i class="bi bi-chevron-right" style="font-size: 0.7rem;"></i>
+                <span id="breadcrumb-current">Todos os Produtos</span>
+            </div>
             <h1 id="page-title">Todos os Produtos</h1>
             <p id="page-subtitle">Explore nossa coleção</p>
         </div>
@@ -541,9 +567,6 @@
             <h3><i class="bi bi-funnel me-2"></i>Filtros</h3>
             <button class="filter-offcanvas-close" onclick="closeFilterOffcanvas()"><i class="bi bi-x-lg"></i></button>
         </div>
-        <button class="btn-clear-filters mb-4" onclick="clearAllFilters(); closeFilterOffcanvas();">
-            <i class="bi bi-x-lg"></i> Limpar Filtros
-        </button>
         <div id="filter-offcanvas-content">
             <!-- Cloned from desktop sidebar -->
         </div>
@@ -820,11 +843,13 @@
         function updatePageTitle() {
             const titleEl = document.getElementById('page-title');
             const subEl = document.getElementById('page-subtitle');
+            const breadEl = document.getElementById('breadcrumb-current');
+            let titulo = 'Todos os Produtos';
             if (filtrosAtivos.categoria && filtrosAtivos.categoria !== 'todos') {
-                titleEl.textContent = capitalize(filtrosAtivos.categoria);
-            } else {
-                titleEl.textContent = 'Todos os Produtos';
+                titulo = capitalize(filtrosAtivos.categoria);
             }
+            titleEl.textContent = titulo;
+            if (breadEl) breadEl.textContent = titulo;
             const produtos = filtrarProdutos(filtrosAtivos);
             subEl.textContent = produtos.length + ' produto' + (produtos.length !== 1 ? 's' : '') + ' na coleção';
         }
