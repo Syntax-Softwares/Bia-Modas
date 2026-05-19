@@ -91,10 +91,16 @@ function showToast(message) {
 function finalizeOrder() {
     if (cart.length === 0) return;
 
-    const name = prompt('Digite seu nome:');
-    if (!name || name.trim() === '') {
-        alert('Por favor, digite seu nome para finalizar a compra.');
-        return;
+    let name = '';
+    const user = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
+    if (user && user.nome) {
+        name = user.nome;
+    } else {
+        name = prompt('Digite seu nome:');
+        if (!name || name.trim() === '') {
+            alert('Por favor, digite seu nome para finalizar a compra.');
+            return;
+        }
     }
 
     let message = `Olá! Meu nome é ${name.trim()} e tenho interesse nos seguintes produtos:\n\n`;
