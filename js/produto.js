@@ -77,4 +77,10 @@ function addProductToCartFromPage() {
 
 document.addEventListener('DOMContentLoaded', () => {
     renderProductPage();
+
+    // Salva como visto recentemente
+    const product = getQueryParams();
+    if (product.nome && product.nome !== 'Produto' && typeof saveRecentView === 'function') {
+        saveRecentView(product);
+    }
 });

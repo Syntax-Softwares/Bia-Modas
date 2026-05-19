@@ -556,3 +556,94 @@
     width: 25px;
     border-radius: 5px;
 }
+
+/* === Visual Category Menu (like referencia.png) === */
+.category-grid-section {
+    padding: 60px 0;
+    background: #ffffff;
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 30px;
+    text-align: center;
+}
+
+.category-circle-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--color-dark);
+    transition: transform 0.3s;
+}
+
+.category-circle-item:hover {
+    transform: translateY(-5px);
+}
+
+.category-circle-item:hover .category-circle-name {
+    color: var(--color-primary);
+}
+
+.category-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: var(--color-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: box-shadow 0.3s;
+}
+
+.category-circle-item:hover .category-circle {
+    box-shadow: 0 5px 15px rgba(209, 0, 31, 0.15);
+}
+
+.category-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.category-circle i {
+    font-size: 2.5rem;
+    color: var(--color-gray);
+}
+
+.category-circle-name {
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.3;
+    max-width: 120px;
+    transition: color 0.3s;
+}
+
+@media (max-width: 1199px) {
+    .category-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 30px;
+    }
+}
+
+@media (max-width: 576px) {
+    .category-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+    .category-circle {
+        width: 90px;
+        height: 90px;
+    }
+    .category-circle i {
+        font-size: 2rem;
+    }
+    .category-circle-name {
+        font-size: 0.85rem;
+    }
+}
