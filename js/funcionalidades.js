@@ -15,6 +15,7 @@ function extractProductMeta(name) {
     const lower = name.toLowerCase();
     let cor = '';
     let tipo = '';
+    let estilo = '';
 
     // Extrai cor do nome
     const cores = {
@@ -25,7 +26,8 @@ function extractProductMeta(name) {
         'verde': 'Verde',
         'rosa': 'Rosa',
         'estampado': 'Estampado',
-        'neutro': 'Neutro'
+        'estampada': 'Estampado',
+        'neutro': 'Neutro', 'neutra': 'Neutro'
     };
     for (const [key, val] of Object.entries(cores)) {
         if (lower.includes(key)) { cor = val; break; }
@@ -43,7 +45,37 @@ function extractProductMeta(name) {
         if (lower.includes(t.key)) { tipo = t.val; break; }
     }
 
-    return { cor, tipo };
+    // Extrai estilo do nome
+    const estilos = [
+        { key: 'elegante', val: 'Elegante' },
+        { key: 'casual', val: 'Casual' },
+        { key: 'esportiva', val: 'Esportivo' },
+        { key: 'esportivo', val: 'Esportivo' },
+        { key: 'romântico', val: 'Romântico' },
+        { key: 'romantico', val: 'Romântico' },
+        { key: 'vintage', val: 'Vintage' },
+        { key: 'boho', val: 'Vintage' },
+        { key: 'minimalista', val: 'Minimalista' },
+        { key: 'básica', val: 'Minimalista' },
+        { key: 'basica', val: 'Minimalista' }
+    ];
+    for (const e of estilos) {
+        if (lower.includes(e.key)) { estilo = e.val; break; }
+    }
+
+    return { cor, tipo, estilo };
+}
+
+// Mapeia tipo de corpo para tipos de roupa que mais combinam
+function getTiposRecomendadosPorCorpo(tipoCorpo) {
+    const mapa = {
+        'ampulheta': ['Vestidos', 'Blusas', 'Calças'],
+        'triangulo': ['Vestidos', 'Calças', 'Blusas'],
+        'triangulo-invertido': ['Blusas', 'Vestidos', 'Calças'],
+        'retangulo': ['Vestidos', 'Blusas', 'Calças'],
+        'oval': ['Blusas', 'Vestidos', 'Calças']
+    };
+    return mapa[tipoCorpo] || [];
 }
 
 function getRecentes() {
@@ -151,6 +183,7 @@ function renderRecomendados() {
     const prefs = user.preferencias || {};
     const coresPref = prefs.cores || [];
     const estilosPref = prefs.estilos || [];
+    const tiposRecomendados = getTiposRecomendadosPorCorpo(prefs.tipoCorpo);
 
     // Coleta todos os produtos da página atual
     const todosCards = Array.from(document.querySelectorAll('.carousel-slide'));
@@ -158,10 +191,20 @@ function renderRecomendados() {
         let score = 0;
         const cor = card.dataset.cor || '';
         const tipo = card.dataset.tipo || '';
+        const estilo = card.dataset.estilo || '';
         const categoria = card.dataset.categoria || '';
 
+        // Pontua por cor favorita
         if (coresPref.includes(cor)) score += 2;
-        if (prefs.tipoCorpo && tipo) score += 1;
+
+        // Pontua por estilo favorito
+        if (estilosPref.includes(estilo)) score += 2;
+
+        // Pontua por tipo de corpo (ordenação do array define prioridade)
+        if (prefs.tipoCorpo && tiposRecomendados.includes(tipo)) {
+            const idx = tiposRecomendados.indexOf(tipo);
+            score += Math.max(1, 3 - idx); // 3 pontos para o 1º, 2 para o 2º, 1 para o 3º
+        }
 
         return { card: card.cloneNode(true), score };
     }).filter(item => item.score > 0)
@@ -191,6 +234,7 @@ function enrichProductCards() {
         slide.dataset.categoria = category;
         slide.dataset.cor = meta.cor;
         slide.dataset.tipo = meta.tipo;
+        slide.dataset.estilo = meta.estilo;
     });
 }
 

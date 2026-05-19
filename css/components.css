@@ -570,6 +570,19 @@
     text-align: center;
 }
 
+/* Garante pelo menos 2 linhas em todos os breakpoints */
+@media (min-width: 1200px) {
+    .category-grid {
+        grid-template-columns: repeat(8, 1fr);
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .category-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
 .category-circle-item {
     display: flex;
     flex-direction: column;
