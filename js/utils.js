@@ -86,3 +86,38 @@ function capitalize(str) {
     if (!str) return '';
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+// --- URL Helpers ---
+function buildProductUrl(product) {
+    const nome = encodeURIComponent(product.nome || product.name || '');
+    const preco = encodeURIComponent(product.preco || product.price || '');
+    const imagem = encodeURIComponent(product.imagem || product.image || '');
+    const categoria = encodeURIComponent(product.categoria || product.category || 'Plus Size');
+    const badge = encodeURIComponent(product.badge || '');
+    return `./produto.html?nome=${nome}&preco=${preco}&imagem=${imagem}&categoria=${categoria}&badge=${badge}`;
+}
+
+// --- Currency Parsing ---
+function parseCurrency(value) {
+    if (typeof value === 'number') return value;
+    return parseFloat(
+        String(value).replace('R$', '').replace(/\./g, '').replace(',', '.')
+    ) || 0;
+}
+
+// --- ViaCEP Auto-complete ---
+function autoCompleteCEP(cep, fieldMap) {
+    const clean = cep.replace(/\D/g, '');
+    if (clean.length !== 8) return Promise.resolve(false);
+    return fetch(`https://viacep.com.br/ws/${clean}/json/`)
+        .then(r => r.json())
+        .then(data => {
+            if (data.erro) return false;
+            Object.entries(fieldMap).forEach(([key, elId]) => {
+                const el = document.getElementById(elId);
+                if (el) el.value = data[key] || '';
+            });
+            return true;
+        })
+        .catch(() => false);
+}

@@ -30,7 +30,7 @@ function updateCartUI() {
         let html = '';
 
         cart.forEach((item, index) => {
-            const price = parseFloat(item.price.replace('R$', '').replace('.', '').replace(',', '.'));
+            const price = parseCurrency(item.price);
             total += price;
 
             html += `
@@ -103,7 +103,7 @@ function finalizeOrder() {
 
     cart.forEach((item, index) => {
         message += `${index + 1}. ${item.name} - ${item.price}\n`;
-        const price = parseFloat(item.price.replace('R$', '').replace('.', '').replace(',', '.'));
+        const price = parseCurrency(item.price);
         total += price;
     });
 

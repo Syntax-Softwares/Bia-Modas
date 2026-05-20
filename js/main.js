@@ -58,7 +58,7 @@ function initProductCards() {
         const badgeEl = card.querySelector('.product-badge');
         const badge = badgeEl ? badgeEl.textContent.trim() : '';
 
-        const productUrl = `./produto.html?nome=${encodeURIComponent(name)}&preco=${encodeURIComponent(price)}&imagem=${encodeURIComponent(image)}&categoria=${encodeURIComponent(category)}&badge=${encodeURIComponent(badge)}`;
+        const productUrl = buildProductUrl({ nome: name, preco: price, imagem: image, categoria: category, badge });
 
         // Make image clickable
         if (img && !img.closest('a')) {

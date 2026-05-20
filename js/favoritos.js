@@ -67,7 +67,7 @@ function renderFavorites() {
             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                 <div class="product-card">
                     <div class="product-image">
-                        <a href="./produto.html?nome=${encodeURIComponent(item.name)}&preco=${encodeURIComponent(item.price)}&imagem=${encodeURIComponent(item.image)}&categoria=${encodeURIComponent(item.category || 'Plus Size')}">
+                        <a href="${buildProductUrl({ nome: item.name, preco: item.price, imagem: item.image, categoria: item.category })}">
                             <img src="${item.image}" alt="${item.name}">
                         </a>
                         <div class="product-actions">
@@ -85,7 +85,7 @@ function renderFavorites() {
                     <div class="product-info">
                         <div class="product-category">${item.category || 'Plus Size'}</div>
                         <h3 class="product-title">
-                            <a href="./produto.html?nome=${encodeURIComponent(item.name)}&preco=${encodeURIComponent(item.price)}&imagem=${encodeURIComponent(item.image)}&categoria=${encodeURIComponent(item.category || 'Plus Size')}" style="color: inherit; text-decoration: none;">
+                            <a href="${buildProductUrl({ nome: item.name, preco: item.price, imagem: item.image, categoria: item.category })}" style="color: inherit; text-decoration: none;">
                                 ${item.name}
                             </a>
                         </h3>

@@ -371,7 +371,7 @@ function buildProductCardHTML(product) {
         <div class="col-lg-3 col-md-4 col-6 mb-4" data-cor="${product.cor}" data-tipo="${product.tipo}" data-estilo="${product.estilo}" data-categoria="${product.categoria}">
             <div class="product-card">
                 <div class="product-image">
-                    <a href="./produto.html?nome=${encodeURIComponent(product.nome)}&preco=${encodeURIComponent(product.precoFormatado)}&imagem=${encodeURIComponent(product.imagem)}&categoria=${encodeURIComponent(product.categoria)}&badge=${encodeURIComponent(product.badge)}">
+                    <a href="${buildProductUrl(product)}">
                         <img src="${product.imagem}" alt="${product.nome}">
                     </a>
                     ${badgeHtml}
@@ -384,7 +384,7 @@ function buildProductCardHTML(product) {
                 <div class="product-info">
                     <div class="product-category">${product.categoria}</div>
                     <h3 class="product-title">
-                        <a href="./produto.html?nome=${encodeURIComponent(product.nome)}&preco=${encodeURIComponent(product.precoFormatado)}&imagem=${encodeURIComponent(product.imagem)}&categoria=${encodeURIComponent(product.categoria)}&badge=${encodeURIComponent(product.badge)}" style="color:inherit;text-decoration:none;">${product.nome}</a>
+                        <a href="${buildProductUrl(product)}" style="color:inherit;text-decoration:none;">${product.nome}</a>
                     </h3>
                     <div class="product-price">
                         ${precoOriginalStr}

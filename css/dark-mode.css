@@ -555,15 +555,6 @@
     color: #a0a0a0;
 }
 
-/* --- Empty states --- */
-[data-theme="dark"] .empty-state {
-    color: #a0a0a0;
-}
-
-[data-theme="dark"] .empty-state i {
-    color: #444;
-}
-
 /* --- Divider lines --- */
 [data-theme="dark"] hr {
     border-color: #2a2a2a;
