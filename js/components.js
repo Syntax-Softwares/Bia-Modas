@@ -183,15 +183,28 @@
             }
 
             // Append: cart + toast + footer
+            // Adiado para DOMContentLoaded para garantir que vá para o final,
+            // depois de todo o conteúdo da página ser parseado.
             let append = '';
             if (cfg.cart) append += CART;
             if (cfg.toast) append += TOAST;
             if (cfg.footer) append += FOOTER;
             if (append) {
-                const wrapper = document.createElement('div');
-                wrapper.innerHTML = append.trim();
-                while (wrapper.firstChild) {
-                    body.appendChild(wrapper.firstChild);
+                const appendHTML = append.trim();
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', function doAppend() {
+                        const wrapper = document.createElement('div');
+                        wrapper.innerHTML = appendHTML;
+                        while (wrapper.firstChild) {
+                            document.body.appendChild(wrapper.firstChild);
+                        }
+                    });
+                } else {
+                    const wrapper = document.createElement('div');
+                    wrapper.innerHTML = appendHTML;
+                    while (wrapper.firstChild) {
+                        document.body.appendChild(wrapper.firstChild);
+                    }
                 }
             }
         }
