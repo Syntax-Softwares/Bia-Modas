@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="./css/responsive.css">
     <link rel="stylesheet" href="./css/auth.css">
     <link rel="stylesheet" href="./css/dark-mode.css">
+    <link rel="stylesheet" href="./css/produto.css">
     <script>
         (function() {
             const theme = localStorage.getItem('bia_modas_theme');
@@ -26,115 +27,61 @@
             }
         })();
     </script>
-    <style>
-        .product-buttons .btn-primary-custom,
-        .product-buttons .btn-primary-solid,
-        .product-buttons .btn-outline-custom {
-            width: 100%;
-            max-width: 400px;
-        }
-    </style>
 </head>
 <body>
-
-    <!-- Top Bar -->
-    <div class="top-bar">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6 text-center text-md-start">
-                    <span><i class="bi bi-truck me-2"></i>Frete grátis para Jaú em compras acima de R$ 199</span>
-                </div>
-                <div class="col-md-6 text-center text-md-end mt-2 mt-md-0">
-                    <a href="tel:+5514999999999" class="me-3"><i class="bi bi-telephone me-1"></i>(14) 99999-9999</a>
-                    <a href="https://www.instagram.com/lojabiamodass/" target="_blank" rel="noopener noreferrer"><i class="bi bi-instagram me-1"></i>@lojabiamodass</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Header -->
-    <header class="main-header">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-3 col-md-3 col-6">
-                    <a href="./index.html" class="logo">
-                        <img src="./img/logoBiaModas.png" alt="Bia Modas - Moda Feminina">
-                    </a>
-                </div>
-                <div class="col-lg-6 col-md-6 d-none d-md-block">
-                    <div class="search-box mx-auto">
-                        <input type="text" id="search-input" placeholder="O que você procura?" aria-label="Pesquisar produtos">
-                        <button type="button" aria-label="Buscar" onclick="handleSearch()">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-3 col-6 text-end">
-                    <div class="header-actions justify-content-end">
-                        <a href="#" aria-label="Alternar tema" id="theme-toggle">
-                            <i class="bi bi-moon"></i>
-                        </a>
-                        <a href="#" class="auth-header-link" aria-label="Minha conta">
-                            <i class="bi bi-person"></i>
-                        </a>
-                        <a href="./favoritos.html" aria-label="Favoritos">
-                            <i class="bi bi-heart"></i>
-                        </a>
-                        <a href="#" aria-label="Carrinho" onclick="openCart(); return false;">
-                            <i class="bi bi-bag"></i>
-                            <span class="badge-count" id="cart-count">0</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
+    <script src="./js/components.js"></script>
+    <script>
+        BiaModasComponents.inject({
+            logoHref: './index.html',
+            contaHref: '#'
+        });
+    </script>
 
     <!-- Product Detail -->
-    <section class="products-section" style="padding-top: 40px;">
+    <section class="products-section product-detail-section">
         <div class="container">
             <div class="row">
                 <!-- Image -->
                 <div class="col-lg-6 mb-4 mb-lg-0">
-                    <div style="border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08);">
-                        <img id="product-image" src="" alt="" style="width: 100%; height: auto; object-fit: cover;">
+                    <div class="product-image-wrapper">
+                        <img id="product-image" src="" alt="">
                     </div>
                 </div>
                 <!-- Info -->
                 <div class="col-lg-6">
-                    <div id="product-category" style="color: var(--color-gray); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;"></div>
-                    <h1 id="product-name" style="font-family: var(--font-display); font-size: 2.5rem; margin-bottom: 15px;"></h1>
-                    <div style="margin-bottom: 20px;"></div>
-                    <div id="product-price" style="font-size: 2rem; font-weight: 700; color: var(--color-primary); margin-bottom: 25px;"></div>
-                    <p style="color: var(--color-gray); line-height: 1.8; margin-bottom: 30px;">
+                    <div id="product-category"></div>
+                    <h1 id="product-name"></h1>
+                    <div class="product-rating"></div>
+                    <div id="product-price"></div>
+                    <p class="product-description">
                         Produto exclusivo da nova coleção Bia Modas. Confeccionado com materiais de alta qualidade, 
                         proporcionando conforto e elegância para o seu dia a dia. Disponível em diversos tamanhos.
                     </p>
-                    <div class="product-buttons" style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <div class="product-buttons">
                         <button class="btn-primary-solid" onclick="addProductToCartFromPage()">
                             <i class="bi bi-cart-plus me-2"></i>Adicionar ao Carrinho
                         </button>
-                        <button id="btn-favorite" class="btn-outline-custom" style="color: var(--color-dark); border-color: var(--color-dark);" onclick="toggleProductFavorite()">
+                        <button id="btn-favorite" class="btn-outline-custom" onclick="toggleProductFavorite()">
                             <i class="bi bi-heart me-2"></i>Adicionar aos Favoritos
                         </button>
                     </div>
-                    <div style="margin-top: 40px; padding-top: 30px; border-top: 1px solid var(--color-light-gray);">
+                    <div class="product-features">
                         <div class="row">
                             <div class="col-6 mb-3">
-                                <span style="font-weight: 600;"><i class="bi bi-truck me-2" style="color: var(--color-primary);"></i>Frete Grátis</span>
-                                <p style="font-size: 0.85rem; color: var(--color-gray); margin-bottom: 0;">Para Jaú acima de R$ 199</p>
+                                <span class="feature-title"><i class="bi bi-truck me-2"></i>Frete Grátis</span>
+                                <p class="feature-desc">Para Jaú acima de R$ 199</p>
                             </div>
                             <div class="col-6 mb-3">
-                                <span style="font-weight: 600;"><i class="bi bi-arrow-repeat me-2" style="color: var(--color-primary);"></i>Troca Fácil</span>
-                                <p style="font-size: 0.85rem; color: var(--color-gray); margin-bottom: 0;">7 dias para trocar</p>
+                                <span class="feature-title"><i class="bi bi-arrow-repeat me-2"></i>Troca Fácil</span>
+                                <p class="feature-desc">7 dias para trocar</p>
                             </div>
                             <div class="col-6">
-                                <span style="font-weight: 600;"><i class="bi bi-shield-check me-2" style="color: var(--color-primary);"></i>Compra Segura</span>
-                                <p style="font-size: 0.85rem; color: var(--color-gray); margin-bottom: 0;">Ambiente protegido</p>
+                                <span class="feature-title"><i class="bi bi-shield-check me-2"></i>Compra Segura</span>
+                                <p class="feature-desc">Ambiente protegido</p>
                             </div>
                             <div class="col-6">
-                                <span style="font-weight: 600;"><i class="bi bi-credit-card me-2" style="color: var(--color-primary);"></i>Até 12x</span>
-                                <p style="font-size: 0.85rem; color: var(--color-gray); margin-bottom: 0;">Parcelamento em cartões</p>
+                                <span class="feature-title"><i class="bi bi-credit-card me-2"></i>Até 12x</span>
+                                <p class="feature-desc">Parcelamento em cartões</p>
                             </div>
                         </div>
                     </div>
@@ -143,98 +90,8 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="main-footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
-                    <div class="footer-widget">
-                        <img src="./img/logoBiaModas.png" alt="Bia Modas" class="footer-logo">
-                        <p>Moda feminina com estilo, qualidade e preços acessíveis. Há mais de 10 anos vestindo mulheres de Jaú e região.</p>
-                        <div class="social-links">
-                            <a href="https://www.instagram.com/lojabiamodass/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
-                            <a href="https://www.facebook.com/jaubiamodas/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
-                            <a href="https://api.whatsapp.com/send?phone=5514999999999&text=Ol%C3%A1%2C%20tudo%20bem%3F" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
-                    <div class="footer-widget">
-                        <h3>Institucional</h3>
-                        <ul>
-                            <li><a href="#">Sobre Nós</a></li>
-                            <li><a href="#">Nossas Lojas</a></li>
-                            <li><a href="#">Trabalhe Conosco</a></li>
-                            <li><a href="#">Política de Privacidade</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
-                    <div class="footer-widget">
-                        <h3>Ajuda</h3>
-                        <ul>
-                            <li><a href="#">Como Comprar</a></li>
-                            <li><a href="#">Prazos e Entregas</a></li>
-                            <li><a href="#">Trocas e Devoluções</a></li>
-                            <li><a href="#">Formas de Pagamento</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="footer-widget">
-                        <h3>Contato</h3>
-                        <div class="footer-contact">
-                            <p><i class="bi bi-geo-alt"></i> R. Humaitá, 1310 - Centro<br>Jaú - SP, 17201-320</p>
-                            <p><i class="bi bi-telephone"></i> (14) 99999-9999</p>
-                            <p><i class="bi bi-envelope"></i> biamodas@email.com</p>
-                            <p><i class="bi bi-clock"></i> Seg a Sáb: 9h às 18h</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; <span id="current-year">2025</span> Bia Modas. Todos os direitos reservados. Desenvolvido com amor em Jau/SP</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Cart Overlay -->
-    <div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
-
-    <!-- Cart Offcanvas -->
-    <div class="cart-offcanvas" id="cart-offcanvas">
-        <div class="cart-header">
-            <h3><i class="bi bi-bag me-2"></i>Meu Carrinho</h3>
-            <button class="cart-close" onclick="closeCart()" aria-label="Fechar carrinho">
-                <i class="bi bi-x-lg"></i>
-            </button>
-        </div>
-        <div class="cart-items" id="cart-items">
-            <div class="cart-empty">
-                <i class="bi bi-bag"></i>
-                <p>Seu carrinho está vazio</p>
-                <p style="font-size: 0.9rem;">Adicione produtos para continuar</p>
-            </div>
-        </div>
-        <div class="cart-footer" id="cart-footer" style="display: none;">
-            <div class="cart-total">
-                <span>Total:</span>
-                <span id="cart-total">R$ 0,00</span>
-            </div>
-            <button class="btn-checkout" onclick="finalizeOrder()">
-                <i class="bi bi-whatsapp"></i>
-                Finalizar no WhatsApp
-            </button>
-        </div>
-    </div>
-
-    <!-- Toast Notification -->
-    <div class="toast-notification" id="toast-notification">
-        <i class="bi bi-check-circle"></i>
-        <span id="toast-message">Produto adicionado ao carrinho!</span>
-    </div>
-
     <script src="./js/theme.js"></script>
+    <script src="./js/utils.js"></script>
     <script src="./js/cart.js"></script>
     <script src="./js/favoritos.js"></script>
     <script src="./js/auth.js"></script>

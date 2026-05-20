@@ -186,53 +186,17 @@ function updateCurrentUser(updates) {
     return { success: true, message: 'Dados atualizados com sucesso!', user: users[idx] };
 }
 
-// --- Máscaras e Helpers de Validação ---
-
-function maskPhone(value) {
-    return value
-        .replace(/\D/g, '')
-        .replace(/(\d{2})(\d)/, '($1) $2')
-        .replace(/(\d{5})(\d)/, '$1-$2')
-        .replace(/(-\d{4})\d+?$/, '$1');
-}
-
-function maskCEP(value) {
-    return value
-        .replace(/\D/g, '')
-        .replace(/(\d{5})(\d)/, '$1-$2')
-        .replace(/(-\d{3})\d+?$/, '$1');
-}
-
-function validateEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-function checkPasswordStrength(password) {
-    let score = 0;
-    if (password.length >= 6) score++;
-    if (password.length >= 8) score++;
-    if (/[A-Z]/.test(password)) score++;
-    if (/[0-9]/.test(password)) score++;
-    if (/[^A-Za-z0-9]/.test(password)) score++;
-
-    if (score <= 2) return { level: 'fraca', label: 'Fraca', color: '#dc3545' };
-    if (score <= 4) return { level: 'media', label: 'Média', color: '#ffc107' };
-    return { level: 'forte', label: 'Forte', color: '#28a745' };
-}
-
 // --- UI: Header Dropdown ---
 
 function initAuthHeader() {
     const container = document.querySelector('.header-actions');
     if (!container) return;
 
-    // Encontra o link do avatar pelo ícone de conta ou pelo href
     let avatarLink = container.querySelector('a.auth-header-link');
     if (!avatarLink) {
         avatarLink = container.querySelector('a[href="./usuario.html"]');
     }
     if (!avatarLink) {
-        // Fallback: pega o primeiro <a> que NÃO é o theme-toggle
         const links = container.querySelectorAll('a');
         for (const a of links) {
             if (a.id !== 'theme-toggle') {
@@ -257,7 +221,6 @@ function initAuthHeader() {
     avatarLink.href = '#';
     avatarLink.style.position = 'relative';
     avatarLink.addEventListener('click', function(e) {
-        // Se clicou em um link/item dentro do dropdown, não interfere
         if (e.target.closest('.auth-dropdown-item')) return;
         e.preventDefault();
         toggleAuthDropdown(this);
@@ -306,7 +269,6 @@ function toggleAuthDropdown(avatarLink) {
         avatarLink.appendChild(dropdown);
     }
 
-    // Fechar ao clicar fora
     setTimeout(() => {
         document.addEventListener('click', function closeDropdown(e) {
             if (!dropdown.contains(e.target) && !avatarLink.contains(e.target)) {

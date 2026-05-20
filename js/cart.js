@@ -24,15 +24,15 @@ function updateCartUI() {
                 <p style="font-size: 0.9rem;">Adicione produtos para continuar</p>
             </div>
         `;
-        cartFooter.style.display = 'none';
+        if (cartFooter) cartFooter.style.display = 'none';
     } else {
         let total = 0;
         let html = '';
-        
+
         cart.forEach((item, index) => {
-            const price = parseFloat(item.price.replace('R$', '').replace('.', '').replace(',', '.'));
+            const price = parseCurrency(item.price);
             total += price;
-            
+
             html += `
                 <div class="cart-item">
                     <div class="cart-item-image">
@@ -48,10 +48,10 @@ function updateCartUI() {
                 </div>
             `;
         });
-        
+
         cartItems.innerHTML = html;
-        cartFooter.style.display = 'block';
-        cartTotal.textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
+        if (cartFooter) cartFooter.style.display = 'block';
+        if (cartTotal) cartTotal.textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
     }
 }
 
@@ -68,24 +68,19 @@ function removeFromCart(index) {
 }
 
 function openCart() {
-    document.getElementById('cart-offcanvas').classList.add('open');
-    document.getElementById('cart-overlay').classList.add('open');
+    const offcanvas = document.getElementById('cart-offcanvas');
+    const overlay = document.getElementById('cart-overlay');
+    if (offcanvas) offcanvas.classList.add('open');
+    if (overlay) overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
 }
 
 function closeCart() {
-    document.getElementById('cart-offcanvas').classList.remove('open');
-    document.getElementById('cart-overlay').classList.remove('open');
+    const offcanvas = document.getElementById('cart-offcanvas');
+    const overlay = document.getElementById('cart-overlay');
+    if (offcanvas) offcanvas.classList.remove('open');
+    if (overlay) overlay.classList.remove('open');
     document.body.style.overflow = '';
-}
-
-function showToast(message) {
-    const toast = document.getElementById('toast-notification');
-    document.getElementById('toast-message').textContent = message;
-    toast.classList.add('show');
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, 3000);
 }
 
 function finalizeOrder() {
@@ -108,7 +103,7 @@ function finalizeOrder() {
 
     cart.forEach((item, index) => {
         message += `${index + 1}. ${item.name} - ${item.price}\n`;
-        const price = parseFloat(item.price.replace('R$', '').replace('.', '').replace(',', '.'));
+        const price = parseCurrency(item.price);
         total += price;
     });
 
