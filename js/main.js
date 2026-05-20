@@ -24,7 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
         initCarousel('novidades');
     }
     if (document.getElementById('carousel-recentes')) {
-        renderCarouselTrack('carousel-recentes', ['blusa-azul-plus', 'vestido-verde-plus', 'blusa-vermelha-plus', 'blusa-preta-plus'], 2);
+        // Se funcionalidades.js tiver dados reais de recentes, não sobrescreve
+        const temRecentesReais = typeof getRecentes === 'function' && getRecentes().length > 0;
+        if (!temRecentesReais) {
+            renderCarouselTrack('carousel-recentes', ['blusa-azul-plus', 'vestido-verde-plus', 'blusa-vermelha-plus', 'blusa-preta-plus'], 2);
+        }
         initCarousel('recentes');
     }
     if (document.getElementById('carousel-promocoes')) {
