@@ -8,10 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateIcon() {
         if (html.getAttribute('data-theme') === 'dark') {
-            icon.className = 'bi bi-sun-fill';
+            icon.className = 'bi bi-sun';
             toggle.setAttribute('aria-label', 'Mudar para modo claro');
         } else {
-            icon.className = 'bi bi-moon-fill';
+            icon.className = 'bi bi-moon';
             toggle.setAttribute('aria-label', 'Mudar para modo escuro');
         }
     }

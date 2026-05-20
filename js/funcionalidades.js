@@ -79,7 +79,19 @@ function getTiposRecomendadosPorCorpo(tipoCorpo) {
 }
 
 function getRecentes() {
-    return JSON.parse(localStorage.getItem(RECENTES_KEY)) || [];
+    const recentes = JSON.parse(localStorage.getItem(RECENTES_KEY)) || [];
+    // Corrige imagens PNG sem fundo para WEBP com fundo
+    const pngFixMap = {
+        './img/VestidoVerdePlusSize.png': './img/VestidoVerdePlusSize.webp',
+        './img/BlusaPlusSizeVermelho.png': './img/BlusaPlusSizeVermelho.webp',
+        './img/BlusaPlusSizePreta.png': './img/BlusaPlusSizePreta.webp'
+    };
+    return recentes.map(r => {
+        if (r.imagem && pngFixMap[r.imagem]) {
+            r.imagem = pngFixMap[r.imagem];
+        }
+        return r;
+    });
 }
 
 function saveRecentView(product) {
