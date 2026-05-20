@@ -290,57 +290,178 @@
     border-color: #2a2a2a;
 }
 
-/* --- Category Page Filter Sidebar --- */
-[data-theme="dark"] .filter-sidebar {
-    background: #1e1e1e;
-    border: 1px solid #2a2a2a;
-}
+/* =====================================================
+   CATEGORIA PAGE - FILTER OVERRIDES (inline styles)
+   ===================================================== */
 
-[data-theme="dark"] .filter-group {
-    border-color: #2a2a2a;
-}
-
-[data-theme="dark"] .filter-title {
-    color: #f0f0f0;
-}
-
-[data-theme="dark"] .filter-options label {
-    color: #e0e0e0;
-}
-
-[data-theme="dark"] .price-range-inputs input {
-    background: #252525;
-    border-color: #3a3a3a;
-    color: #f0f0f0;
-}
-
-[data-theme="dark"] .sort-select {
-    background: #252525;
-    border-color: #3a3a3a;
-    color: #f0f0f0;
-}
-
-[data-theme="dark"] .active-filter-chip {
-    background: #252525;
-    border-color: #3a3a3a;
-    color: #f0f0f0;
-}
-
-/* --- Categoria Page Header / Breadcrumb --- */
+/* Page Header */
 [data-theme="dark"] .page-header {
-    background: #151515;
+    background: #151515 !important;
+    border-color: #2a2a2a;
 }
 
 [data-theme="dark"] .page-header h1 {
     color: #f0f0f0;
 }
 
-[data-theme="dark"] .breadcrumb-item a {
+[data-theme="dark"] .page-header p {
     color: #a0a0a0;
 }
 
-[data-theme="dark"] .breadcrumb-item.active {
+[data-theme="dark"] .page-header .breadcrumb a {
+    color: var(--color-primary);
+}
+
+[data-theme="dark"] .page-header .breadcrumb-item.active {
     color: #f0f0f0;
+}
+
+/* Filter Sidebar */
+[data-theme="dark"] .filter-sidebar {
+    background: #1e1e1e !important;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.3);
+    border: 1px solid #2a2a2a;
+}
+
+[data-theme="dark"] .filter-section {
+    border-color: #2a2a2a;
+}
+
+[data-theme="dark"] .filter-sidebar h4 {
+    color: #f0f0f0;
+}
+
+/* Category list */
+[data-theme="dark"] .filter-category-list a {
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .filter-category-list a:hover,
+[data-theme="dark"] .filter-category-list a.active {
+    background: #252525;
+    color: var(--color-primary);
+}
+
+[data-theme="dark"] .filter-category-list .count {
+    color: #a0a0a0;
+    background: #333;
+}
+
+[data-theme="dark"] .filter-category-list a:hover .count,
+[data-theme="dark"] .filter-category-list a.active .count {
+    background: #1e1e1e;
+    color: var(--color-primary);
+}
+
+/* Color swatches */
+[data-theme="dark"] .color-swatch.active {
+    box-shadow: 0 0 0 2px #1e1e1e, 0 0 0 4px var(--color-primary);
+}
+
+/* Price buttons */
+[data-theme="dark"] .filter-price-btn {
+    background: #252525;
+    border-color: #3a3a3a;
+    color: #f0f0f0;
+}
+
+[data-theme="dark"] .filter-price-btn:hover,
+[data-theme="dark"] .filter-price-btn.active {
+    border-color: var(--color-primary);
+    background: rgba(209, 0, 31, 0.1);
+    color: var(--color-primary);
+}
+
+/* Size tags */
+[data-theme="dark"] .filter-size-btn {
+    background: #252525;
+    border-color: #3a3a3a;
+    color: #f0f0f0;
+}
+
+[data-theme="dark"] .filter-size-btn:hover,
+[data-theme="dark"] .filter-size-btn.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+}
+
+/* Checkbox tags */
+[data-theme="dark"] .filter-checkbox-tag label {
+    background: #252525;
+    border-color: #3a3a3a;
+    color: #f0f0f0;
+}
+
+[data-theme="dark"] .filter-checkbox-tag input:checked + label {
+    background: rgba(209, 0, 31, 0.1);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+/* Promo toggle */
+[data-theme="dark"] .filter-promo-toggle {
+    color: #f0f0f0;
+}
+
+/* Clear filters button */
+[data-theme="dark"] .btn-clear-filters {
+    background: #252525;
+    border-color: #3a3a3a;
+    color: #f0f0f0;
+}
+
+[data-theme="dark"] .btn-clear-filters:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+/* Top bar filters */
+[data-theme="dark"] .filter-results-count {
+    color: #a0a0a0;
+}
+
+[data-theme="dark"] .filter-sort select {
+    background: #252525;
+    border-color: #3a3a3a;
+    color: #f0f0f0;
+}
+
+/* Mobile offcanvas */
+[data-theme="dark"] .filter-offcanvas {
+    background: #1a1a1a;
+}
+
+[data-theme="dark"] .filter-offcanvas-header h3 {
+    color: #f0f0f0;
+}
+
+[data-theme="dark"] .filter-offcanvas-close {
+    color: #f0f0f0;
+}
+
+/* Empty state */
+[data-theme="dark"] .empty-state {
+    color: #a0a0a0;
+}
+
+[data-theme="dark"] .empty-state i {
+    color: #444;
+}
+
+/* Active filter chips */
+[data-theme="dark"] .filter-chip {
+    background: #252525;
+    border-color: #3a3a3a;
+    color: #f0f0f0;
+}
+
+[data-theme="dark"] .filter-chip button {
+    color: #a0a0a0;
+}
+
+[data-theme="dark"] .filter-chip button:hover {
+    color: var(--color-primary);
 }
 
 /* --- Product Detail Page --- */
@@ -433,18 +554,6 @@
 [data-theme="dark"] .empty-state i {
     color: #444;
 }
-
-/* --- Offcanvas mobile filter --- */
-[data-theme="dark"] .filter-offcanvas {
-    background: #1a1a1a;
-}
-
-[data-theme="dark"] .filter-offcanvas-header {
-    border-color: #2a2a2a;
-}
-
-/* --- Hero section mantém a imagem, mas ajusta overlay se necessário --- */
-/* Hero já tem overlay escuro, não precisa mudar */
 
 /* --- Divider lines --- */
 [data-theme="dark"] hr {
