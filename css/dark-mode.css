@@ -9,6 +9,11 @@
     color: #f0f0f0;
 }
 
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+    color: #888;
+}
+
 /* --- Header --- */
 [data-theme="dark"] .main-header {
     background-color: #1a1a1a;
@@ -230,6 +235,10 @@
     background: #252525;
     border-color: #3a3a3a;
     color: #f0f0f0;
+}
+
+[data-theme="dark"] .auth-form .form-control::placeholder {
+    color: #888;
 }
 
 [data-theme="dark"] .auth-form .form-control:focus {
