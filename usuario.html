@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="./css/responsive.css">
     <link rel="stylesheet" href="./css/auth.css">
     <link rel="stylesheet" href="./css/dark-mode.css">
+    <link rel="stylesheet" href="./css/usuario.css">
     <script>
         (function() {
             const theme = localStorage.getItem('bia_modas_theme');
@@ -37,7 +38,7 @@
     </script>
 
     <!-- Profile Page -->
-    <section class="products-section" style="padding-top: 40px; min-height: 60vh;">
+    <section class="products-section profile-section">
         <div class="container">
             <div class="section-header">
                 <h2>Minha Conta</h2>
@@ -47,15 +48,15 @@
 
             <div class="row justify-content-center">
                 <div class="col-lg-10">
-                    <div style="background: white; border-radius: 20px; padding: 35px; box-shadow: 0 5px 25px rgba(0,0,0,0.07);">
+                    <div class="profile-card">
 
                         <!-- Avatar & Name -->
                         <div class="text-center mb-4">
-                            <div id="profile-avatar" style="width: 100px; height: 100px; border-radius: 50%; background: var(--color-primary); display: inline-flex; align-items: center; justify-content: center; font-size: 2.5rem; color: white; font-weight: 600;">
+                            <div id="profile-avatar">
                                 <i class="bi bi-person"></i>
                             </div>
-                            <h3 class="mt-3 mb-1" id="profile-name" style="font-family: var(--font-display); font-size: 1.5rem;"></h3>
-                            <p class="mb-0" id="profile-email" style="color: var(--color-gray); font-size: 0.95rem;"></p>
+                            <h3 class="mt-3 mb-1" id="profile-name"></h3>
+                            <p class="mb-0" id="profile-email"></p>
                         </div>
 
                         <!-- Tabs -->
@@ -85,7 +86,7 @@
                                     </div>
                                 </div>
                                 <div class="text-center mt-3">
-                                    <button type="submit" class="btn-primary-solid" style="border: none;">
+                                    <button type="submit" class="btn-primary-solid">
                                         <i class="bi bi-check-lg me-2"></i>Salvar Alterações
                                     </button>
                                 </div>
@@ -122,7 +123,7 @@
                                     </div>
                                 </div>
                                 <div class="text-center mt-3">
-                                    <button type="submit" class="btn-primary-solid" style="border: none;">
+                                    <button type="submit" class="btn-primary-solid">
                                         <i class="bi bi-check-lg me-2"></i>Salvar Endereço
                                     </button>
                                 </div>
@@ -200,7 +201,7 @@
                                     </div>
                                 </div>
                                 <div class="text-center mt-3">
-                                    <button type="submit" class="btn-primary-solid" style="border: none;">
+                                    <button type="submit" class="btn-primary-solid">
                                         <i class="bi bi-check-lg me-2"></i>Salvar Medidas
                                     </button>
                                 </div>
@@ -213,14 +214,14 @@
                                 <div class="form-group">
                                     <label>Cores Favoritas</label>
                                     <div class="checkbox-group">
-                                        <div class="checkbox-tag"><input type="checkbox" id="pf-cor-preto" value="Preto" name="pf-cores"><label for="pf-cor-preto"><i class="bi bi-palette-fill" style="color: #212529;"></i> Preto</label></div>
-                                        <div class="checkbox-tag"><input type="checkbox" id="pf-cor-branco" value="Branco" name="pf-cores"><label for="pf-cor-branco"><i class="bi bi-palette-fill" style="color: #f8f9fa; text-shadow: 0 0 1px #aaa;"></i> Branco</label></div>
-                                        <div class="checkbox-tag"><input type="checkbox" id="pf-cor-vermelho" value="Vermelho" name="pf-cores"><label for="pf-cor-vermelho"><i class="bi bi-palette-fill" style="color: #dc3545;"></i> Vermelho</label></div>
-                                        <div class="checkbox-tag"><input type="checkbox" id="pf-cor-azul" value="Azul" name="pf-cores"><label for="pf-cor-azul"><i class="bi bi-palette-fill" style="color: #0d6efd;"></i> Azul</label></div>
-                                        <div class="checkbox-tag"><input type="checkbox" id="pf-cor-verde" value="Verde" name="pf-cores"><label for="pf-cor-verde"><i class="bi bi-palette-fill" style="color: #198754;"></i> Verde</label></div>
-                                        <div class="checkbox-tag"><input type="checkbox" id="pf-cor-rosa" value="Rosa" name="pf-cores"><label for="pf-cor-rosa"><i class="bi bi-palette-fill" style="color: #d63384;"></i> Rosa</label></div>
-                                        <div class="checkbox-tag"><input type="checkbox" id="pf-cor-estampado" value="Estampado" name="pf-cores"><label for="pf-cor-estampado"><i class="bi bi-palette-fill" style="color: #fd7e14;"></i> Estampado</label></div>
-                                        <div class="checkbox-tag"><input type="checkbox" id="pf-cor-neutro" value="Neutro" name="pf-cores"><label for="pf-cor-neutro"><i class="bi bi-palette-fill" style="color: #6c757d;"></i> Neutro</label></div>
+                                        <div class="checkbox-tag"><input type="checkbox" id="pf-cor-preto" value="Preto" name="pf-cores"><label for="pf-cor-preto"><i class="bi bi-palette-fill color-swatch-preto"></i> Preto</label></div>
+                                        <div class="checkbox-tag"><input type="checkbox" id="pf-cor-branco" value="Branco" name="pf-cores"><label for="pf-cor-branco"><i class="bi bi-palette-fill color-swatch-branco"></i> Branco</label></div>
+                                        <div class="checkbox-tag"><input type="checkbox" id="pf-cor-vermelho" value="Vermelho" name="pf-cores"><label for="pf-cor-vermelho"><i class="bi bi-palette-fill color-swatch-vermelho"></i> Vermelho</label></div>
+                                        <div class="checkbox-tag"><input type="checkbox" id="pf-cor-azul" value="Azul" name="pf-cores"><label for="pf-cor-azul"><i class="bi bi-palette-fill color-swatch-azul"></i> Azul</label></div>
+                                        <div class="checkbox-tag"><input type="checkbox" id="pf-cor-verde" value="Verde" name="pf-cores"><label for="pf-cor-verde"><i class="bi bi-palette-fill color-swatch-verde"></i> Verde</label></div>
+                                        <div class="checkbox-tag"><input type="checkbox" id="pf-cor-rosa" value="Rosa" name="pf-cores"><label for="pf-cor-rosa"><i class="bi bi-palette-fill color-swatch-rosa"></i> Rosa</label></div>
+                                        <div class="checkbox-tag"><input type="checkbox" id="pf-cor-estampado" value="Estampado" name="pf-cores"><label for="pf-cor-estampado"><i class="bi bi-palette-fill color-swatch-estampado"></i> Estampado</label></div>
+                                        <div class="checkbox-tag"><input type="checkbox" id="pf-cor-neutro" value="Neutro" name="pf-cores"><label for="pf-cor-neutro"><i class="bi bi-palette-fill color-swatch-neutro"></i> Neutro</label></div>
                                     </div>
                                 </div>
 
@@ -251,14 +252,14 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 400;">
-                                        <input type="checkbox" id="pf-newsletter" style="width: 20px; height: 20px; accent-color: var(--color-primary);">
+                                    <label class="newsletter-label">
+                                        <input type="checkbox" id="pf-newsletter">
                                         <span>Quero receber novidades, ofertas exclusivas e dicas de moda por e-mail.</span>
                                     </label>
                                 </div>
 
                                 <div class="text-center mt-3">
-                                    <button type="submit" class="btn-primary-solid" style="border: none;">
+                                    <button type="submit" class="btn-primary-solid">
                                         <i class="bi bi-check-lg me-2"></i>Salvar Preferências
                                     </button>
                                 </div>
@@ -285,15 +286,15 @@
                                     </div>
                                 </div>
                                 <div class="text-center mt-3">
-                                    <button type="submit" class="btn-primary-solid" style="border: none;">
+                                    <button type="submit" class="btn-primary-solid">
                                         <i class="bi bi-shield-check me-2"></i>Atualizar Senha
                                     </button>
                                 </div>
                             </form>
 
-                            <div style="border-top: 1px solid var(--color-light-gray); margin-top: 35px; padding-top: 30px; text-align: center;">
-                                <p style="color: var(--color-gray); margin-bottom: 15px;">Deseja sair da sua conta?</p>
-                                <button type="button" class="btn-primary-solid" style="border: none; background: #dc3545;" onclick="handleLogout(event)">
+                            <div class="logout-section">
+                                <p>Deseja sair da sua conta?</p>
+                                <button type="button" class="btn-primary-solid btn-logout" onclick="handleLogout(event)">
                                     <i class="bi bi-box-arrow-right me-2"></i>Sair da Conta
                                 </button>
                             </div>

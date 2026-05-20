@@ -48,20 +48,12 @@
     telInput.addEventListener('input', function() { this.value = maskPhone(this.value); });
     document.getElementById('pf-cep').addEventListener('input', function() { this.value = maskCEP(this.value); });
     document.getElementById('pf-cep').addEventListener('blur', function() {
-        const cep = this.value.replace(/\D/g, '');
-        if (cep.length === 8) {
-            fetch(`https://viacep.com.br/ws/${cep}/json/`)
-                .then(r => r.json())
-                .then(data => {
-                    if (!data.erro) {
-                        document.getElementById('pf-endereco').value = data.logradouro || '';
-                        document.getElementById('pf-bairro').value = data.bairro || '';
-                        document.getElementById('pf-cidade').value = data.localidade || '';
-                        document.getElementById('pf-estado').value = data.uf || '';
-                    }
-                })
-                .catch(() => {});
-        }
+        autoCompleteCEP(this.value, {
+            logradouro: 'pf-endereco',
+            bairro: 'pf-bairro',
+            localidade: 'pf-cidade',
+            uf: 'pf-estado'
+        });
     });
 })();
 

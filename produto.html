@@ -18,14 +18,7 @@
     <link rel="stylesheet" href="./css/responsive.css">
     <link rel="stylesheet" href="./css/auth.css">
     <link rel="stylesheet" href="./css/dark-mode.css">
-    <style>
-        .product-buttons .btn-primary-custom,
-        .product-buttons .btn-primary-solid,
-        .product-buttons .btn-outline-custom {
-            width: 100%;
-            max-width: 400px;
-        }
-    </style>
+    <link rel="stylesheet" href="./css/produto.css">
     <script>
         (function() {
             const theme = localStorage.getItem('bia_modas_theme');
@@ -45,50 +38,50 @@
     </script>
 
     <!-- Product Detail -->
-    <section class="products-section" style="padding-top: 40px;">
+    <section class="products-section product-detail-section">
         <div class="container">
             <div class="row">
                 <!-- Image -->
                 <div class="col-lg-6 mb-4 mb-lg-0">
-                    <div style="border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08);">
-                        <img id="product-image" src="" alt="" style="width: 100%; height: auto; object-fit: cover;">
+                    <div class="product-image-wrapper">
+                        <img id="product-image" src="" alt="">
                     </div>
                 </div>
                 <!-- Info -->
                 <div class="col-lg-6">
-                    <div id="product-category" style="color: var(--color-gray); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;"></div>
-                    <h1 id="product-name" style="font-family: var(--font-display); font-size: 2.5rem; margin-bottom: 15px;"></h1>
-                    <div style="margin-bottom: 20px;"></div>
-                    <div id="product-price" style="font-size: 2rem; font-weight: 700; color: var(--color-primary); margin-bottom: 25px;"></div>
-                    <p style="color: var(--color-gray); line-height: 1.8; margin-bottom: 30px;">
+                    <div id="product-category"></div>
+                    <h1 id="product-name"></h1>
+                    <div class="product-rating"></div>
+                    <div id="product-price"></div>
+                    <p class="product-description">
                         Produto exclusivo da nova coleção Bia Modas. Confeccionado com materiais de alta qualidade, 
                         proporcionando conforto e elegância para o seu dia a dia. Disponível em diversos tamanhos.
                     </p>
-                    <div class="product-buttons" style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <div class="product-buttons">
                         <button class="btn-primary-solid" onclick="addProductToCartFromPage()">
                             <i class="bi bi-cart-plus me-2"></i>Adicionar ao Carrinho
                         </button>
-                        <button id="btn-favorite" class="btn-outline-custom" style="color: var(--color-dark); border-color: var(--color-dark);" onclick="toggleProductFavorite()">
+                        <button id="btn-favorite" class="btn-outline-custom" onclick="toggleProductFavorite()">
                             <i class="bi bi-heart me-2"></i>Adicionar aos Favoritos
                         </button>
                     </div>
-                    <div style="margin-top: 40px; padding-top: 30px; border-top: 1px solid var(--color-light-gray);">
+                    <div class="product-features">
                         <div class="row">
                             <div class="col-6 mb-3">
-                                <span style="font-weight: 600;"><i class="bi bi-truck me-2" style="color: var(--color-primary);"></i>Frete Grátis</span>
-                                <p style="font-size: 0.85rem; color: var(--color-gray); margin-bottom: 0;">Para Jaú acima de R$ 199</p>
+                                <span class="feature-title"><i class="bi bi-truck me-2"></i>Frete Grátis</span>
+                                <p class="feature-desc">Para Jaú acima de R$ 199</p>
                             </div>
                             <div class="col-6 mb-3">
-                                <span style="font-weight: 600;"><i class="bi bi-arrow-repeat me-2" style="color: var(--color-primary);"></i>Troca Fácil</span>
-                                <p style="font-size: 0.85rem; color: var(--color-gray); margin-bottom: 0;">7 dias para trocar</p>
+                                <span class="feature-title"><i class="bi bi-arrow-repeat me-2"></i>Troca Fácil</span>
+                                <p class="feature-desc">7 dias para trocar</p>
                             </div>
                             <div class="col-6">
-                                <span style="font-weight: 600;"><i class="bi bi-shield-check me-2" style="color: var(--color-primary);"></i>Compra Segura</span>
-                                <p style="font-size: 0.85rem; color: var(--color-gray); margin-bottom: 0;">Ambiente protegido</p>
+                                <span class="feature-title"><i class="bi bi-shield-check me-2"></i>Compra Segura</span>
+                                <p class="feature-desc">Ambiente protegido</p>
                             </div>
                             <div class="col-6">
-                                <span style="font-weight: 600;"><i class="bi bi-credit-card me-2" style="color: var(--color-primary);"></i>Até 12x</span>
-                                <p style="font-size: 0.85rem; color: var(--color-gray); margin-bottom: 0;">Parcelamento em cartões</p>
+                                <span class="feature-title"><i class="bi bi-credit-card me-2"></i>Até 12x</span>
+                                <p class="feature-desc">Parcelamento em cartões</p>
                             </div>
                         </div>
                     </div>

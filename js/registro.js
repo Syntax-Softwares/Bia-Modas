@@ -45,21 +45,12 @@
 
     // CEP auto-complete (ViaCEP)
     cepInput.addEventListener('blur', function() {
-        const cep = this.value.replace(/\D/g, '');
-        if (cep.length === 8) {
-            fetch(`https://viacep.com.br/ws/${cep}/json/`)
-                .then(r => r.json())
-                .then(data => {
-                    if (!data.erro) {
-                        document.getElementById('reg-endereco').value = data.logradouro || '';
-                        document.getElementById('reg-bairro').value = data.bairro || '';
-                        document.getElementById('reg-cidade').value = data.localidade || '';
-                        document.getElementById('reg-estado').value = data.uf || '';
-                        document.getElementById('reg-numero').focus();
-                    }
-                })
-                .catch(() => {});
-        }
+        autoCompleteCEP(this.value, {
+            logradouro: 'reg-endereco',
+            bairro: 'reg-bairro',
+            localidade: 'reg-cidade',
+            uf: 'reg-estado'
+        }).then(ok => { if (ok) document.getElementById('reg-numero').focus(); });
     });
 
     window.handleNextClick = function() {

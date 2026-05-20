@@ -1,3 +1,12 @@
+function renderCarouselTrack(trackId, productIds, repeat) {
+    const track = document.getElementById(trackId);
+    if (!track || typeof PRODUTOS === 'undefined') return;
+    let ids = productIds.slice();
+    for (let i = 1; i < (repeat || 1); i++) ids = ids.concat(productIds);
+    const products = ids.map(id => PRODUTOS.find(p => p.id === id)).filter(Boolean);
+    track.innerHTML = products.map(buildCarouselSlideHTML).join('');
+}
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     updateCartUI();
@@ -11,12 +20,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (document.getElementById('carousel-novidades')) {
+        renderCarouselTrack('carousel-novidades', ['vestido-verde-plus', 'regata-rosa-plus', 'blusa-vermelha-plus', 'blusa-preta-plus'], 2);
         initCarousel('novidades');
     }
     if (document.getElementById('carousel-recentes')) {
+        renderCarouselTrack('carousel-recentes', ['blusa-azul-plus', 'vestido-verde-plus', 'blusa-vermelha-plus', 'blusa-preta-plus'], 2);
         initCarousel('recentes');
     }
     if (document.getElementById('carousel-promocoes')) {
+        renderCarouselTrack('carousel-promocoes', ['blusa-azul-plus', 'blusa-vermelha-plus', 'regata-rosa-plus', 'blusa-preta-plus'], 2);
         initCarousel('promocoes');
     }
 

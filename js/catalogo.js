@@ -397,6 +397,42 @@ function buildProductCardHTML(product) {
     `;
 }
 
+function buildCarouselSlideHTML(product) {
+    const escapNome = product.nome.replace(/'/g, "\\'");
+    const precoOriginalStr = product.precoOriginal
+        ? `<span class="price-original">R$ ${product.precoOriginal.toFixed(2).replace('.', ',')}</span>`
+        : '';
+    const discountHtml = (product.badge && product.badge.includes('%'))
+        ? `<span class="price-discount">${product.badge}</span>`
+        : '';
+    const badgeHtml = product.badge ? `<span class="product-badge">${product.badge}</span>` : '';
+
+    return `
+        <div class="carousel-slide">
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="${product.imagem}" alt="${product.nome}">
+                    ${badgeHtml}
+                    <div class="product-actions">
+                        <button aria-label="Adicionar aos favoritos"><i class="bi bi-heart"></i></button>
+                        <button aria-label="Adicionar ao carrinho" onclick="addToCart('${escapNome}', '${product.precoFormatado}', '${product.imagem}')"><i class="bi bi-cart-plus"></i></button>
+                        <button aria-label="Visualizar"><i class="bi bi-eye"></i></button>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">${product.categoria}</div>
+                    <h3 class="product-title">${product.nome}</h3>
+                    <div class="product-price">
+                        ${precoOriginalStr}
+                        <span class="price-current">${product.precoFormatado}</span>
+                        ${discountHtml}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 function toggleProductFavoriteInline(btn, name, price, image, category) {
     const product = { name, price, image, category };
     toggleFavorite(product);
