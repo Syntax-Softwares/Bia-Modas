@@ -331,6 +331,17 @@ function filtrarProdutos(filtros) {
         });
     }
 
+    if (filtros.busca) {
+        const termo = filtros.busca.toLowerCase();
+        resultado = resultado.filter(p =>
+            p.nome.toLowerCase().includes(termo) ||
+            p.categoria.toLowerCase().includes(termo) ||
+            p.tipo.toLowerCase().includes(termo) ||
+            p.cor.toLowerCase().includes(termo) ||
+            p.estilo.toLowerCase().includes(termo)
+        );
+    }
+
     if (filtros.ordenacao) {
         if (filtros.ordenacao === 'menor-preco') {
             resultado.sort((a, b) => a.preco - b.preco);

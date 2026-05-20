@@ -58,8 +58,8 @@
                 <!-- Search -->
                 <div class="col-lg-6 col-md-6 d-none d-md-block">
                     <div class="search-box mx-auto">
-                        <input type="text" placeholder="O que você procura?" aria-label="Pesquisar produtos">
-                        <button type="button" aria-label="Buscar">
+                        <input type="text" id="search-input" placeholder="O que você procura?" aria-label="Pesquisar produtos">
+                        <button type="button" aria-label="Buscar" onclick="handleSearch()">
                             <i class="bi bi-search"></i>
                         </button>
                     </div>
@@ -979,8 +979,8 @@
     <!-- Mobile Search (visible only on mobile) -->
     <div class="d-md-none p-3 bg-white border-top fixed-bottom d-none">
         <div class="search-box">
-            <input type="text" placeholder="Pesquisar..." aria-label="Pesquisar produtos">
-            <button type="button" aria-label="Buscar"><i class="bi bi-search"></i></button>
+            <input type="text" id="search-input-mobile" placeholder="Pesquisar..." aria-label="Pesquisar produtos">
+            <button type="button" aria-label="Buscar" onclick="handleSearch()"><i class="bi bi-search"></i></button>
         </div>
     </div>
 
