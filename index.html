@@ -17,6 +17,15 @@
     <link rel="stylesheet" href="./css/components.css">
     <link rel="stylesheet" href="./css/responsive.css">
     <link rel="stylesheet" href="./css/auth.css">
+    <link rel="stylesheet" href="./css/dark-mode.css">
+    <script>
+        (function() {
+            const theme = localStorage.getItem('bia_modas_theme');
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
 </head>
 <body>
 
@@ -49,8 +58,8 @@
                 <!-- Search -->
                 <div class="col-lg-6 col-md-6 d-none d-md-block">
                     <div class="search-box mx-auto">
-                        <input type="text" placeholder="O que você procura?" aria-label="Pesquisar produtos">
-                        <button type="button" aria-label="Buscar">
+                        <input type="text" id="search-input" placeholder="O que você procura?" aria-label="Pesquisar produtos">
+                        <button type="button" aria-label="Buscar" onclick="handleSearch()">
                             <i class="bi bi-search"></i>
                         </button>
                     </div>
@@ -59,7 +68,10 @@
                 <!-- Actions -->
                 <div class="col-lg-3 col-md-3 col-6 text-end">
                     <div class="header-actions justify-content-end">
-                        <a href="./usuario.html" aria-label="Minha conta">
+                        <a href="#" aria-label="Alternar tema" id="theme-toggle">
+                            <i class="bi bi-moon"></i>
+                        </a>
+                        <a href="./usuario.html" class="auth-header-link" aria-label="Minha conta">
                             <i class="bi bi-person"></i>
                         </a>
                         <a href="./favoritos.html" aria-label="Favoritos">
@@ -255,11 +267,11 @@
                     <div class="carousel-slide">
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="./img/VestidoVerdePlusSize.png" alt="Vestido Verde Plus Size">
+                                <img src="./img/VestidoVerdePlusSize.webp" alt="Vestido Verde Plus Size">
                                 <span class="product-badge">Novo</span>
                                 <div class="product-actions">
                                     <button aria-label="Adicionar aos favoritos"><i class="bi bi-heart"></i></button>
-                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Vestido Verde Plus Size', 'R$ 179,90', './img/VestidoVerdePlusSize.png')"><i class="bi bi-cart-plus"></i></button>
+                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Vestido Verde Plus Size', 'R$ 179,90', './img/VestidoVerdePlusSize.webp')"><i class="bi bi-cart-plus"></i></button>
                                     <button aria-label="Visualizar"><i class="bi bi-eye"></i></button>
                                 </div>
                             </div>
@@ -297,11 +309,11 @@
                     <div class="carousel-slide">
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="./img/BlusaPlusSizeVermelho.png" alt="Blusa Plus Size Vermelha">
+                                <img src="./img/BlusaPlusSizeVermelho.webp" alt="Blusa Plus Size Vermelha">
                                 <span class="product-badge">Novo</span>
                                 <div class="product-actions">
                                     <button aria-label="Adicionar aos favoritos"><i class="bi bi-heart"></i></button>
-                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Blusa Plus Size Vermelha', 'R$ 109,90', './img/BlusaPlusSizeVermelho.png')"><i class="bi bi-cart-plus"></i></button>
+                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Blusa Plus Size Vermelha', 'R$ 109,90', './img/BlusaPlusSizeVermelho.webp')"><i class="bi bi-cart-plus"></i></button>
                                     <button aria-label="Visualizar"><i class="bi bi-eye"></i></button>
                                 </div>
                             </div>
@@ -318,11 +330,11 @@
                     <div class="carousel-slide">
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="./img/BlusaPlusSizePreta.png" alt="Blusa Plus Size Preta">
+                                <img src="./img/BlusaPlusSizePreta.webp" alt="Blusa Plus Size Preta">
                                 <span class="product-badge">Novo</span>
                                 <div class="product-actions">
                                     <button aria-label="Adicionar aos favoritos"><i class="bi bi-heart"></i></button>
-                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Blusa Plus Size Preta', 'R$ 99,90', './img/BlusaPlusSizePreta.png')"><i class="bi bi-cart-plus"></i></button>
+                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Blusa Plus Size Preta', 'R$ 99,90', './img/BlusaPlusSizePreta.webp')"><i class="bi bi-cart-plus"></i></button>
                                     <button aria-label="Visualizar"><i class="bi bi-eye"></i></button>
                                 </div>
                             </div>
@@ -339,11 +351,11 @@
                     <div class="carousel-slide">
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="./img/VestidoVerdePlusSize.png" alt="Vestido Verde Plus Size">
+                                <img src="./img/VestidoVerdePlusSize.webp" alt="Vestido Verde Plus Size">
                                 <span class="product-badge">Novo</span>
                                 <div class="product-actions">
                                     <button aria-label="Adicionar aos favoritos"><i class="bi bi-heart"></i></button>
-                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Vestido Verde Plus Size', 'R$ 179,90', './img/VestidoVerdePlusSize.png')"><i class="bi bi-cart-plus"></i></button>
+                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Vestido Verde Plus Size', 'R$ 179,90', './img/VestidoVerdePlusSize.webp')"><i class="bi bi-cart-plus"></i></button>
                                     <button aria-label="Visualizar"><i class="bi bi-eye"></i></button>
                                 </div>
                             </div>
@@ -381,11 +393,11 @@
                     <div class="carousel-slide">
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="./img/BlusaPlusSizeVermelho.png" alt="Blusa Plus Size Vermelha">
+                                <img src="./img/BlusaPlusSizeVermelho.webp" alt="Blusa Plus Size Vermelha">
                                 <span class="product-badge">Novo</span>
                                 <div class="product-actions">
                                     <button aria-label="Adicionar aos favoritos"><i class="bi bi-heart"></i></button>
-                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Blusa Plus Size Vermelha', 'R$ 109,90', './img/BlusaPlusSizeVermelho.png')"><i class="bi bi-cart-plus"></i></button>
+                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Blusa Plus Size Vermelha', 'R$ 109,90', './img/BlusaPlusSizeVermelho.webp')"><i class="bi bi-cart-plus"></i></button>
                                     <button aria-label="Visualizar"><i class="bi bi-eye"></i></button>
                                 </div>
                             </div>
@@ -402,11 +414,11 @@
                     <div class="carousel-slide">
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="./img/BlusaPlusSizePreta.png" alt="Blusa Plus Size Preta">
+                                <img src="./img/BlusaPlusSizePreta.webp" alt="Blusa Plus Size Preta">
                                 <span class="product-badge">Novo</span>
                                 <div class="product-actions">
                                     <button aria-label="Adicionar aos favoritos"><i class="bi bi-heart"></i></button>
-                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Blusa Plus Size Preta', 'R$ 99,90', './img/BlusaPlusSizePreta.png')"><i class="bi bi-cart-plus"></i></button>
+                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Blusa Plus Size Preta', 'R$ 99,90', './img/BlusaPlusSizePreta.webp')"><i class="bi bi-cart-plus"></i></button>
                                     <button aria-label="Visualizar"><i class="bi bi-eye"></i></button>
                                 </div>
                             </div>
@@ -464,11 +476,11 @@
                     <div class="carousel-slide">
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="./img/VestidoVerdePlusSize.png" alt="Vestido Verde Plus Size">
+                                <img src="./img/VestidoVerdePlusSize.webp" alt="Vestido Verde Plus Size">
                                 <span class="product-badge">Novo</span>
                                 <div class="product-actions">
                                     <button aria-label="Adicionar aos favoritos"><i class="bi bi-heart"></i></button>
-                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Vestido Verde Plus Size', 'R$ 179,90', './img/VestidoVerdePlusSize.png')"><i class="bi bi-cart-plus"></i></button>
+                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Vestido Verde Plus Size', 'R$ 179,90', './img/VestidoVerdePlusSize.webp')"><i class="bi bi-cart-plus"></i></button>
                                     <button aria-label="Visualizar"><i class="bi bi-eye"></i></button>
                                 </div>
                             </div>
@@ -485,10 +497,10 @@
                     <div class="carousel-slide">
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="./img/BlusaPlusSizeVermelho.png" alt="Blusa Plus Size Vermelha">
+                                <img src="./img/BlusaPlusSizeVermelho.webp" alt="Blusa Plus Size Vermelha">
                                 <div class="product-actions">
                                     <button aria-label="Adicionar aos favoritos"><i class="bi bi-heart"></i></button>
-                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Blusa Plus Size Vermelha', 'R$ 109,90', './img/BlusaPlusSizeVermelho.png')"><i class="bi bi-cart-plus"></i></button>
+                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Blusa Plus Size Vermelha', 'R$ 109,90', './img/BlusaPlusSizeVermelho.webp')"><i class="bi bi-cart-plus"></i></button>
                                     <button aria-label="Visualizar"><i class="bi bi-eye"></i></button>
                                 </div>
                             </div>
@@ -507,11 +519,11 @@
                     <div class="carousel-slide">
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="./img/BlusaPlusSizePreta.png" alt="Blusa Plus Size Preta">
+                                <img src="./img/BlusaPlusSizePreta.webp" alt="Blusa Plus Size Preta">
                                 <span class="product-badge">Mais Vendido</span>
                                 <div class="product-actions">
                                     <button aria-label="Adicionar aos favoritos"><i class="bi bi-heart"></i></button>
-                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Blusa Plus Size Preta', 'R$ 99,90', './img/BlusaPlusSizePreta.png')"><i class="bi bi-cart-plus"></i></button>
+                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Blusa Plus Size Preta', 'R$ 99,90', './img/BlusaPlusSizePreta.webp')"><i class="bi bi-cart-plus"></i></button>
                                     <button aria-label="Visualizar"><i class="bi bi-eye"></i></button>
                                 </div>
                             </div>
@@ -550,11 +562,11 @@
                     <div class="carousel-slide">
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="./img/VestidoVerdePlusSize.png" alt="Vestido Verde Plus Size">
+                                <img src="./img/VestidoVerdePlusSize.webp" alt="Vestido Verde Plus Size">
                                 <span class="product-badge">Novo</span>
                                 <div class="product-actions">
                                     <button aria-label="Adicionar aos favoritos"><i class="bi bi-heart"></i></button>
-                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Vestido Verde Plus Size', 'R$ 179,90', './img/VestidoVerdePlusSize.png')"><i class="bi bi-cart-plus"></i></button>
+                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Vestido Verde Plus Size', 'R$ 179,90', './img/VestidoVerdePlusSize.webp')"><i class="bi bi-cart-plus"></i></button>
                                     <button aria-label="Visualizar"><i class="bi bi-eye"></i></button>
                                 </div>
                             </div>
@@ -571,10 +583,10 @@
                     <div class="carousel-slide">
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="./img/BlusaPlusSizeVermelho.png" alt="Blusa Plus Size Vermelha">
+                                <img src="./img/BlusaPlusSizeVermelho.webp" alt="Blusa Plus Size Vermelha">
                                 <div class="product-actions">
                                     <button aria-label="Adicionar aos favoritos"><i class="bi bi-heart"></i></button>
-                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Blusa Plus Size Vermelha', 'R$ 109,90', './img/BlusaPlusSizeVermelho.png')"><i class="bi bi-cart-plus"></i></button>
+                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Blusa Plus Size Vermelha', 'R$ 109,90', './img/BlusaPlusSizeVermelho.webp')"><i class="bi bi-cart-plus"></i></button>
                                     <button aria-label="Visualizar"><i class="bi bi-eye"></i></button>
                                 </div>
                             </div>
@@ -593,11 +605,11 @@
                     <div class="carousel-slide">
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="./img/BlusaPlusSizePreta.png" alt="Blusa Plus Size Preta">
+                                <img src="./img/BlusaPlusSizePreta.webp" alt="Blusa Plus Size Preta">
                                 <span class="product-badge">Mais Vendido</span>
                                 <div class="product-actions">
                                     <button aria-label="Adicionar aos favoritos"><i class="bi bi-heart"></i></button>
-                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Blusa Plus Size Preta', 'R$ 99,90', './img/BlusaPlusSizePreta.png')"><i class="bi bi-cart-plus"></i></button>
+                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Blusa Plus Size Preta', 'R$ 99,90', './img/BlusaPlusSizePreta.webp')"><i class="bi bi-cart-plus"></i></button>
                                     <button aria-label="Visualizar"><i class="bi bi-eye"></i></button>
                                 </div>
                             </div>
@@ -655,11 +667,11 @@
                     <div class="carousel-slide">
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="./img/BlusaPlusSizeVermelho.png" alt="Blusa Plus Size Vermelha">
+                                <img src="./img/BlusaPlusSizeVermelho.webp" alt="Blusa Plus Size Vermelha">
                                 <span class="product-badge">-31%</span>
                                 <div class="product-actions">
                                     <button aria-label="Adicionar aos favoritos"><i class="bi bi-heart"></i></button>
-                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Blusa Plus Size Vermelha', 'R$ 109,90', './img/BlusaPlusSizeVermelho.png')"><i class="bi bi-cart-plus"></i></button>
+                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Blusa Plus Size Vermelha', 'R$ 109,90', './img/BlusaPlusSizeVermelho.webp')"><i class="bi bi-cart-plus"></i></button>
                                     <button aria-label="Visualizar"><i class="bi bi-eye"></i></button>
                                 </div>
                             </div>
@@ -699,11 +711,11 @@
                     <div class="carousel-slide">
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="./img/BlusaPlusSizePreta.png" alt="Blusa Plus Size Preta">
+                                <img src="./img/BlusaPlusSizePreta.webp" alt="Blusa Plus Size Preta">
                                 <span class="product-badge">-20%</span>
                                 <div class="product-actions">
                                     <button aria-label="Adicionar aos favoritos"><i class="bi bi-heart"></i></button>
-                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Blusa Plus Size Preta', 'R$ 99,90', './img/BlusaPlusSizePreta.png')"><i class="bi bi-cart-plus"></i></button>
+                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Blusa Plus Size Preta', 'R$ 99,90', './img/BlusaPlusSizePreta.webp')"><i class="bi bi-cart-plus"></i></button>
                                     <button aria-label="Visualizar"><i class="bi bi-eye"></i></button>
                                 </div>
                             </div>
@@ -743,11 +755,11 @@
                     <div class="carousel-slide">
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="./img/BlusaPlusSizeVermelho.png" alt="Blusa Plus Size Vermelha">
+                                <img src="./img/BlusaPlusSizeVermelho.webp" alt="Blusa Plus Size Vermelha">
                                 <span class="product-badge">-31%</span>
                                 <div class="product-actions">
                                     <button aria-label="Adicionar aos favoritos"><i class="bi bi-heart"></i></button>
-                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Blusa Plus Size Vermelha', 'R$ 109,90', './img/BlusaPlusSizeVermelho.png')"><i class="bi bi-cart-plus"></i></button>
+                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Blusa Plus Size Vermelha', 'R$ 109,90', './img/BlusaPlusSizeVermelho.webp')"><i class="bi bi-cart-plus"></i></button>
                                     <button aria-label="Visualizar"><i class="bi bi-eye"></i></button>
                                 </div>
                             </div>
@@ -787,11 +799,11 @@
                     <div class="carousel-slide">
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="./img/BlusaPlusSizePreta.png" alt="Blusa Plus Size Preta">
+                                <img src="./img/BlusaPlusSizePreta.webp" alt="Blusa Plus Size Preta">
                                 <span class="product-badge">-20%</span>
                                 <div class="product-actions">
                                     <button aria-label="Adicionar aos favoritos"><i class="bi bi-heart"></i></button>
-                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Blusa Plus Size Preta', 'R$ 99,90', './img/BlusaPlusSizePreta.png')"><i class="bi bi-cart-plus"></i></button>
+                                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('Blusa Plus Size Preta', 'R$ 99,90', './img/BlusaPlusSizePreta.webp')"><i class="bi bi-cart-plus"></i></button>
                                     <button aria-label="Visualizar"><i class="bi bi-eye"></i></button>
                                 </div>
                             </div>
@@ -824,7 +836,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="category-card">
-                        <img src="./img/VestidoVerdePlusSize.png" alt="Categoria Vestidos">
+                        <img src="./img/VestidoVerdePlusSize.webp" alt="Categoria Vestidos">
                         <div class="category-overlay">
                             <h3>Vestidos</h3>
                             <a href="./categoria.html?categoria=Vestidos">Ver Coleção <i class="bi bi-arrow-right"></i></a>
@@ -833,7 +845,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="category-card">
-                        <img src="./img/BlusaPlusSizeVermelho.png" alt="Categoria Plus Size">
+                        <img src="./img/BlusaPlusSizeVermelho.webp" alt="Categoria Plus Size">
                         <div class="category-overlay">
                             <h3>Plus Size</h3>
                             <a href="./categoria.html?categoria=Plus%20Size">Ver Coleção <i class="bi bi-arrow-right"></i></a>
@@ -967,11 +979,12 @@
     <!-- Mobile Search (visible only on mobile) -->
     <div class="d-md-none p-3 bg-white border-top fixed-bottom d-none">
         <div class="search-box">
-            <input type="text" placeholder="Pesquisar..." aria-label="Pesquisar produtos">
-            <button type="button" aria-label="Buscar"><i class="bi bi-search"></i></button>
+            <input type="text" id="search-input-mobile" placeholder="Pesquisar..." aria-label="Pesquisar produtos">
+            <button type="button" aria-label="Buscar" onclick="handleSearch()"><i class="bi bi-search"></i></button>
         </div>
     </div>
 
+    <script src="./js/theme.js"></script>
     <script src="./js/cart.js"></script>
     <script src="./js/carousel.js"></script>
     <script src="./js/favoritos.js"></script>

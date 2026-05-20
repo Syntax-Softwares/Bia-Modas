@@ -2,6 +2,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     updateCartUI();
 
+    // Search bar Enter key
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') handleSearch();
+        });
+    }
+
     if (document.getElementById('carousel-novidades')) {
         initCarousel('novidades');
     }
@@ -94,4 +102,15 @@ function initProductCards() {
             viewLink.appendChild(viewBtn);
         }
     });
+}
+
+function handleSearch() {
+    const input = document.getElementById('search-input');
+    if (!input) return;
+    const termo = input.value.trim();
+    if (termo) {
+        window.location.href = `./categoria.html?busca=${encodeURIComponent(termo)}`;
+    } else {
+        window.location.href = './categoria.html';
+    }
 }

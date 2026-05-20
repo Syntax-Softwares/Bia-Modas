@@ -226,10 +226,20 @@ function initAuthHeader() {
     const container = document.querySelector('.header-actions');
     if (!container) return;
 
-    // Encontra o link do avatar (primeiro link do container, ou por ícone)
-    let avatarLink = container.querySelector('a[href="./usuario.html"]');
+    // Encontra o link do avatar pelo ícone de conta ou pelo href
+    let avatarLink = container.querySelector('a.auth-header-link');
     if (!avatarLink) {
-        avatarLink = container.querySelector('a:first-child');
+        avatarLink = container.querySelector('a[href="./usuario.html"]');
+    }
+    if (!avatarLink) {
+        // Fallback: pega o primeiro <a> que NÃO é o theme-toggle
+        const links = container.querySelectorAll('a');
+        for (const a of links) {
+            if (a.id !== 'theme-toggle') {
+                avatarLink = a;
+                break;
+            }
+        }
     }
     if (!avatarLink) return;
 

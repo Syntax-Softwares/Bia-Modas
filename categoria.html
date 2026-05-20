@@ -17,6 +17,15 @@
     <link rel="stylesheet" href="./css/components.css">
     <link rel="stylesheet" href="./css/responsive.css">
     <link rel="stylesheet" href="./css/auth.css">
+    <link rel="stylesheet" href="./css/dark-mode.css">
+    <script>
+        (function() {
+            const theme = localStorage.getItem('bia_modas_theme');
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
     <style>
         /* Page Header */
         .page-header {
@@ -443,13 +452,16 @@
                 </div>
                 <div class="col-lg-6 col-md-6 d-none d-md-block">
                     <div class="search-box mx-auto">
-                        <input type="text" placeholder="O que você procura?" aria-label="Pesquisar produtos">
-                        <button type="button" aria-label="Buscar"><i class="bi bi-search"></i></button>
+                        <input type="text" id="search-input" placeholder="O que você procura?" aria-label="Pesquisar produtos">
+                        <button type="button" aria-label="Buscar" onclick="handleSearch()"><i class="bi bi-search"></i></button>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-3 col-6 text-end">
                     <div class="header-actions justify-content-end">
-                        <a href="#" aria-label="Minha conta"><i class="bi bi-person"></i></a>
+                        <a href="#" aria-label="Alternar tema" id="theme-toggle">
+                            <i class="bi bi-moon"></i>
+                        </a>
+                        <a href="#" class="auth-header-link" aria-label="Minha conta"><i class="bi bi-person"></i></a>
                         <a href="./favoritos.html" aria-label="Favoritos"><i class="bi bi-heart"></i></a>
                         <a href="#" aria-label="Carrinho" onclick="openCart(); return false;">
                             <i class="bi bi-bag"></i>
@@ -659,6 +671,7 @@
         <span id="toast-message">Produto adicionado ao carrinho!</span>
     </div>
 
+    <script src="./js/theme.js"></script>
     <script src="./js/cart.js"></script>
     <script src="./js/favoritos.js"></script>
     <script src="./js/auth.js"></script>
@@ -669,6 +682,7 @@
         const params = new URLSearchParams(window.location.search);
         const categoriaParam = params.get('categoria');
         const promocoesParam = params.get('promocoes');
+        const buscaParam = params.get('busca');
 
         // State
         let filtrosAtivos = {
@@ -679,8 +693,15 @@
             precoMin: null,
             precoMax: null,
             promocao: promocoesParam === '1',
-            ordenacao: ''
+            ordenacao: '',
+            busca: buscaParam || ''
         };
+
+        // Preenche search bar com termo de busca
+        if (buscaParam) {
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) searchInput.value = buscaParam;
+        }
 
         // Render sidebar filters
         function renderSidebar() {
@@ -815,6 +836,9 @@
             if (filtrosAtivos.promocao) {
                 chips.push({ label: 'Em Promoção', remove: () => { filtrosAtivos.promocao = false; applyFilters(); } });
             }
+            if (filtrosAtivos.busca) {
+                chips.push({ label: 'Busca: ' + filtrosAtivos.busca, remove: () => { filtrosAtivos.busca = ''; applyFilters(); } });
+            }
 
             container.innerHTML = chips.map((c, i) => `
                 <span class="filter-chip">${c.label} <button onclick="removeChip(${i})" aria-label="Remover filtro"><i class="bi bi-x"></i></button></span>
@@ -832,6 +856,7 @@
             count += filtrosAtivos.tamanhos.length;
             if (filtrosAtivos.precoMin !== null) count++;
             if (filtrosAtivos.promocao) count++;
+            if (filtrosAtivos.busca) count++;
             if (count > 0) {
                 btn.textContent = '(' + count + ')';
                 btn.style.display = '';
@@ -845,7 +870,9 @@
             const subEl = document.getElementById('page-subtitle');
             const breadEl = document.getElementById('breadcrumb-current');
             let titulo = 'Todos os Produtos';
-            if (filtrosAtivos.categoria && filtrosAtivos.categoria !== 'todos') {
+            if (filtrosAtivos.busca) {
+                titulo = 'Resultados para "' + filtrosAtivos.busca + '"';
+            } else if (filtrosAtivos.categoria && filtrosAtivos.categoria !== 'todos') {
                 titulo = capitalize(filtrosAtivos.categoria);
             }
             titleEl.textContent = titulo;
@@ -904,10 +931,13 @@
                 precoMin: null,
                 precoMax: null,
                 promocao: false,
-                ordenacao: ''
+                ordenacao: '',
+                busca: ''
             };
             document.getElementById('sort-select').value = '';
             document.getElementById('filter-promo').checked = false;
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) searchInput.value = '';
             applyFilters();
         };
         window.removeChip = function(index) {
