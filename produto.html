@@ -16,15 +16,13 @@
     <link rel="stylesheet" href="./css/layout.css">
     <link rel="stylesheet" href="./css/components.css">
     <link rel="stylesheet" href="./css/responsive.css">
-    <link rel="stylesheet" href="./css/auth.css">
     <link rel="stylesheet" href="./css/produto.css">
 </head>
 <body>
     <script src="./js/components.js"></script>
     <script>
         BiaModasComponents.inject({
-            logoHref: './index.html',
-            contaHref: '#'
+            logoHref: './index.html'
         });
     </script>
 
@@ -73,17 +71,6 @@
                         <div class="size-options" id="size-options"></div>
                     </div>
 
-                    <!-- Provador Virtual -->
-                    <button class="btn-try-on" onclick="openVirtualTryOn()" aria-label="Abrir Provador Virtual">
-                        <i class="bi bi-badge-3d-fill btn-try-on-icon"></i>
-                        <span class="btn-try-on-text">
-                            <strong>Provador Virtual</strong>
-                            <small>Veja em um avatar 3D antes de comprar</small>
-                        </span>
-                        <span class="btn-try-on-tag">NOVO</span>
-                    </button>
-
-
                     <div class="product-buttons">
                         <button class="btn-primary-solid" onclick="addProductToCartFromPage()">
                             <i class="bi bi-cart-plus me-2"></i>Adicionar ao Carrinho
@@ -117,38 +104,9 @@
         </div>
     </section>
 
-    <!-- Provador Virtual: Modal -->
-    <div class="try-on-overlay" id="try-on-overlay" onclick="closeVirtualTryOn(event)">
-        <div class="try-on-modal" role="dialog" aria-modal="true" aria-labelledby="try-on-title">
-            <button class="try-on-close" onclick="closeVirtualTryOn()" aria-label="Fechar provador virtual">
-                <i class="bi bi-x-lg"></i>
-            </button>
-
-            <div class="try-on-header">
-                <div class="try-on-badge">BETA</div>
-                <h2 id="try-on-title">Provador Virtual</h2>
-            </div>
-
-            <div class="try-on-stage">
-                <canvas id="try-on-canvas" aria-label="Avatar 3D"></canvas>
-
-                <div class="try-on-loading" id="try-on-loading">
-                    <div class="try-on-spinner"></div>
-                    <span>Carregando avatar 3D&hellip;</span>
-                </div>
-
-                <div class="try-on-rotate-hint">
-                    <i class="bi bi-arrows-move"></i>
-                    <span>Arraste para girar</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script src="./js/utils.js"></script>
     <script src="./js/cart.js"></script>
     <script src="./js/favoritos.js"></script>
-    <script src="./js/auth.js"></script>
     <script src="./js/catalogo.js"></script>
     <script src="./js/funcionalidades.js"></script>
     <script src="./js/produto.js"></script>
