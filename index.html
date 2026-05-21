@@ -17,15 +17,6 @@
     <link rel="stylesheet" href="./css/components.css">
     <link rel="stylesheet" href="./css/responsive.css">
     <link rel="stylesheet" href="./css/auth.css">
-    <link rel="stylesheet" href="./css/dark-mode.css">
-    <script>
-        (function() {
-            const theme = localStorage.getItem('bia_modas_theme');
-            if (theme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'dark');
-            }
-        })();
-    </script>
 </head>
 <body>
     <script src="./js/components.js"></script>
@@ -307,15 +298,6 @@
         </div>
     </section>
 
-    <!-- Mobile Search (visible only on mobile) -->
-    <div class="d-md-none p-3 bg-white border-top fixed-bottom d-none">
-        <div class="search-box">
-            <input type="text" id="search-input-mobile" placeholder="Pesquisar..." aria-label="Pesquisar produtos">
-            <button type="button" aria-label="Buscar" onclick="handleSearch()"><i class="bi bi-search"></i></button>
-        </div>
-    </div>
-
-    <script src="./js/theme.js"></script>
     <script src="./js/utils.js"></script>
     <script src="./js/cart.js"></script>
     <script src="./js/catalogo.js"></script>

@@ -43,9 +43,6 @@
                 </div>
                 <div class="col-lg-3 col-md-3 col-6 text-end">
                     <div class="header-actions justify-content-end">
-                        <a href="#" aria-label="Alternar tema" id="theme-toggle">
-                            <i class="bi bi-moon"></i>
-                        </a>
                         <a href="{{CONTA_HREF}}" class="auth-header-link" aria-label="Minha conta">
                             <i class="bi bi-person"></i>
                         </a>

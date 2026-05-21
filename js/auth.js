@@ -196,15 +196,6 @@ function initAuthHeader() {
     if (!avatarLink) {
         avatarLink = container.querySelector('a[href="./usuario.html"]');
     }
-    if (!avatarLink) {
-        const links = container.querySelectorAll('a');
-        for (const a of links) {
-            if (a.id !== 'theme-toggle') {
-                avatarLink = a;
-                break;
-            }
-        }
-    }
     if (!avatarLink) return;
 
     const session = getSession();

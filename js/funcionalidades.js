@@ -102,33 +102,9 @@ function saveRecentView(product) {
 
 function buildProductCard(product) {
     const meta = extractProductMeta(product.nome);
-    const hasBadge = product.badge && product.badge.trim() !== '';
-    const badgeHtml = hasBadge ? `<span class="product-badge">${product.badge}</span>` : '';
-    const priceOriginal = product.precoOriginal ? `<span class="price-original">${product.precoOriginal}</span>` : '';
-    const discountHtml = product.desconto ? `<span class="price-discount">${product.desconto}</span>` : '';
-
     return `
         <div class="carousel-slide" data-cor="${meta.cor}" data-tipo="${meta.tipo}" data-categoria="${product.categoria}">
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="${product.imagem}" alt="${product.nome}">
-                    ${badgeHtml}
-                    <div class="product-actions">
-                        <button aria-label="Adicionar aos favoritos"><i class="bi bi-heart"></i></button>
-                        <button aria-label="Adicionar ao carrinho" onclick="addToCart('${product.nome.replace(/'/g, "\\'")}', '${product.preco}', '${product.imagem}')"><i class="bi bi-cart-plus"></i></button>
-                        <button aria-label="Visualizar"><i class="bi bi-eye"></i></button>
-                    </div>
-                </div>
-                <div class="product-info">
-                    <div class="product-category">${product.categoria}</div>
-                    <h3 class="product-title">${product.nome}</h3>
-                    <div class="product-price">
-                        ${priceOriginal}
-                        <span class="price-current">${product.preco}</span>
-                        ${discountHtml}
-                    </div>
-                </div>
-            </div>
+            ${buildProductCardInner(product, { withLinks: false })}
         </div>
     `;
 }

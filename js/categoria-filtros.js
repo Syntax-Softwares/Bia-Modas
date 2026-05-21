@@ -128,9 +128,9 @@
             grid.innerHTML = produtos.map(p => buildProductCardHTML(p)).join('');
         }
 
-        // Update favorites
-        document.querySelectorAll('.product-actions button[aria-label="Adicionar aos favoritos"]').forEach(btn => {
-            const nome = btn.getAttribute('onclick')?.match(/'([^']+)',/)?.[1];
+        // Update favorites - lê nome via data attribute (mais robusto que regex em onclick)
+        document.querySelectorAll('.product-actions button[data-fav-name]').forEach(btn => {
+            const nome = btn.dataset.favName;
             if (nome && typeof isFavorite === 'function' && isFavorite(nome)) {
                 btn.innerHTML = '<i class="bi bi-heart-fill"></i>';
                 btn.classList.add('active');
@@ -138,41 +138,41 @@
         });
     }
 
+    let activeChips = [];
+
     function renderActiveChips() {
         const container = document.getElementById('active-filters');
-        const chips = [];
+        activeChips = [];
 
         if (filtrosAtivos.categoria && filtrosAtivos.categoria !== 'todos') {
-            chips.push({ label: 'Categoria: ' + capitalize(filtrosAtivos.categoria), remove: () => setCategory('Todos') });
+            activeChips.push({ label: 'Categoria: ' + capitalize(filtrosAtivos.categoria), remove: () => setCategory('Todos') });
         }
         filtrosAtivos.cores.forEach(c => {
-            chips.push({ label: 'Cor: ' + c, remove: () => toggleColor(c) });
+            activeChips.push({ label: 'Cor: ' + c, remove: () => toggleColor(c) });
         });
         filtrosAtivos.estilos.forEach(e => {
-            chips.push({ label: 'Estilo: ' + e, remove: () => toggleEstilo(e) });
+            activeChips.push({ label: 'Estilo: ' + e, remove: () => toggleEstilo(e) });
         });
         filtrosAtivos.tamanhos.forEach(t => {
-            chips.push({ label: 'Tamanho: ' + t, remove: () => toggleSize(t) });
+            activeChips.push({ label: 'Tamanho: ' + t, remove: () => toggleSize(t) });
         });
         if (filtrosAtivos.precoMin !== null || filtrosAtivos.precoMax !== null) {
             let label = 'Preço: ';
             if (filtrosAtivos.precoMax === null) label += 'Acima de R$ ' + filtrosAtivos.precoMin;
             else if (filtrosAtivos.precoMin === 0) label += 'Até R$ ' + filtrosAtivos.precoMax;
             else label += 'R$ ' + filtrosAtivos.precoMin + ' - R$ ' + filtrosAtivos.precoMax;
-            chips.push({ label, remove: () => setPriceRange(null, null) });
+            activeChips.push({ label, remove: () => setPriceRange(null, null) });
         }
         if (filtrosAtivos.promocao) {
-            chips.push({ label: 'Em Promoção', remove: () => { filtrosAtivos.promocao = false; applyFilters(); } });
+            activeChips.push({ label: 'Em Promoção', remove: () => { filtrosAtivos.promocao = false; applyFilters(); } });
         }
         if (filtrosAtivos.busca) {
-            chips.push({ label: 'Busca: ' + filtrosAtivos.busca, remove: () => { filtrosAtivos.busca = ''; applyFilters(); } });
+            activeChips.push({ label: 'Busca: ' + filtrosAtivos.busca, remove: () => { filtrosAtivos.busca = ''; applyFilters(); } });
         }
 
-        container.innerHTML = chips.map((c, i) => `
+        container.innerHTML = activeChips.map((c, i) => `
             <span class="filter-chip">${c.label} <button onclick="removeChip(${i})" aria-label="Remover filtro"><i class="bi bi-x"></i></button></span>
         `).join('');
-
-        window._chips = chips;
     }
 
     function updateMobileFilterCount() {
@@ -265,8 +265,8 @@
         applyFilters();
     };
     window.removeChip = function(index) {
-        if (window._chips && window._chips[index]) {
-            window._chips[index].remove();
+        if (activeChips[index]) {
+            activeChips[index].remove();
         }
     };
     window.openFilterOffcanvas = function() {

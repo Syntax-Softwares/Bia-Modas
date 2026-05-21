@@ -356,77 +356,54 @@ function filtrarProdutos(filtros) {
 }
 
 function buildProductCardHTML(product) {
-    const precoOriginalStr = product.precoOriginal
-        ? `<span class="price-original">R$ ${product.precoOriginal.toFixed(2).replace('.', ',')}</span>`
-        : '';
-    const discountHtml = (product.badge && product.badge.includes('%')) || (product.badge && product.badge.includes('-'))
-        ? `<span class="price-discount">${product.badge}</span>`
-        : (product.badge && product.badge !== 'Novo' && product.badge !== 'Mais Vendido'
-            ? `<span class="price-discount">${product.badge}</span>`
-            : '');
-    const badgeHtml = product.badge ? `<span class="product-badge">${product.badge}</span>` : '';
-    const escapNome = product.nome.replace(/'/g, "\\'");
-
     return `
-        <div class="col-lg-3 col-md-4 col-6 mb-4" data-cor="${product.cor}" data-tipo="${product.tipo}" data-estilo="${product.estilo}" data-categoria="${product.categoria}">
-            <div class="product-card">
-                <div class="product-image">
-                    <a href="${buildProductUrl(product)}">
-                        <img src="${product.imagem}" alt="${product.nome}">
-                    </a>
-                    ${badgeHtml}
-                    <div class="product-actions">
-                        <button aria-label="Adicionar aos favoritos" onclick="toggleProductFavoriteInline(this, '${escapNome}', '${product.precoFormatado}', '${product.imagem}', '${product.categoria}')"><i class="bi bi-heart"></i></button>
-                        <button aria-label="Adicionar ao carrinho" onclick="addToCart('${escapNome}', '${product.precoFormatado}', '${product.imagem}')"><i class="bi bi-cart-plus"></i></button>
-                        <a href="./produto.html?nome=${encodeURIComponent(product.nome)}&preco=${encodeURIComponent(product.precoFormatado)}&imagem=${encodeURIComponent(product.imagem)}&categoria=${encodeURIComponent(product.categoria)}&badge=${encodeURIComponent(product.badge)}" style="text-decoration:none;color:inherit;" aria-label="Visualizar"><button><i class="bi bi-eye"></i></button></a>
-                    </div>
-                </div>
-                <div class="product-info">
-                    <div class="product-category">${product.categoria}</div>
-                    <h3 class="product-title">
-                        <a href="${buildProductUrl(product)}" style="color:inherit;text-decoration:none;">${product.nome}</a>
-                    </h3>
-                    <div class="product-price">
-                        ${precoOriginalStr}
-                        <span class="price-current">${product.precoFormatado}</span>
-                        ${discountHtml}
-                    </div>
-                </div>
-            </div>
+        <div class="col-lg-4 col-md-6 col-6 mb-4" data-cor="${product.cor}" data-tipo="${product.tipo}" data-estilo="${product.estilo}" data-categoria="${product.categoria}">
+            ${buildProductCardInner(product, { withLinks: true })}
         </div>
     `;
 }
 
 function buildCarouselSlideHTML(product) {
-    const escapNome = product.nome.replace(/'/g, "\\'");
-    const precoOriginalStr = product.precoOriginal
-        ? `<span class="price-original">R$ ${product.precoOriginal.toFixed(2).replace('.', ',')}</span>`
-        : '';
-    const discountHtml = (product.badge && product.badge.includes('%'))
-        ? `<span class="price-discount">${product.badge}</span>`
-        : '';
-    const badgeHtml = product.badge ? `<span class="product-badge">${product.badge}</span>` : '';
-
     return `
         <div class="carousel-slide">
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="${product.imagem}" alt="${product.nome}">
-                    ${badgeHtml}
-                    <div class="product-actions">
-                        <button aria-label="Adicionar aos favoritos"><i class="bi bi-heart"></i></button>
-                        <button aria-label="Adicionar ao carrinho" onclick="addToCart('${escapNome}', '${product.precoFormatado}', '${product.imagem}')"><i class="bi bi-cart-plus"></i></button>
-                        <button aria-label="Visualizar"><i class="bi bi-eye"></i></button>
-                    </div>
+            ${buildProductCardInner(product, { withLinks: false })}
+        </div>
+    `;
+}
+
+function buildProductCardInner(product, opts) {
+    const withLinks = opts && opts.withLinks;
+    const escapNome = product.nome.replace(/'/g, "\\'");
+    const precoFmt = product.precoFormatado || product.preco || '';
+    const precoOriginalStr = product.precoOriginal
+        ? `<span class="price-original">R$ ${Number(product.precoOriginal).toFixed(2).replace('.', ',')}</span>`
+        : '';
+    const badgeHtml = product.badge ? `<span class="product-badge">${product.badge}</span>` : '';
+    const productUrl = withLinks ? buildProductUrl(product) : '';
+
+    const imageInner = `<img src="${product.imagem}" alt="${product.nome}">`;
+    const image = withLinks ? `<a href="${productUrl}">${imageInner}</a>` : imageInner;
+    const title = withLinks
+        ? `<a href="${productUrl}" class="product-title-link">${product.nome}</a>`
+        : product.nome;
+
+    return `
+        <div class="product-card">
+            <div class="product-image">
+                ${image}
+                ${badgeHtml}
+                <div class="product-actions">
+                    <button aria-label="Adicionar aos favoritos" data-fav-name="${escapNome}" onclick="toggleProductFavoriteInline(this, '${escapNome}', '${precoFmt}', '${product.imagem}', '${product.categoria}')"><i class="bi bi-heart"></i></button>
+                    <button aria-label="Adicionar ao carrinho" onclick="addToCart('${escapNome}', '${precoFmt}', '${product.imagem}')"><i class="bi bi-cart-plus"></i></button>
+                    <button aria-label="Visualizar"><i class="bi bi-eye"></i></button>
                 </div>
-                <div class="product-info">
-                    <div class="product-category">${product.categoria}</div>
-                    <h3 class="product-title">${product.nome}</h3>
-                    <div class="product-price">
-                        ${precoOriginalStr}
-                        <span class="price-current">${product.precoFormatado}</span>
-                        ${discountHtml}
-                    </div>
+            </div>
+            <div class="product-info">
+                <div class="product-category">${product.categoria}</div>
+                <h3 class="product-title">${title}</h3>
+                <div class="product-price">
+                    ${precoOriginalStr}
+                    <span class="price-current">${precoFmt}</span>
                 </div>
             </div>
         </div>

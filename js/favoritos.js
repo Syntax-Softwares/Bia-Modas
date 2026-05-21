@@ -61,33 +61,28 @@ function renderFavorites() {
         return;
     }
 
-    let html = '';
-    favorites.forEach(item => {
-        html += `
+    container.innerHTML = favorites.map(item => {
+        const productUrl = buildProductUrl({ nome: item.name, preco: item.price, imagem: item.image, categoria: item.category });
+        const category = item.category || 'Plus Size';
+        return `
             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                 <div class="product-card">
                     <div class="product-image">
-                        <a href="${buildProductUrl({ nome: item.name, preco: item.price, imagem: item.image, categoria: item.category })}">
-                            <img src="${item.image}" alt="${item.name}">
-                        </a>
+                        <a href="${productUrl}"><img src="${item.image}" alt="${item.name}"></a>
                         <div class="product-actions">
-                            <button aria-label="Remover dos favoritos" onclick="removeFavoriteByName('${item.name}')">
-                                <i class="bi bi-heart-fill" style="color: var(--color-primary);"></i>
+                            <button aria-label="Remover dos favoritos" class="active" onclick="removeFavoriteByName('${item.name}')">
+                                <i class="bi bi-heart-fill"></i>
                             </button>
                             <button aria-label="Adicionar ao carrinho" onclick="addToCart('${item.name}', '${item.price}', '${item.image}')">
                                 <i class="bi bi-cart-plus"></i>
                             </button>
-                            <a href="./produto.html?nome=${encodeURIComponent(item.name)}&preco=${encodeURIComponent(item.price)}&imagem=${encodeURIComponent(item.image)}&categoria=${encodeURIComponent(item.category || 'Plus Size')}" aria-label="Visualizar">
-                                <button><i class="bi bi-eye"></i></button>
-                            </a>
+                            <a href="${productUrl}" class="product-view-link" aria-label="Visualizar"><i class="bi bi-eye"></i></a>
                         </div>
                     </div>
                     <div class="product-info">
-                        <div class="product-category">${item.category || 'Plus Size'}</div>
+                        <div class="product-category">${category}</div>
                         <h3 class="product-title">
-                            <a href="${buildProductUrl({ nome: item.name, preco: item.price, imagem: item.image, categoria: item.category })}" style="color: inherit; text-decoration: none;">
-                                ${item.name}
-                            </a>
+                            <a href="${productUrl}" class="product-title-link">${item.name}</a>
                         </h3>
                         <div class="product-price">
                             <span class="price-current">${item.price}</span>
@@ -96,9 +91,7 @@ function renderFavorites() {
                 </div>
             </div>
         `;
-    });
-
-    container.innerHTML = html;
+    }).join('');
 }
 
 function removeFavoriteByName(name) {
@@ -122,3 +115,9 @@ function handleFavoriteClick(btn) {
     toggleFavorite(product);
     updateFavoriteButtons();
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('favorites-list')) {
+        renderFavorites();
+    }
+});
