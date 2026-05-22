@@ -6,7 +6,7 @@
 .auth-avatar-logged {
     width: 36px;
     height: 36px;
-    border-radius: 50%;
+    border-radius: 0;
     background: var(--color-primary);
     color: white;
     display: flex;
@@ -26,7 +26,6 @@
     top: calc(100% + 12px);
     right: 0;
     background: white;
-    border-radius: 15px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.15);
     min-width: 260px;
     z-index: 9999;
@@ -50,7 +49,7 @@
 .auth-dropdown-avatar {
     width: 44px;
     height: 44px;
-    border-radius: 50%;
+    border-radius: 0;
     background: var(--color-primary);
     color: white;
     display: flex;
@@ -133,7 +132,6 @@
 
 .auth-card {
     background: white;
-    border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.08);
     width: 100%;
     max-width: 520px;
@@ -206,7 +204,6 @@
 .wizard-step-dot {
     width: 36px;
     height: 36px;
-    border-radius: 50%;
     background: var(--color-light-gray);
     color: var(--color-gray);
     display: flex;
@@ -289,7 +286,6 @@
     width: 100%;
     padding: 14px 18px;
     border: 2px solid var(--color-light-gray);
-    border-radius: 12px;
     font-size: 0.95rem;
     transition: all 0.3s;
     background: white;
@@ -406,7 +402,6 @@
     gap: 6px;
     padding: 10px 16px;
     border: 2px solid var(--color-light-gray);
-    border-radius: 30px;
     cursor: pointer;
     font-size: 0.85rem;
     font-weight: 500;
@@ -442,7 +437,6 @@
 
 .wizard-nav .btn {
     padding: 14px 32px;
-    border-radius: 30px;
     font-weight: 600;
     font-size: 0.95rem;
     cursor: pointer;
@@ -507,7 +501,7 @@
     justify-content: center;
     width: 18px;
     height: 18px;
-    border-radius: 50%;
+    border-radius: 0;
     background: var(--color-light-gray);
     color: var(--color-gray);
     font-size: 0.7rem;
@@ -525,7 +519,6 @@
     background: var(--color-dark);
     color: white;
     padding: 8px 12px;
-    border-radius: 8px;
     font-size: 0.75rem;
     white-space: nowrap;
     z-index: 100;
@@ -587,7 +580,6 @@
         left: 10px;
         bottom: 10px;
         min-width: auto;
-        border-radius: 15px;
     }
 }
 

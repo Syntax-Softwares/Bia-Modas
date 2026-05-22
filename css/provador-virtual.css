@@ -1,0 +1,729 @@
+/* ==========================================================
+   Provador Virtual — Layout editorial (página dedicada)
+   Sem cards centralizados. Bordas retas. Tipografia ousada.
+   ========================================================== */
+
+.provador-page {
+    background: #ffffff;
+    padding-bottom: 100px;
+    min-height: 80vh;
+}
+
+/* === Barra fina superior (voltar + meta) === */
+.provador-topbar {
+    border-bottom: 1px solid var(--color-light-gray);
+    background: white;
+    padding: 14px 0;
+}
+
+.provador-topbar .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.provador-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-gray);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.provador-back:hover {
+    color: var(--color-primary);
+    transform: translateX(-3px);
+}
+
+.provador-meta {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.provador-eyebrow {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: 600;
+    color: var(--color-dark);
+}
+
+.provador-step-counter {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    color: var(--color-gray);
+    letter-spacing: 2px;
+}
+
+.provador-step-counter strong {
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+/* === Faixa de título + progress === */
+.provador-title-bar {
+    padding: 48px 0 0;
+    background: white;
+}
+
+.provador-title-row {
+    margin-bottom: 32px;
+}
+
+.provador-title-eyebrow {
+    display: block;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: 14px;
+}
+
+#step-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-weight: 600;
+    color: var(--color-dark);
+    line-height: 1.05;
+    margin: 0;
+    max-width: 18ch;
+}
+
+/* Barra de progresso fina (full-width) */
+.provador-progress-track {
+    height: 3px;
+    background: var(--color-light-gray);
+    overflow: hidden;
+    position: relative;
+}
+
+.provador-progress-fill {
+    position: absolute;
+    inset: 0 100% 0 0;
+    background: var(--color-primary);
+    transition: right 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* === Conteúdo dos steps === */
+.provador-content {
+    padding-top: 50px;
+}
+
+.wizard-step {
+    display: none;
+    animation: stepFadeIn 0.4s ease;
+}
+
+.wizard-step.active {
+    display: block;
+}
+
+@keyframes stepFadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Grid principal de cada step: mídia + painel */
+.step-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: 60px;
+    align-items: stretch;
+}
+
+.step-grid-avatar {
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+}
+
+/* Coluna de mídia (imagem produto, vídeo, canvas 3D) */
+.step-media {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    background: #1a1a1d;
+    overflow: hidden;
+}
+
+.step-media-product {
+    background: var(--color-secondary);
+    aspect-ratio: 3 / 4;
+}
+
+.step-media-product img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Painel direito (texto + ações) */
+.step-panel {
+    display: flex;
+    flex-direction: column;
+    padding-top: 12px;
+}
+
+.step-panel-eyebrow {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: 14px;
+}
+
+.step-panel-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.9rem, 3vw, 2.6rem);
+    font-weight: 600;
+    color: var(--color-dark);
+    margin: 0 0 16px;
+    line-height: 1.15;
+}
+
+.step-panel-price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 4px;
+}
+
+.step-panel-lead {
+    color: var(--color-gray);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0 0 28px;
+    max-width: 44ch;
+}
+
+.step-panel-divider {
+    border: none;
+    border-top: 1px solid var(--color-light-gray);
+    margin: 28px 0;
+}
+
+/* === Step 1: lista de dicas numeradas === */
+.step-tips {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.step-tips li {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--color-light-gray);
+}
+
+.step-tips li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.tip-num {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1;
+    flex-shrink: 0;
+    min-width: 40px;
+}
+
+.step-tips li > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    line-height: 1.5;
+}
+
+.step-tips li strong {
+    font-size: 1.02rem;
+    font-weight: 600;
+    color: var(--color-dark);
+}
+
+.step-tips li span {
+    font-size: 0.92rem;
+    color: var(--color-gray);
+}
+
+/* === Steps 2/3: checklist === */
+.capture-checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.capture-checklist li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.94rem;
+    color: var(--color-dark);
+}
+
+.capture-checklist i {
+    color: var(--color-primary);
+    font-size: 1.05rem;
+    flex-shrink: 0;
+}
+
+/* === Captura: vídeo, preview, guia === */
+.capture-video,
+.capture-preview {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.capture-video {
+    transform: scaleX(-1); /* selfie style */
+}
+
+.capture-guide {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+}
+
+.capture-guide svg {
+    width: 78%;
+    height: 78%;
+    filter: drop-shadow(0 0 14px rgba(0, 0, 0, 0.5));
+    animation: capturePulse 2.6s ease-in-out infinite;
+}
+
+.capture-guide.face-guide svg {
+    width: 62%;
+    height: 86%;
+}
+
+.capture-guide.body-guide svg {
+    width: 44%;
+    height: 94%;
+}
+
+.capture-guide svg ellipse,
+.capture-guide svg path {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.95);
+    stroke-width: 3;
+    stroke-dasharray: 9 7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.capture-stage.captured .capture-guide {
+    opacity: 0;
+}
+
+@keyframes capturePulse {
+    0%, 100% { opacity: 0.9;  transform: scale(1); }
+    50%      { opacity: 1;    transform: scale(1.015); }
+}
+
+/* Flash */
+.capture-flash {
+    position: absolute;
+    inset: 0;
+    background: white;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.capture-flash.flash {
+    animation: cameraFlash 0.55s ease-out;
+}
+
+@keyframes cameraFlash {
+    0%   { opacity: 0; }
+    18%  { opacity: 0.95; }
+    100% { opacity: 0; }
+}
+
+/* Erro de câmera */
+.capture-error {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 30px;
+    background: rgba(26, 26, 29, 0.95);
+    color: white;
+    z-index: 6;
+}
+
+.capture-error i {
+    font-size: 2.8rem;
+    color: var(--color-primary);
+    margin-bottom: 16px;
+}
+
+.capture-error p {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0 0 6px;
+}
+
+.capture-error small {
+    color: #c8c8cc;
+    font-size: 0.85rem;
+    max-width: 280px;
+    line-height: 1.5;
+}
+
+/* === Step actions (botões grandes) === */
+.step-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: auto;
+    padding-top: 12px;
+}
+
+.btn-capture,
+.btn-retake {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 18px 32px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    font-family: var(--font-primary);
+    cursor: pointer;
+    transition: background 0.25s, color 0.25s, border-color 0.25s;
+    border: 2px solid transparent;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    flex: 1;
+    min-width: 180px;
+}
+
+.btn-capture {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+.btn-capture:hover {
+    background: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
+}
+
+.btn-capture:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.btn-capture i {
+    font-size: 1.1rem;
+}
+
+.btn-retake {
+    background: white;
+    color: var(--color-dark);
+    border-color: var(--color-dark);
+}
+
+.btn-retake:hover {
+    background: var(--color-dark);
+    color: white;
+}
+
+/* === Step 4: Avatar 3D === */
+.avatar-stage {
+    background: linear-gradient(165deg, #fbeaec 0%, #f4f4f6 100%);
+    aspect-ratio: auto;
+    height: 620px;
+}
+
+#avatar-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    cursor: grab;
+}
+
+#avatar-canvas:active {
+    cursor: grabbing;
+}
+
+.avatar-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    background: linear-gradient(165deg, #fbeaec 0%, #f4f4f6 100%);
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    text-align: center;
+    padding: 30px;
+}
+
+.avatar-loading.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.avatar-loading strong {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    color: var(--color-dark);
+    font-weight: 600;
+}
+
+.avatar-loading span {
+    color: var(--color-gray);
+    font-size: 0.9rem;
+}
+
+/* Barra de progresso indeterminada (loading) */
+.avatar-loading-bar {
+    width: 220px;
+    height: 2px;
+    background: var(--color-light-gray);
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.avatar-loading-bar span {
+    position: absolute;
+    inset: 0 100% 0 -30%;
+    background: var(--color-primary);
+    animation: loadingSlide 1.3s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes loadingSlide {
+    0%   { right: 100%; left: -30%; }
+    60%  { right: -30%; left: 100%; }
+    100% { right: -30%; left: 100%; }
+}
+
+.avatar-hint {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--color-dark);
+    color: white;
+    padding: 8px 16px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    pointer-events: none;
+}
+
+.avatar-hint i {
+    color: white;
+}
+
+/* Card de produto no painel do step 4 */
+.avatar-product-block {
+    display: flex;
+    gap: 18px;
+    padding: 20px;
+    border: 1px solid var(--color-light-gray);
+    background: var(--color-secondary);
+    margin-top: 28px;
+}
+
+.avatar-product-image {
+    width: 90px;
+    height: 110px;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: white;
+}
+
+.avatar-product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.avatar-product-block > div {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+    justify-content: center;
+}
+
+.avatar-product-block strong {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--color-dark);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.avatar-product-price {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+/* === Navegação inferior (barra fixa estilo) === */
+.provador-nav-bar {
+    border-top: 1px solid var(--color-light-gray);
+    background: white;
+    padding: 24px 0;
+    margin-top: 60px;
+}
+
+.provador-nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+}
+
+.btn-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 36px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    font-family: var(--font-primary);
+    border: 2px solid transparent;
+    transition: all 0.25s;
+}
+
+.btn-nav-prev {
+    background: transparent;
+    color: var(--color-gray);
+    border-color: transparent;
+}
+
+.btn-nav-prev:hover {
+    color: var(--color-dark);
+}
+
+.btn-nav-next {
+    background: var(--color-dark);
+    color: white;
+    border-color: var(--color-dark);
+}
+
+.btn-nav-next:hover:not(:disabled) {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.btn-nav-next:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* === Responsive === */
+@media (max-width: 991px) {
+    .step-grid,
+    .step-grid-avatar {
+        grid-template-columns: 1fr;
+        gap: 36px;
+    }
+
+    .step-media,
+    .step-media-product {
+        aspect-ratio: 4 / 5;
+        max-width: 520px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    .avatar-stage {
+        height: 520px;
+    }
+
+    .step-panel {
+        padding-top: 0;
+    }
+}
+
+@media (max-width: 575px) {
+    .provador-topbar .container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .provador-title-bar {
+        padding-top: 32px;
+    }
+
+    .provador-content {
+        padding-top: 32px;
+    }
+
+    #step-title {
+        font-size: 2rem;
+    }
+
+    .step-panel-title {
+        font-size: 1.7rem;
+    }
+
+    .step-actions {
+        flex-direction: column;
+    }
+
+    .btn-capture,
+    .btn-retake {
+        width: 100%;
+    }
+
+    .avatar-stage {
+        height: 420px;
+    }
+
+    .provador-nav-row {
+        gap: 8px;
+    }
+
+    .btn-nav {
+        padding: 14px 22px;
+        font-size: 0.78rem;
+        letter-spacing: 1.5px;
+    }
+}

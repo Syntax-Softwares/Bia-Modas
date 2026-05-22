@@ -375,12 +375,27 @@ function buildProductCardInner(product, opts) {
     const withLinks = opts && opts.withLinks;
     const escapNome = product.nome.replace(/'/g, "\\'");
     const precoFmt = product.precoFormatado || product.preco || '';
-    const precoOriginalStr = product.precoOriginal
+    const isOnSale = product.precoOriginal != null;
+
+    const precoOriginalStr = isOnSale
         ? `<span class="price-original">R$ ${Number(product.precoOriginal).toFixed(2).replace('.', ',')}</span>`
         : '';
-    const badgeHtml = product.badge ? `<span class="product-badge">${product.badge}</span>` : '';
-    const productUrl = withLinks ? buildProductUrl(product) : '';
 
+    const economiaStr = isOnSale
+        ? `<div class="price-savings">Economize R$ ${(product.precoOriginal - product.preco).toFixed(2).replace('.', ',')}</div>`
+        : '';
+
+    let badgeHtml = '';
+    if (isOnSale) {
+        const descBadge = product.badge && product.badge.includes('-')
+            ? `${product.badge} OFF`
+            : `-${Math.round((1 - product.preco / product.precoOriginal) * 100)}% OFF`;
+        badgeHtml = `<span class="product-badge is-sale"><i class="bi bi-tag-fill"></i>${descBadge}</span>`;
+    } else if (product.badge) {
+        badgeHtml = `<span class="product-badge">${product.badge}</span>`;
+    }
+
+    const productUrl = withLinks ? buildProductUrl(product) : '';
     const imageInner = `<img src="${product.imagem}" alt="${product.nome}">`;
     const image = withLinks ? `<a href="${productUrl}">${imageInner}</a>` : imageInner;
     const title = withLinks
@@ -388,7 +403,7 @@ function buildProductCardInner(product, opts) {
         : product.nome;
 
     return `
-        <div class="product-card">
+        <div class="product-card ${isOnSale ? 'is-on-sale' : ''}">
             <div class="product-image">
                 ${image}
                 ${badgeHtml}
@@ -405,6 +420,7 @@ function buildProductCardInner(product, opts) {
                     ${precoOriginalStr}
                     <span class="price-current">${precoFmt}</span>
                 </div>
+                ${economiaStr}
             </div>
         </div>
     `;
