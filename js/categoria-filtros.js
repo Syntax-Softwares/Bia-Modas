@@ -269,24 +269,47 @@
             activeChips[index].remove();
         }
     };
-    window.openFilterOffcanvas = function() {
-        const desktopSidebar = document.getElementById('filter-sidebar-desktop');
-        const offcanvasContent = document.getElementById('filter-offcanvas-content');
-        if (desktopSidebar && offcanvasContent) {
-            offcanvasContent.innerHTML = desktopSidebar.innerHTML;
-        }
-        document.getElementById('filter-offcanvas').classList.add('open');
-        document.getElementById('filter-offcanvas-overlay').classList.add('open');
-        document.body.style.overflow = 'hidden';
+    // Sidebar drawer (substitui offcanvas + colapso inline)
+    window.openSidebar = function() {
+        const sidebar = document.getElementById('category-sidebar');
+        const backdrop = document.getElementById('sidebar-backdrop');
+        if (!sidebar) return;
+        sidebar.classList.add('open');
+        if (backdrop) backdrop.classList.add('open');
+        document.body.classList.add('sidebar-open');
+        // Em mobile, trava scroll do body
+        if (window.innerWidth < 992) document.body.style.overflow = 'hidden';
     };
-    window.closeFilterOffcanvas = function() {
-        document.getElementById('filter-offcanvas').classList.remove('open');
-        document.getElementById('filter-offcanvas-overlay').classList.remove('open');
+
+    window.closeSidebar = function() {
+        const sidebar = document.getElementById('category-sidebar');
+        const backdrop = document.getElementById('sidebar-backdrop');
+        if (!sidebar) return;
+        sidebar.classList.remove('open');
+        if (backdrop) backdrop.classList.remove('open');
+        document.body.classList.remove('sidebar-open');
         document.body.style.overflow = '';
     };
+
+    // ESC fecha
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+            const sidebar = document.getElementById('category-sidebar');
+            if (sidebar && sidebar.classList.contains('open')) window.closeSidebar();
+        }
+    });
+
+    // Compat: chamadas antigas continuam funcionando
+    window.openFilterOffcanvas = window.openSidebar;
+    window.closeFilterOffcanvas = window.closeSidebar;
 
     // Initialize
     renderSidebar();
     applyFilters();
+
+    // No desktop, sidebar abre por padrão
+    if (window.innerWidth >= 992) {
+        window.openSidebar();
+    }
 
 })();

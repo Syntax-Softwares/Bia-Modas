@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Provador Virtual Bia Modas - Experimente as peças em um avatar 3D antes de comprar." />
+    <title>Provador Virtual | Bia Modas</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/layout.css">
+    <link rel="stylesheet" href="./css/components.css">
+    <link rel="stylesheet" href="./css/responsive.css">
+    <link rel="stylesheet" href="./css/auth.css">
+    <link rel="stylesheet" href="./css/provador-virtual.css">
+</head>
+<body>
+    <script src="./js/components.js"></script>
+    <script>
+        BiaModasComponents.inject({
+            logoHref: './index.html',
+            contaHref: '#'
+        });
+    </script>
+
+    <main class="provador-page">
+        <!-- Barra fina superior: voltar + contador -->
+        <div class="provador-topbar">
+            <div class="container">
+                <a href="javascript:history.back()" class="provador-back">
+                    <i class="bi bi-arrow-left"></i>
+                    <span>Voltar ao produto</span>
+                </a>
+                <div class="provador-meta">
+                    <span class="provador-eyebrow">Provador Virtual</span>
+                    <span class="provador-step-counter"><strong id="step-counter-current">01</strong> &nbsp;/&nbsp; 04</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Título grande + barra de progresso -->
+        <div class="provador-title-bar">
+            <div class="container">
+                <div class="provador-title-row">
+                    <div class="provador-title-text">
+                        <span class="provador-title-eyebrow" id="step-eyebrow">Bem-vinda</span>
+                        <h1 id="step-title">Experimente antes de levar.</h1>
+                    </div>
+                </div>
+                <div class="provador-progress-track">
+                    <div class="provador-progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conteúdo dos steps -->
+        <div class="container provador-content">
+
+            <!-- STEP 1: Boas-vindas -->
+            <section class="wizard-step active" data-step="1">
+                <div class="step-grid">
+                    <div class="step-media step-media-product">
+                        <img id="provador-product-img" src="" alt="">
+                    </div>
+                    <div class="step-panel">
+                        <span class="step-panel-eyebrow">Você vai provar</span>
+                        <h2 class="step-panel-title" id="provador-product-name">—</h2>
+                        <span class="step-panel-price" id="provador-product-price">—</span>
+
+                        <hr class="step-panel-divider">
+
+                        <p class="step-panel-lead">Três passos. Em segundos, você vê a peça em um avatar com a sua silhueta.</p>
+
+                        <ol class="step-tips">
+                            <li>
+                                <span class="tip-num">01</span>
+                                <div>
+                                    <strong>Boa iluminação</strong>
+                                    <span>Fique de frente para uma fonte de luz natural.</span>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="tip-num">02</span>
+                                <div>
+                                    <strong>Fundo neutro</strong>
+                                    <span>Uma parede lisa ajuda a separar você do cenário.</span>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="tip-num">03</span>
+                                <div>
+                                    <strong>Roupas justas</strong>
+                                    <span>Peças coladas tornam a silhueta mais fiel.</span>
+                                </div>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STEP 2: Captura do rosto -->
+            <section class="wizard-step" data-step="2">
+                <div class="step-grid">
+                    <div class="step-media capture-stage" data-guide="face">
+                        <video id="video-face" class="capture-video" autoplay playsinline muted></video>
+                        <img id="preview-face" class="capture-preview" alt="Foto do rosto" hidden>
+
+                        <div class="capture-guide face-guide" id="guide-face">
+                            <svg viewBox="0 0 300 380" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                                <ellipse cx="150" cy="190" rx="110" ry="160" />
+                            </svg>
+                        </div>
+
+                        <div class="capture-flash" id="flash-face" aria-hidden="true"></div>
+
+                        <div class="capture-error" id="error-face" hidden>
+                            <i class="bi bi-camera-video-off"></i>
+                            <p>Câmera bloqueada</p>
+                            <small>Permita o uso da câmera nas configurações do navegador.</small>
+                        </div>
+                    </div>
+
+                    <div class="step-panel">
+                        <span class="step-panel-eyebrow">02 · Rosto</span>
+                        <h2 class="step-panel-title">Posicione seu rosto.</h2>
+                        <p class="step-panel-lead">Centralize o rosto dentro da guia oval. Quando estiver bem enquadrada, clique em capturar.</p>
+
+                        <ul class="capture-checklist">
+                            <li><i class="bi bi-check-lg"></i> Rosto sem óculos escuros</li>
+                            <li><i class="bi bi-check-lg"></i> Olhe diretamente para a câmera</li>
+                            <li><i class="bi bi-check-lg"></i> Expressão neutra ou sorriso suave</li>
+                        </ul>
+
+                        <div class="step-actions">
+                            <button type="button" class="btn-capture" id="btn-capture-face">
+                                <i class="bi bi-camera-fill"></i>
+                                <span>Capturar foto</span>
+                            </button>
+                            <button type="button" class="btn-retake" id="btn-retake-face" hidden>
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                                <span>Refazer</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STEP 3: Captura do corpo -->
+            <section class="wizard-step" data-step="3">
+                <div class="step-grid">
+                    <div class="step-media capture-stage" data-guide="body">
+                        <video id="video-body" class="capture-video" autoplay playsinline muted></video>
+                        <img id="preview-body" class="capture-preview" alt="Foto do corpo" hidden>
+
+                        <div class="capture-guide body-guide" id="guide-body">
+                            <svg viewBox="0 0 220 460" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                                <path d="M110 35
+                                         c-22 0 -36 17 -36 38
+                                         c0 18 9 33 22 39
+                                         c-18 6 -33 22 -38 46
+                                         l-14 70
+                                         c-2 11 6 18 14 18
+                                         l16 0
+                                         l-6 130
+                                         c-1 14 6 22 16 22
+                                         l12 0
+                                         l4 -90
+                                         l4 90
+                                         l12 0
+                                         c10 0 17 -8 16 -22
+                                         l-6 -130
+                                         l16 0
+                                         c8 0 16 -7 14 -18
+                                         l-14 -70
+                                         c-5 -24 -20 -40 -38 -46
+                                         c13 -6 22 -21 22 -39
+                                         c0 -21 -14 -38 -36 -38 z" />
+                            </svg>
+                        </div>
+
+                        <div class="capture-flash" id="flash-body" aria-hidden="true"></div>
+
+                        <div class="capture-error" id="error-body" hidden>
+                            <i class="bi bi-camera-video-off"></i>
+                            <p>Câmera bloqueada</p>
+                            <small>Permita o uso da câmera nas configurações do navegador.</small>
+                        </div>
+                    </div>
+
+                    <div class="step-panel">
+                        <span class="step-panel-eyebrow">03 · Corpo</span>
+                        <h2 class="step-panel-title">Mostre seu corpo.</h2>
+                        <p class="step-panel-lead">Afaste a câmera, fique de frente e mantenha a silhueta dentro da guia.</p>
+
+                        <ul class="capture-checklist">
+                            <li><i class="bi bi-check-lg"></i> Distância de aproximadamente 2 metros</li>
+                            <li><i class="bi bi-check-lg"></i> Braços levemente afastados do corpo</li>
+                            <li><i class="bi bi-check-lg"></i> Pés alinhados, postura natural</li>
+                        </ul>
+
+                        <div class="step-actions">
+                            <button type="button" class="btn-capture" id="btn-capture-body">
+                                <i class="bi bi-camera-fill"></i>
+                                <span>Capturar foto</span>
+                            </button>
+                            <button type="button" class="btn-retake" id="btn-retake-body" hidden>
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                                <span>Refazer</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STEP 4: Avatar 3D -->
+            <section class="wizard-step" data-step="4">
+                <div class="step-grid step-grid-avatar">
+                    <div class="step-media avatar-stage">
+                        <canvas id="avatar-canvas" aria-label="Avatar 3D"></canvas>
+
+                        <div class="avatar-loading" id="avatar-loading">
+                            <div class="avatar-loading-bar">
+                                <span></span>
+                            </div>
+                            <strong id="avatar-loading-text">Gerando seu avatar</strong>
+                            <span id="avatar-loading-sub">Combinando suas fotos com a peça</span>
+                        </div>
+
+                        <div class="avatar-hint" id="avatar-hint" hidden>
+                            <i class="bi bi-arrows-move"></i>
+                            <span>Arraste para girar</span>
+                        </div>
+                    </div>
+
+                    <div class="step-panel">
+                        <span class="step-panel-eyebrow">04 · Resultado</span>
+                        <h2 class="step-panel-title">Seu avatar está pronto.</h2>
+                        <p class="step-panel-lead">Gire, aproxime e veja a peça por todos os ângulos.</p>
+
+                        <div class="avatar-product-block" id="avatar-summary" hidden>
+                            <div class="avatar-product-image">
+                                <img id="avatar-summary-image" src="" alt="">
+                            </div>
+                            <div>
+                                <span class="step-panel-eyebrow">Provando</span>
+                                <strong id="avatar-summary-product">—</strong>
+                                <span id="avatar-summary-price" class="avatar-product-price">—</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Navegação inferior -->
+        <div class="provador-nav-bar">
+            <div class="container provador-nav-row">
+                <button type="button" class="btn-nav btn-nav-prev" id="btn-prev">
+                    <i class="bi bi-arrow-left"></i> Voltar
+                </button>
+                <button type="button" class="btn-nav btn-nav-next" id="btn-next">
+                    Começar <i class="bi bi-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script src="./js/utils.js"></script>
+    <script src="./js/cart.js"></script>
+    <script src="./js/favoritos.js"></script>
+    <script src="./js/auth.js"></script>
+    <script src="./js/catalogo.js"></script>
+    <script src="./js/provador-virtual.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0t3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

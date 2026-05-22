@@ -11,8 +11,6 @@ const COLOR_HEX = {
     'Neutro':    '#a89683'
 };
 
-const TRY_ON_DEFAULT_CLOTH = 0xd1001f; // cor primária Bia Modas
-
 function getQueryParams() {
     const params = new URLSearchParams(window.location.search);
     return {
@@ -59,6 +57,7 @@ function renderProductPage() {
     renderGallery(product.imagem);
     renderColorOptions(catalog);
     renderSizeOptions(catalog);
+    setupTryOnLink(product);
 
     if (favBtn) {
         favBtn.dataset.name = product.nome;
@@ -67,6 +66,19 @@ function renderProductPage() {
         favBtn.dataset.category = product.categoria;
         updateProductFavoriteButton();
     }
+}
+
+function setupTryOnLink(product) {
+    const link = document.getElementById('btn-try-on');
+    if (!link) return;
+    const params = new URLSearchParams({
+        nome: product.nome,
+        preco: product.preco,
+        imagem: product.imagem,
+        categoria: product.categoria,
+        badge: product.badge || ''
+    });
+    link.href = `./provador-virtual.html?${params.toString()}`;
 }
 
 // --- Galeria de imagens ---
@@ -112,7 +124,6 @@ function renderColorOptions(catalog) {
     }).join('');
 
     if (label) label.textContent = corPrincipal;
-    syncAvatarColor(corPrincipal);
 
     container.addEventListener('click', e => {
         const btn = e.target.closest('.color-option');
@@ -120,7 +131,6 @@ function renderColorOptions(catalog) {
         container.querySelectorAll('.color-option').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         if (label) label.textContent = btn.dataset.color;
-        syncAvatarColor(btn.dataset.color);
     });
 }
 
@@ -182,237 +192,6 @@ function addProductToCartFromPage() {
     const favBtn = document.getElementById('btn-favorite');
     if (!favBtn) return;
     addToCart(favBtn.dataset.name, favBtn.dataset.price, favBtn.dataset.image);
-}
-
-// ============================================================
-// Provador Virtual (mockup com avatar 3D real — Three.js)
-// ============================================================
-
-const THREE_CDN = 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js';
-const ORBIT_CDN = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
-const GLTF_CDN  = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js';
-const AVATAR_MODEL_PATH = './osama_bin_laden.glb';
-const AVATAR_TARGET_HEIGHT = 4.5; // unidades da cena — normaliza tamanho do modelo importado
-
-let tryOn = null;          // { scene, camera, renderer, controls, avatar, animId, resizeHandler }
-let tryOnLoading = false;
-
-function openVirtualTryOn() {
-    const overlay = document.getElementById('try-on-overlay');
-    if (!overlay) return;
-    overlay.classList.add('open');
-    document.body.style.overflow = 'hidden';
-
-    if (!tryOn && !tryOnLoading) {
-        tryOnLoading = true;
-        loadThreeJs().then(() => {
-            tryOn = initAvatarScene();
-            tryOnLoading = false;
-        }).catch(err => {
-            console.error('Failed to load Three.js', err);
-            tryOnLoading = false;
-            const loading = document.getElementById('try-on-loading');
-            if (loading) loading.innerHTML = '<span>Não foi possível carregar o provador virtual.</span>';
-        });
-    } else if (tryOn) {
-        // Já iniciado: apenas resume animação
-        if (!tryOn.running) {
-            tryOn.running = true;
-            animateScene();
-        }
-        tryOn.resizeHandler && tryOn.resizeHandler();
-    }
-}
-
-function closeVirtualTryOn(e) {
-    // Só fecha se clicou no overlay (fora do modal) ou foi acionado programaticamente
-    if (e && e.target && !e.target.classList.contains('try-on-overlay') && e.type === 'click') {
-        return;
-    }
-    const overlay = document.getElementById('try-on-overlay');
-    if (!overlay) return;
-    overlay.classList.remove('open');
-    document.body.style.overflow = '';
-    if (tryOn) tryOn.running = false; // pausa o loop de animação enquanto fechado
-}
-
-document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-        const overlay = document.getElementById('try-on-overlay');
-        if (overlay && overlay.classList.contains('open')) closeVirtualTryOn();
-    }
-});
-
-function loadThreeJs() {
-    if (window.THREE && window.THREE.OrbitControls && window.THREE.GLTFLoader) return Promise.resolve();
-    return loadScript(THREE_CDN)
-        .then(() => loadScript(ORBIT_CDN))
-        .then(() => loadScript(GLTF_CDN));
-}
-
-function loadScript(src) {
-    return new Promise((resolve, reject) => {
-        const existing = document.querySelector(`script[src="${src}"]`);
-        if (existing) {
-            if (existing.dataset.loaded === '1') return resolve();
-            existing.addEventListener('load', () => resolve());
-            existing.addEventListener('error', reject);
-            return;
-        }
-        const s = document.createElement('script');
-        s.src = src;
-        s.onload = () => { s.dataset.loaded = '1'; resolve(); };
-        s.onerror = reject;
-        document.head.appendChild(s);
-    });
-}
-
-function initAvatarScene() {
-    const canvas = document.getElementById('try-on-canvas');
-    if (!canvas) return null;
-
-    const w = canvas.clientWidth || canvas.parentElement.clientWidth;
-    const h = canvas.clientHeight || canvas.parentElement.clientHeight;
-
-    const scene = new THREE.Scene();
-    scene.background = null;
-
-    const camera = new THREE.PerspectiveCamera(34, w / h, 0.1, 100);
-    camera.position.set(0, 2.55, 6.4);
-
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(w, h, false);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.outputEncoding = THREE.sRGBEncoding;
-
-    // Lighting
-    const ambient = new THREE.AmbientLight(0xffffff, 0.55);
-    scene.add(ambient);
-
-    const key = new THREE.DirectionalLight(0xffffff, 0.95);
-    key.position.set(4, 8, 5);
-    key.castShadow = true;
-    key.shadow.mapSize.set(1024, 1024);
-    key.shadow.camera.left = -3;
-    key.shadow.camera.right = 3;
-    key.shadow.camera.top = 5;
-    key.shadow.camera.bottom = -1;
-    scene.add(key);
-
-    const fill = new THREE.DirectionalLight(0xfde2e6, 0.3);
-    fill.position.set(-4, 3, 2);
-    scene.add(fill);
-
-    const rim = new THREE.DirectionalLight(0xffffff, 0.2);
-    rim.position.set(0, 4, -5);
-    scene.add(rim);
-
-    // Floor para receber sombra
-    const floor = new THREE.Mesh(
-        new THREE.CircleGeometry(3, 48),
-        new THREE.ShadowMaterial({ opacity: 0.18 })
-    );
-    floor.rotation.x = -Math.PI / 2;
-    floor.position.y = 0;
-    floor.receiveShadow = true;
-    scene.add(floor);
-
-    // Controls
-    const controls = new THREE.OrbitControls(camera, canvas);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.08;
-    controls.target.set(0, 2.4, 0);
-    controls.minDistance = 4.5;
-    controls.maxDistance = 10;
-    controls.minPolarAngle = Math.PI * 0.18;
-    controls.maxPolarAngle = Math.PI * 0.62;
-    controls.enablePan = false;
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = 1.0;
-    controls.addEventListener('start', () => { controls.autoRotate = false; });
-
-    const state = {
-        scene, camera, renderer, controls, avatar: null,
-        running: true,
-        animId: 0,
-        resizeHandler: null
-    };
-
-    // Carrega o modelo .glb de forma assíncrona
-    const loader = new THREE.GLTFLoader();
-    loader.load(
-        AVATAR_MODEL_PATH,
-        (gltf) => {
-            const model = gltf.scene;
-
-            // Normaliza tamanho e posição: altura alvo + base no chão + centralizado em X/Z
-            const box = new THREE.Box3().setFromObject(model);
-            const size = box.getSize(new THREE.Vector3());
-            const center = box.getCenter(new THREE.Vector3());
-            const scale = size.y > 0 ? AVATAR_TARGET_HEIGHT / size.y : 1;
-            model.scale.setScalar(scale);
-            model.position.x = -center.x * scale;
-            model.position.y = -box.min.y * scale;
-            model.position.z = -center.z * scale;
-
-            model.traverse(n => {
-                if (n.isMesh) {
-                    n.castShadow = true;
-                    n.receiveShadow = true;
-                }
-            });
-
-            scene.add(model);
-            state.avatar = model;
-
-            const loading = document.getElementById('try-on-loading');
-            if (loading) loading.classList.add('hidden');
-        },
-        undefined,
-        (err) => {
-            console.error('Falha ao carregar modelo 3D:', err);
-            const loading = document.getElementById('try-on-loading');
-            if (loading) loading.innerHTML = '<span>Não foi possível carregar o modelo 3D.</span>';
-        }
-    );
-
-    function resize() {
-        const cw = canvas.clientWidth || canvas.parentElement.clientWidth;
-        const ch = canvas.clientHeight || canvas.parentElement.clientHeight;
-        if (cw === 0 || ch === 0) return;
-        camera.aspect = cw / ch;
-        camera.updateProjectionMatrix();
-        renderer.setSize(cw, ch, false);
-    }
-    state.resizeHandler = resize;
-    window.addEventListener('resize', resize);
-
-    tryOn = state;
-    animateScene();
-    return state;
-}
-
-function animateScene() {
-    if (!tryOn || !tryOn.running) return;
-    tryOn.controls.update();
-    tryOn.renderer.render(tryOn.scene, tryOn.camera);
-    tryOn.animId = requestAnimationFrame(animateScene);
-}
-
-// Sincroniza cor da roupa do avatar com o seletor de cor da página.
-// Modelos importados da net normalmente não expõem uma "malha de roupa" identificável,
-// então esta função é no-op caso o modelo não defina userData.clothMat.
-function syncAvatarColor(corNome) {
-    if (!tryOn || !tryOn.avatar || !tryOn.avatar.userData || !tryOn.avatar.userData.clothMat) return;
-    const mat = tryOn.avatar.userData.clothMat;
-    const valor = COLOR_HEX[corNome];
-    if (!valor || (typeof valor === 'string' && valor.startsWith('linear'))) {
-        mat.color.setHex(TRY_ON_DEFAULT_CLOTH);
-        return;
-    }
-    mat.color.set(valor);
 }
 
 document.addEventListener('DOMContentLoaded', () => {

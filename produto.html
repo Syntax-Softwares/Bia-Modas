@@ -74,14 +74,14 @@
                     </div>
 
                     <!-- Provador Virtual -->
-                    <button class="btn-try-on" onclick="openVirtualTryOn()" aria-label="Abrir Provador Virtual">
+                    <a class="btn-try-on" id="btn-try-on" href="#" aria-label="Abrir Provador Virtual">
                         <i class="bi bi-badge-3d-fill btn-try-on-icon"></i>
                         <span class="btn-try-on-text">
                             <strong>Provador Virtual</strong>
-                            <small>Veja em um avatar 3D antes de comprar</small>
+                            <small>Capture suas fotos e veja em um avatar 3D</small>
                         </span>
                         <span class="btn-try-on-tag">NOVO</span>
-                    </button>
+                    </a>
 
 
                     <div class="product-buttons">
@@ -116,34 +116,6 @@
             </div>
         </div>
     </section>
-
-    <!-- Provador Virtual: Modal -->
-    <div class="try-on-overlay" id="try-on-overlay" onclick="closeVirtualTryOn(event)">
-        <div class="try-on-modal" role="dialog" aria-modal="true" aria-labelledby="try-on-title">
-            <button class="try-on-close" onclick="closeVirtualTryOn()" aria-label="Fechar provador virtual">
-                <i class="bi bi-x-lg"></i>
-            </button>
-
-            <div class="try-on-header">
-                <div class="try-on-badge">BETA</div>
-                <h2 id="try-on-title">Provador Virtual</h2>
-            </div>
-
-            <div class="try-on-stage">
-                <canvas id="try-on-canvas" aria-label="Avatar 3D"></canvas>
-
-                <div class="try-on-loading" id="try-on-loading">
-                    <div class="try-on-spinner"></div>
-                    <span>Carregando avatar 3D&hellip;</span>
-                </div>
-
-                <div class="try-on-rotate-hint">
-                    <i class="bi bi-arrows-move"></i>
-                    <span>Arraste para girar</span>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <script src="./js/utils.js"></script>
     <script src="./js/cart.js"></script>
