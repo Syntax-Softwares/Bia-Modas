@@ -88,9 +88,18 @@ function capitalize(str) {
 }
 
 // --- URL Helpers ---
+function formatPriceForUrl(raw) {
+    if (raw == null || raw === '') return '';
+    if (typeof raw === 'string' && raw.includes('R$')) return raw;
+    const num = typeof raw === 'number' ? raw : parseFloat(String(raw).replace(',', '.'));
+    if (isNaN(num)) return String(raw);
+    return 'R$ ' + num.toFixed(2).replace('.', ',');
+}
+
 function buildProductUrl(product) {
     const nome = encodeURIComponent(product.nome || product.name || '');
-    const preco = encodeURIComponent(product.preco || product.price || '');
+    const precoRaw = product.precoFormatado || product.preco || product.price || '';
+    const preco = encodeURIComponent(formatPriceForUrl(precoRaw));
     const imagem = encodeURIComponent(product.imagem || product.image || '');
     const categoria = encodeURIComponent(product.categoria || product.category || 'Plus Size');
     const badge = encodeURIComponent(product.badge || '');
