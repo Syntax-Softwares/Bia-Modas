@@ -9,9 +9,15 @@
     min-height: 80vh;
 }
 
+.provador-page a,
+.provador-page a:hover,
+.provador-page a:focus,
+.provador-page a:active {
+    text-decoration: none !important;
+}
+
 /* === Barra fina superior (voltar + meta) === */
 .provador-topbar {
-    border-bottom: 1px solid var(--color-light-gray);
     background: white;
     padding: 14px 0;
 }
@@ -221,13 +227,6 @@
     display: flex;
     gap: 20px;
     align-items: flex-start;
-    padding-bottom: 22px;
-    border-bottom: 1px solid var(--color-light-gray);
-}
-
-.step-tips li:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
 }
 
 .tip-num {

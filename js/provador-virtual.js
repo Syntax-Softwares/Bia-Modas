@@ -5,7 +5,7 @@
 const THREE_CDN = 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js';
 const ORBIT_CDN = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
 const GLTF_CDN  = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js';
-const AVATAR_MODEL_PATH = './osama_bin_laden.glb';
+const AVATAR_MODEL_PATH = './model.glb';
 const AVATAR_TARGET_HEIGHT = 4.5;
 const FAKE_AVATAR_DELAY_MS = 2200; // tempo da animação de "gerando avatar"
 
