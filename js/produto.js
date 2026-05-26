@@ -71,23 +71,37 @@ function renderProductPage() {
 
 function renderGallery(mainImage) {
     const thumbs = document.getElementById('product-thumbs');
+    const prevBtn = document.getElementById('gallery-prev');
+    const nextBtn = document.getElementById('gallery-next');
+    const mainImg = document.getElementById('product-image');
     if (!thumbs) return;
+
     // O catálogo só tem 1 imagem por produto, então repetimos para simular vistas múltiplas.
     const images = [mainImage, mainImage, mainImage, mainImage];
+    let activeIndex = 0;
+
     thumbs.innerHTML = images.map((src, i) => `
-        <button class="gallery-thumb ${i === 0 ? 'active' : ''}" data-img="${src}" aria-label="Visualização ${i + 1}">
+        <button class="gallery-thumb ${i === 0 ? 'active' : ''}" data-index="${i}" data-img="${src}" aria-label="Visualização ${i + 1}">
             <img src="${src}" alt="Vista ${i + 1}">
         </button>
     `).join('');
 
+    function setActiveThumb(idx) {
+        activeIndex = (idx + images.length) % images.length;
+        thumbs.querySelectorAll('.gallery-thumb').forEach((b, i) => {
+            b.classList.toggle('active', i === activeIndex);
+        });
+        if (mainImg) mainImg.src = images[activeIndex];
+    }
+
     thumbs.addEventListener('click', e => {
         const btn = e.target.closest('.gallery-thumb');
         if (!btn) return;
-        thumbs.querySelectorAll('.gallery-thumb').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const mainImg = document.getElementById('product-image');
-        if (mainImg) mainImg.src = btn.dataset.img;
+        setActiveThumb(Number(btn.dataset.index));
     });
+
+    if (prevBtn) prevBtn.onclick = () => setActiveThumb(activeIndex - 1);
+    if (nextBtn) nextBtn.onclick = () => setActiveThumb(activeIndex + 1);
 }
 
 // --- Seletor de cor ---

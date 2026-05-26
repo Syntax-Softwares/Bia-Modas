@@ -26,115 +26,99 @@
         });
     </script>
 
-    <!-- Page Header -->
-    <section class="page-header">
-        <div class="container">
-            <div class="breadcrumb">
-                <a href="./index.html"><i class="bi bi-house-door"></i> Início</a>
-                <i class="bi bi-chevron-right" style="font-size: 0.7rem;"></i>
-                <span id="breadcrumb-current">Todos os Produtos</span>
+    <!-- Sidebar de Filtros (drawer lateral) -->
+    <aside class="category-sidebar" id="category-sidebar">
+        <header class="category-sidebar-header">
+            <h2>Filtros</h2>
+            <button class="category-sidebar-close" onclick="closeSidebar()" aria-label="Fechar filtros">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </header>
+
+        <div class="category-sidebar-body" id="filter-sidebar-desktop">
+            <button class="btn-clear-filters" onclick="clearAllFilters()">
+                Limpar todos os filtros
+            </button>
+
+            <div class="filter-section">
+                <h4>Categorias</h4>
+                <ul class="filter-category-list" id="filter-categories"></ul>
             </div>
-            <h1 id="page-title">Todos os Produtos</h1>
-            <p id="page-subtitle">Explore nossa coleção</p>
+
+            <div class="filter-section">
+                <h4>Cores</h4>
+                <div class="filter-colors" id="filter-colors"></div>
+            </div>
+
+            <div class="filter-section">
+                <h4>Preço</h4>
+                <div class="filter-price-options" id="filter-prices"></div>
+            </div>
+
+            <div class="filter-section">
+                <h4>Tamanhos</h4>
+                <div class="filter-sizes" id="filter-sizes"></div>
+            </div>
+
+            <div class="filter-section">
+                <h4>Estilos</h4>
+                <div class="filter-checkbox-group" id="filter-estilos"></div>
+            </div>
+
+            <div class="filter-section">
+                <label class="filter-promo-toggle">
+                    <input type="checkbox" id="filter-promo" onchange="applyFilters()">
+                    <span><i class="bi bi-tag-fill" style="color: var(--color-primary);"></i> Somente em Promoção</span>
+                </label>
+            </div>
         </div>
-    </section>
+    </aside>
 
-    <!-- Filter Page -->
-    <section class="filter-page">
-        <div class="container">
-            <div class="row">
-                <!-- Sidebar Desktop -->
-                <div class="col-lg-3 filter-sidebar-desktop">
-                    <div class="filter-sidebar" id="filter-sidebar-desktop">
-                        <button class="btn-clear-filters mb-4" onclick="clearAllFilters()">
-                            <i class="bi bi-x-lg"></i> Limpar Filtros
-                        </button>
+    <div class="category-sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
 
-                        <!-- Categorias -->
-                        <div class="filter-section">
-                            <h4><i class="bi bi-grid"></i> Categorias</h4>
-                            <ul class="filter-category-list" id="filter-categories"></ul>
-                        </div>
+    <!-- Wrapper que recebe padding quando a sidebar abre no desktop -->
+    <div class="category-content" id="category-content">
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="./index.html"><i class="bi bi-house-door"></i> Início</a>
+                    <i class="bi bi-chevron-right" style="font-size: 0.7rem;"></i>
+                    <span id="breadcrumb-current">Todos os Produtos</span>
+                </div>
+                <h1 id="page-title">Todos os Produtos</h1>
+                <p id="page-subtitle">Explore nossa coleção</p>
+            </div>
+        </section>
 
-                        <!-- Cores -->
-                        <div class="filter-section">
-                            <h4><i class="bi bi-palette"></i> Cores</h4>
-                            <div class="filter-colors" id="filter-colors"></div>
-                        </div>
+        <!-- Filter Page -->
+        <section class="filter-page">
+            <div class="container-fluid filter-page-container">
+                <!-- Topbar com botão de abrir filtros + ordenação -->
+                <div class="filter-page-topbar">
+                    <button class="filter-open-btn" id="filter-open-btn" onclick="openSidebar()">
+                        <i class="bi bi-funnel"></i>
+                        <span>Filtros</span>
+                    </button>
 
-                        <!-- Preço -->
-                        <div class="filter-section">
-                            <h4><i class="bi bi-cash"></i> Preço</h4>
-                            <div class="filter-price-options" id="filter-prices"></div>
-                        </div>
+                    <span class="filter-results-count" id="results-count">Carregando...</span>
 
-                        <!-- Tamanhos -->
-                        <div class="filter-section">
-                            <h4><i class="bi bi-rulers"></i> Tamanhos</h4>
-                            <div class="filter-sizes" id="filter-sizes"></div>
-                        </div>
-
-                        <!-- Estilos -->
-                        <div class="filter-section">
-                            <h4><i class="bi bi-stars"></i> Estilos</h4>
-                            <div class="filter-checkbox-group" id="filter-estilos"></div>
-                        </div>
-
-                        <!-- Promoções -->
-                        <div class="filter-section">
-                            <label class="filter-promo-toggle">
-                                <input type="checkbox" id="filter-promo" onchange="applyFilters()">
-                                <span><i class="bi bi-tag-fill" style="color: var(--color-primary);"></i> Somente em Promoção</span>
-                            </label>
-                        </div>
+                    <div class="filter-sort">
+                        <label for="sort-select">Ordenar</label>
+                        <select id="sort-select" onchange="applyFilters()">
+                            <option value="">Relevância</option>
+                            <option value="menor-preco">Menor Preço</option>
+                            <option value="maior-preco">Maior Preço</option>
+                            <option value="nome">Nome A-Z</option>
+                        </select>
                     </div>
                 </div>
 
-                <!-- Product Grid -->
-                <div class="col-lg-9">
-                    <!-- Mobile Filter Button -->
-                    <div class="d-lg-none mb-3">
-                        <button class="btn-filter-mobile" onclick="openFilterOffcanvas()">
-                            <i class="bi bi-funnel"></i> Filtros <span id="mobile-filter-count" style="display:none;"></span>
-                        </button>
-                    </div>
+                <div class="active-filters" id="active-filters"></div>
 
-                    <!-- Top Bar -->
-                    <div class="filter-top-bar">
-                        <span class="filter-results-count" id="results-count">Carregando...</span>
-                        <div class="filter-sort">
-                            <label for="sort-select">Ordenar:</label>
-                            <select id="sort-select" onchange="applyFilters()">
-                                <option value="">Relevância</option>
-                                <option value="menor-preco">Menor Preço</option>
-                                <option value="maior-preco">Maior Preço</option>
-                                <option value="nome">Nome A-Z</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Active Filter Chips -->
-                    <div class="active-filters" id="active-filters"></div>
-
-                    <!-- Grid -->
-                    <div class="row" id="products-grid">
-                        <!-- Renderizado via JS -->
-                    </div>
-                </div>
+                <div class="row" id="products-grid"></div>
             </div>
-        </div>
-    </section>
-
-    <!-- Mobile Filter Offcanvas -->
-    <div class="filter-offcanvas-overlay" id="filter-offcanvas-overlay" onclick="closeFilterOffcanvas()"></div>
-    <div class="filter-offcanvas" id="filter-offcanvas">
-        <div class="filter-offcanvas-header">
-            <h3><i class="bi bi-funnel me-2"></i>Filtros</h3>
-            <button class="filter-offcanvas-close" onclick="closeFilterOffcanvas()"><i class="bi bi-x-lg"></i></button>
-        </div>
-        <div id="filter-offcanvas-content">
-            <!-- Cloned from desktop sidebar -->
-        </div>
+        </section>
     </div>
 
     <script src="./js/utils.js"></script>

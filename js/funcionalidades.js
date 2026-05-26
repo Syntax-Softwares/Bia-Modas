@@ -1,7 +1,8 @@
 /**
  * Bia Modas - Funcionalidades de UX
  * ==================================
- * Vistos recentemente (localStorage).
+ * - Filtro por categoria na navegação
+ * - Vistos recentemente (localStorage)
  */
 
 const RECENTES_KEY = 'bia_modas_recentes';
@@ -24,7 +25,9 @@ function extractProductMeta(name) {
         'rosa': 'Rosa',
         'estampado': 'Estampado',
         'estampada': 'Estampado',
-        'neutro': 'Neutro', 'neutra': 'Neutro'
+        'neutro': 'Neutro', 'neutra': 'Neutro',
+        'bege': 'Bege', 'jeans': 'Jeans',
+        'marrom': 'Marrom'
     };
     for (const [key, val] of Object.entries(cores)) {
         if (lower.includes(key)) { cor = val; break; }
@@ -71,10 +74,14 @@ function saveRecentView(product) {
     let recentes = getRecentes();
     // Remove duplicados
     recentes = recentes.filter(r => r.nome !== product.nome);
+    // Normaliza preço pra sempre ter "R$ " — corrige cards antigos sem prefixo
+    const precoNormalizado = typeof formatPriceForUrl === 'function'
+        ? formatPriceForUrl(product.preco)
+        : product.preco;
     // Adiciona no início
     recentes.unshift({
         nome: product.nome,
-        preco: product.preco,
+        preco: precoNormalizado,
         imagem: product.imagem,
         categoria: product.categoria,
         badge: product.badge,
@@ -87,9 +94,13 @@ function saveRecentView(product) {
 
 function buildProductCard(product) {
     const meta = extractProductMeta(product.nome);
+    // Normaliza preço caso esteja salvo sem o "R$ " (cards antigos do localStorage)
+    const normalizado = Object.assign({}, product, {
+        preco: typeof formatPriceForUrl === 'function' ? formatPriceForUrl(product.preco) : product.preco
+    });
     return `
         <div class="carousel-slide" data-cor="${meta.cor}" data-tipo="${meta.tipo}" data-categoria="${product.categoria}">
-            ${buildProductCardInner(product, { withLinks: false })}
+            ${buildProductCardInner(normalizado, { withLinks: false })}
         </div>
     `;
 }

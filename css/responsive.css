@@ -274,13 +274,56 @@
     }
 }
 
-/* Página de Produto */
+/* ==========================================================
+   Página de Produto — Mobile
+   ========================================================== */
 @media (max-width: 767px) {
     #product-name {
         font-size: 1.8rem !important;
     }
     #product-price {
         font-size: 1.5rem !important;
+    }
+
+    .product-detail-section {
+        padding-top: 24px;
+    }
+
+    /* Botões "Adicionar ao Carrinho" / "Adicionar aos Favoritos" — diminuir bastante.
+       Usa grid para garantir mesma altura/largura nas duas colunas. */
+    .product-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+    .product-buttons .btn-primary-solid,
+    .product-buttons .btn-outline-custom {
+        padding: 13px 12px;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+        line-height: 1.3;
+        text-align: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    /* Galeria — thumbs menores */
+    .gallery-thumb {
+        flex: 0 0 64px;
+        width: 64px;
+        height: 80px;
+    }
+
+    /* Product features icons */
+    .product-features {
+        margin-top: 24px;
+        padding-top: 20px;
+    }
+    .feature-title {
+        font-size: 0.88rem;
+    }
+    .feature-desc {
+        font-size: 0.78rem;
     }
 }
 
@@ -291,22 +334,220 @@
     #product-price {
         font-size: 1.3rem !important;
     }
+
+    /* Botões — ainda menores, mas mantém lado a lado (grid 2 colunas iguais) */
     .product-buttons {
-        flex-direction: column !important;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
     }
-    .product-buttons .btn-primary-custom,
+    .product-buttons .btn-primary-solid,
     .product-buttons .btn-outline-custom {
-        max-width: 100% !important;
+        padding: 12px 8px;
+        font-size: 0.72rem;
+        letter-spacing: 0.3px;
+        line-height: 1.3;
+        text-align: center;
         width: 100%;
+        height: 100%;
+    }
+    .product-buttons .btn-primary-solid i,
+    .product-buttons .btn-outline-custom i {
+        margin-right: 0.35rem !important;
+    }
+
+    /* Thumbs ainda menores */
+    .gallery-thumb {
+        flex: 0 0 56px;
+        width: 56px;
+        height: 70px;
+    }
+
+    /* Color/size options menos espaçados */
+    .color-option {
+        width: 32px;
+        height: 32px;
+    }
+    .size-option {
+        min-width: 44px;
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+
+    /* Product options dividers — menos margem */
+    .product-options {
+        margin-bottom: 16px;
+        padding-bottom: 16px;
     }
 }
 
-/* Página de Usuário */
-@media (max-width: 575px) {
-    .user-card {
-        padding: 25px 15px !important;
+/* Telas pequenas: botões viram uma coluna */
+@media (max-width: 380px) {
+    .product-buttons {
+        grid-template-columns: 1fr !important;
     }
-    #user-form .form-label {
-        font-size: 0.9rem;
+    .product-buttons .btn-primary-solid,
+    .product-buttons .btn-outline-custom {
+        padding: 12px 16px !important;
+        font-size: 0.78rem !important;
+    }
+}
+
+/* ==========================================================
+   Newsletter — mobile (era grid 1fr 1fr)
+   ========================================================== */
+@media (max-width: 767px) {
+    .newsletter-section .container {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    .newsletter-section h2 {
+        text-align: left;
+    }
+    .newsletter-section p {
+        text-align: left;
+        max-width: 100%;
+    }
+}
+
+/* ==========================================================
+   Top-bar / Header — telas pequenas
+   ========================================================== */
+@media (max-width: 575px) {
+    .top-bar {
+        padding: 6px 0;
+        font-size: 0.7rem;
+    }
+    .top-bar .me-3 {
+        margin-right: 0.5rem !important;
+    }
+
+    .header-actions {
+        gap: 12px;
+    }
+}
+
+/* ==========================================================
+   Features Section (home) — ajustes mobile
+   ========================================================== */
+@media (max-width: 575px) {
+    .feature-box {
+        padding: 22px 8px;
+        gap: 6px;
+    }
+    .feature-box h3 {
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+    }
+    .feature-box p {
+        font-size: 0.75rem;
+        line-height: 1.4;
+    }
+    .feature-icon {
+        font-size: 1.7rem;
+        margin-bottom: 2px;
+    }
+}
+
+@media (max-width: 400px) {
+    .feature-box {
+        padding: 18px 6px;
+    }
+    .feature-box p {
+        display: none;
+    }
+}
+
+/* ==========================================================
+   Página de Usuário (Perfil)
+   ========================================================== */
+@media (max-width: 767px) {
+    .profile-card {
+        padding: 26px 20px;
+    }
+    .profile-section {
+        padding-top: 24px;
+    }
+    #profile-avatar {
+        width: 80px;
+        height: 80px;
+        font-size: 2rem;
+    }
+    #profile-name {
+        font-size: 1.3rem;
+    }
+    .profile-tab {
+        padding: 10px 14px;
+        font-size: 0.82rem;
+    }
+}
+
+@media (max-width: 575px) {
+    .profile-card {
+        padding: 20px 14px;
+    }
+    .logout-section {
+        margin-top: 26px;
+        padding-top: 22px;
+    }
+}
+
+/* ==========================================================
+   Categoria — filtros topbar
+   ========================================================== */
+@media (max-width: 575px) {
+    .filter-page {
+        padding: 18px 0 50px;
+    }
+    .page-header {
+        padding: 28px 0 20px;
+    }
+    .filter-page-topbar {
+        gap: 10px;
+        margin-bottom: 18px;
+    }
+    .filter-open-btn {
+        padding: 9px 16px;
+        font-size: 0.72rem;
+        letter-spacing: 1.5px;
+    }
+    .filter-sort label {
+        display: none;
+    }
+    .filter-sort select {
+        padding: 7px 10px;
+        font-size: 0.82rem;
+    }
+    .filter-results-count {
+        font-size: 0.72rem;
+        letter-spacing: 1.5px;
+    }
+}
+
+/* ==========================================================
+   Favoritos / Section header em mobile
+   ========================================================== */
+@media (max-width: 575px) {
+    .section-header {
+        margin-bottom: 22px;
+        padding-bottom: 16px;
+        gap: 12px;
+    }
+    .section-link {
+        font-size: 0.68rem;
+        letter-spacing: 1.5px;
+    }
+    .section-header-side {
+        font-size: 0.68rem;
+        letter-spacing: 1.5px;
+    }
+    .section-number {
+        font-size: 0.85rem;
+        letter-spacing: 2px;
+    }
+    .products-section {
+        padding: 36px 0;
     }
 }
