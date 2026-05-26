@@ -27,7 +27,9 @@ function extractProductMeta(name) {
         'rosa': 'Rosa',
         'estampado': 'Estampado',
         'estampada': 'Estampado',
-        'neutro': 'Neutro', 'neutra': 'Neutro'
+        'neutro': 'Neutro', 'neutra': 'Neutro',
+        'bege': 'Bege', 'jeans': 'Jeans',
+        'marrom': 'Marrom'
     };
     for (const [key, val] of Object.entries(cores)) {
         if (lower.includes(key)) { cor = val; break; }
