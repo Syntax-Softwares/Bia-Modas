@@ -141,21 +141,8 @@ function renderRecentes() {
 
 // --- Inicialização ---
 
-function enrichProductCards() {
-    document.querySelectorAll('.carousel-slide').forEach(slide => {
-        const title = slide.querySelector('.product-title')?.textContent || '';
-        const category = slide.querySelector('.product-category')?.textContent || '';
-        const meta = extractProductMeta(title);
-        slide.dataset.categoria = category;
-        slide.dataset.cor = meta.cor;
-        slide.dataset.tipo = meta.tipo;
-        slide.dataset.estilo = meta.estilo;
-    });
-}
-
 document.addEventListener('DOMContentLoaded', () => {
     if (!document.getElementById('carousel-novidades')) return; // Só roda na index
 
-    enrichProductCards();
     renderRecentes();
 });

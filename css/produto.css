@@ -116,7 +116,7 @@
     border-color: var(--color-primary);
 }
 
-/* === Info: categoria, nome, rating, price === */
+/* === Info: categoria, nome, price === */
 #product-category {
     color: var(--color-gray);
     font-size: 0.85rem;
