@@ -43,9 +43,6 @@
                 </div>
                 <div class="col-lg-3 col-md-3 col-6 text-end">
                     <div class="header-actions justify-content-end">
-                        <a href="{{CONTA_HREF}}" class="auth-header-link" aria-label="Minha conta">
-                            <i class="bi bi-person"></i>
-                        </a>
                         <a href="./favoritos.html" aria-label="Favoritos">
                             <i class="bi bi-heart"></i>
                         </a>
@@ -156,8 +153,7 @@
                 cart: true,
                 toast: true,
                 footer: true,
-                logoHref: './index.html',
-                contaHref: '#'
+                logoHref: './index.html'
             }, options);
 
             const body = document.body;
@@ -167,9 +163,7 @@
             let prepend = '';
             if (cfg.topBar) prepend += TOP_BAR;
             if (cfg.header) {
-                prepend += HEADER
-                    .replace(/\{\{LOGO_HREF\}\}/g, cfg.logoHref)
-                    .replace(/\{\{CONTA_HREF\}\}/g, cfg.contaHref);
+                prepend += HEADER.replace(/\{\{LOGO_HREF\}\}/g, cfg.logoHref);
             }
             if (prepend) {
                 const wrapper = document.createElement('div');
