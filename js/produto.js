@@ -57,7 +57,6 @@ function renderProductPage() {
     renderGallery(product.imagem);
     renderColorOptions(catalog);
     renderSizeOptions(catalog);
-    setupTryOnLink(product);
 
     if (favBtn) {
         favBtn.dataset.name = product.nome;
@@ -66,19 +65,6 @@ function renderProductPage() {
         favBtn.dataset.category = product.categoria;
         updateProductFavoriteButton();
     }
-}
-
-function setupTryOnLink(product) {
-    const link = document.getElementById('btn-try-on');
-    if (!link) return;
-    const params = new URLSearchParams({
-        nome: product.nome,
-        preco: product.preco,
-        imagem: product.imagem,
-        categoria: product.categoria,
-        badge: product.badge || ''
-    });
-    link.href = `./provador-virtual.html?${params.toString()}`;
 }
 
 // --- Galeria de imagens ---
