@@ -20,19 +20,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (document.getElementById('carousel-novidades')) {
-        renderCarouselTrack('carousel-novidades', ['vestido-verde-plus', 'regata-rosa-plus', 'blusa-vermelha-plus', 'blusa-preta-plus'], 2);
+        renderCarouselTrack('carousel-novidades', ['655763783_18587522434040712_5117797556536014863_n', '656202496_18587522443040712_9008272828061942804_n', '657598651_18573763777040712_6966380605204482899_n', '659331847_18577711228040712_207586077417158524_n'], 2);
         initCarousel('novidades');
     }
     if (document.getElementById('carousel-recentes')) {
         // Se funcionalidades.js tiver dados reais de recentes, não sobrescreve
         const temRecentesReais = typeof getRecentes === 'function' && getRecentes().length > 0;
         if (!temRecentesReais) {
-            renderCarouselTrack('carousel-recentes', ['blusa-azul-plus', 'vestido-verde-plus', 'blusa-vermelha-plus', 'blusa-preta-plus'], 2);
+            renderCarouselTrack('carousel-recentes', ['656166026_18573763729040712_759498418098033265_n', '656650964_18573763798040712_693249757322836689_n', '657539762_18573763816040712_7436584707047200505_n', '657820557_18577711375040712_2935750976970278950_n'], 2);
         }
         initCarousel('recentes');
     }
     if (document.getElementById('carousel-promocoes')) {
-        renderCarouselTrack('carousel-promocoes', ['blusa-azul-plus', 'blusa-vermelha-plus', 'regata-rosa-plus', 'blusa-preta-plus'], 2);
+        renderCarouselTrack('carousel-promocoes', ['656166026_18573763729040712_759498418098033265_n', '656650964_18573763798040712_693249757322836689_n', '657539762_18573763816040712_7436584707047200505_n', '657820557_18577711375040712_2935750976970278950_n'], 2);
         initCarousel('promocoes');
     }
 

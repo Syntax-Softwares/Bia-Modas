@@ -52,7 +52,8 @@
         const corMap = {
             'Preto': '#212529', 'Branco': '#f8f9fa', 'Vermelho': '#dc3545',
             'Azul': '#0d6efd', 'Verde': '#198754', 'Rosa': '#d63384',
-            'Estampado': '#fd7e14', 'Neutro': '#6c757d'
+            'Estampado': '#fd7e14', 'Neutro': '#6c757d',
+            'Bege': '#e8dcc5', 'Jeans': '#5b7fa3', 'Marrom': '#8B4513'
         };
         colorsContainer.innerHTML = cores.map(cor => {
             const active = filtrosAtivos.cores.includes(cor) ? 'active' : '';
