@@ -91,13 +91,13 @@ Responde à pergunta: Como? Com o que? Onde? Quando?)
 # 5. Banco de dados
 ## 5.1 Modelo Conceitual
 <img 
-    src="ModeloConceitual.jpg" 
+    src="./imgReadme/ModeloConceitual.jpg" 
     alt="Modelo Conceitual do Banco de Dados" 
   />
   
 ## 5.2 Modelo Lógico
 <img 
-    src="ModeloLogico.jpg" 
+    src="./imgReadme/ModeloLogico.jpg" 
     alt="Modelo Lógico do Banco de Dados" 
   />
 
@@ -227,7 +227,7 @@ O desenvolvimento da aplicação é viável devido ao baixo investimento operaci
   
 # 8. Regras de negócio (Modelo canvas)
 <img 
-    src="BMCanvas Bia Modas.jpg" 
+    src="./imgReadme/BMCanvas Bia Modas.jpg" 
     alt="BMCanvas" 
   />
 
