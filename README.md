@@ -521,6 +521,6 @@ figma.com/design/2RQ8GsM3Q9YBE8vV1GWRhu/Bia-Modas?node-id=0-1&t=GSP5pfwupi3Na32n
 
 # 11. Aplicação
 Link da Aplicação para Apresentação:
-http://198.23.164.207
+https://biamodasjau.com.br/
 
 Caso queira rodar ela localmente, acesse a branch apresentacao-pi
