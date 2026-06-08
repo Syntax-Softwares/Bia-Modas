@@ -52,7 +52,7 @@ Responde à pergunta: Como? Com o que? Onde? Quando?)
 | RF03 | Carrossel de Produtos | O sistema deve exibir carrosséis de produtos na página inicial com base em categorias, histórico e recomendações. |
 | RF04 | Barra de Pesquisa | O sistema deve possuir busca com sugestões automáticas e redirecionamento para página de resultados. |
 | RF05 | Recomendações Personalizadas | O sistema deve permitir coleta de dados (com consentimento) para gerar recomendações em tempo real. |
-| RF06 | Catálogo e Visualização de Produtos | O sistema deve permitir acesso ao catálogo completo e visualização de detalhes dos produtos (descrição, especificações, imagens, preço e avaliações) via API. |
+| RF06 | Catálogo e Visualização de Produtos | O sistema deve permitir acesso ao catálogo completo e visualização de detalhes dos produtos (descrição, especificações, imagens, preço e avaliações). |
 | RF07 | Experiência de Compra e Favoritos | O sistema deve permitir selecionar produtos, escolher variações, definir quantidades e favoritar itens para uso futuro. |
 | RF08 | Carrinho de Compras e Finalização | O sistema deve permitir adicionar produtos ao carrinho, visualizar itens e total, e finalizar a compra com integração a sistemas de pagamento. |
 | RF09 | Filtro de Produtos | O sistema deve permitir filtrar produtos por categoria, preço e relevância. |
