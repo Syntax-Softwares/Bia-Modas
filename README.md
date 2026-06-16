@@ -1,3 +1,10 @@
+# Nome do integrantes:
+<ul>Joaquim G.</ul>
+<ul>Thiago Mazzi</ul>
+<ul>Luiz G. Vieira</ul>
+<ul>Gabriel Maciel</ul>
+<ul>João V. Tiroel</ul>
+
 <p align="left" style="font-size:28px;"><strong><em>Documentação do PI</em></strong></p>
 <details>
 <summary><strong>📌 Sumário</strong></summary>
