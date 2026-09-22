@@ -56,19 +56,18 @@ Responde à pergunta: Como? Com o que? Onde? Quando?)
 |--------|------|----------|
 | RF01 | Cadastro de Usuário | O sistema deve permitir que o usuário se cadastre informando nome completo, CPF, RG, e-mail, senha, data de nascimento, endereço completo e telefone. |
 | RF02 | Autenticação de Usuário | O sistema deve permitir login com e-mail e senha previamente cadastrados. |
-| RF03 | Carrossel de Produtos | O sistema deve exibir carrosséis de produtos na página inicial com base em categorias, histórico e recomendações. |
+| RF03 | Recuperação de Senha | O sistema deve permitir redefinir a senha via e-mail. |
 | RF04 | Barra de Pesquisa | O sistema deve possuir busca com sugestões automáticas e redirecionamento para página de resultados. |
 | RF05 | Recomendações Personalizadas | O sistema deve permitir coleta de dados (com consentimento) para gerar recomendações em tempo real. |
 | RF06 | Catálogo e Visualização de Produtos | O sistema deve permitir acesso ao catálogo completo e visualização de detalhes dos produtos (descrição, especificações, imagens, preço e avaliações). |
 | RF07 | Experiência de Compra e Favoritos | O sistema deve permitir selecionar produtos, escolher variações, definir quantidades e favoritar itens para uso futuro. |
 | RF08 | Carrinho de Compras e Finalização | O sistema deve permitir adicionar produtos ao carrinho, visualizar itens e total, e finalizar a compra com integração a sistemas de pagamento. |
 | RF09 | Filtro de Produtos | O sistema deve permitir filtrar produtos por categoria, preço e relevância. |
-<!--| RF10 | Dashboard Administrativa | O sistema deve disponibilizar uma área exclusiva para administradores com funcionalidades de gestão. |-->
-<!--| RF11 | Gestão Administrativa | O administrador deve poder realizar CRUD de usuários e produtos, além de gerenciar promoções e descontos. |-->
-<!--| RF12 | Histórico de Pedidos | O sistema deve permitir visualizar compras anteriores. |-->
-<!--| RF13 | Recuperação de Senha | O sistema deve permitir redefinir a senha via e-mail. |-->
-<!--| RF14 | Avaliação de Produtos | O sistema deve permitir que usuários avaliem produtos. |-->
-<!--| RF15 | Controle de Estoque | O sistema deve controlar automaticamente o estoque de produtos. |-->
+| RF10 | Dashboard Administrativa | O sistema deve disponibilizar uma área exclusiva para administradores com funcionalidades de gestão. |
+| RF11 | Gestão Administrativa | O administrador deve poder realizar CRUD de usuários e produtos, além de gerenciar promoções e descontos. |
+| RF12 | Histórico de Pedidos | O sistema deve permitir visualizar compras anteriores. |
+| RF13 | Avaliação de Produtos | O sistema deve permitir que usuários avaliem produtos. |
+| RF14 | Controle de Estoque | O sistema deve controlar automaticamente o estoque de produtos. |
 
 ## • Requisitos não funcionais
 
@@ -84,11 +83,11 @@ Responde à pergunta: Como? Com o que? Onde? Quando?)
 | RNF08 | Compatibilidade | O sistema deve ser compatível com os principais navegadores. |
 | RNF09 | Manutenibilidade | O sistema deve possuir código organizado e de fácil manutenção. |
 | RNF10 | Confiabilidade | O sistema deve garantir integridade e consistência dos dados. |
-<!--| RNF11 | Autenticação Segura | O sistema deve armazenar senhas criptografadas e utilizar autenticação segura. |-->
-<!--| RNF12 | Controle de Acesso | O sistema deve restringir o acesso à área administrativa apenas a administradores. |-->
-<!--| RNF13 | Integração com APIs | O sistema deve integrar-se de forma eficiente com APIs externas. |-->
-<!--| RNF14 | Backup | O sistema deve realizar backups periódicos dos dados. |-->
-<!--| RNF15 | Recuperação de Falhas | O sistema deve ser capaz de se recuperar rapidamente após falhas. |-->
+| RNF11 | Autenticação Segura | O sistema deve armazenar senhas criptografadas e utilizar autenticação segura. |
+| RNF12 | Controle de Acesso | O sistema deve restringir o acesso à área administrativa apenas a administradores. |
+| RNF13 | Integração com APIs | O sistema deve integrar-se de forma eficiente com APIs externas. |
+| RNF14 | Backup | O sistema deve realizar backups periódicos dos dados. |
+| RNF15 | Recuperação de Falhas | O sistema deve ser capaz de se recuperar rapidamente após falhas. |
 
 # 3. Modelo de casos de uso
 
