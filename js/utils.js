@@ -87,33 +87,6 @@ function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-// --- URL Helpers ---
-function formatPriceForUrl(raw) {
-    if (raw == null || raw === '') return '';
-    if (typeof raw === 'string' && raw.includes('R$')) return raw;
-    const num = typeof raw === 'number' ? raw : parseFloat(String(raw).replace(',', '.'));
-    if (isNaN(num)) return String(raw);
-    return 'R$ ' + num.toFixed(2).replace('.', ',');
-}
-
-function buildProductUrl(product) {
-    const nome = encodeURIComponent(product.nome || product.name || '');
-    const precoRaw = product.precoFormatado || product.preco || product.price || '';
-    const preco = encodeURIComponent(formatPriceForUrl(precoRaw));
-    const imagem = encodeURIComponent(product.imagem || product.image || '');
-    const categoria = encodeURIComponent(product.categoria || product.category || 'Plus Size');
-    const badge = encodeURIComponent(product.badge || '');
-    return `./produto.html?nome=${nome}&preco=${preco}&imagem=${imagem}&categoria=${categoria}&badge=${badge}`;
-}
-
-// --- Currency Parsing ---
-function parseCurrency(value) {
-    if (typeof value === 'number') return value;
-    return parseFloat(
-        String(value).replace('R$', '').replace(/\./g, '').replace(',', '.')
-    ) || 0;
-}
-
 // --- ViaCEP Auto-complete ---
 function autoCompleteCEP(cep, fieldMap) {
     const clean = cep.replace(/\D/g, '');
