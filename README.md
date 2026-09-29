@@ -54,7 +54,7 @@ Responde à pergunta: Como? Com o que? Onde? Quando?)
 
 | Código | Nome | Descrição |
 |--------|------|----------|
-| RF01 | Cadastro de Usuário | O sistema deve permitir que o usuário se cadastre informando nome completo, CPF, RG, e-mail, senha, data de nascimento, endereço completo e telefone. |
+| RF01 | Cadastro de Usuário | O sistema deve permitir que o usuário se cadastre informando nome completo, CPF, e-mail, senha, data de nascimento, endereço completo e telefone. |
 | RF02 | Autenticação de Usuário | O sistema deve permitir login com e-mail e senha previamente cadastrados. |
 | RF03 | Recuperação de Senha | O sistema deve permitir redefinir a senha via e-mail. |
 | RF04 | Barra de Pesquisa | O sistema deve possuir busca com sugestões automáticas e redirecionamento para página de resultados. |
