@@ -30,7 +30,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-3 col-md-3 col-6">
                     <a href="{{LOGO_HREF}}" class="logo">
-                        <img src="./img/logoBiaModas.png" alt="Bia Modas - Moda Feminina">
+                        <img src="/assets/img/logoBiaModas.png" alt="Bia Modas - Moda Feminina">
                     </a>
                 </div>
                 <div class="col-lg-6 col-md-6 d-none d-md-block">
@@ -46,7 +46,7 @@
                         <a href="{{CONTA_HREF}}" class="auth-header-link" aria-label="Minha conta">
                             <i class="bi bi-person"></i>
                         </a>
-                        <a href="./favoritos.html" aria-label="Favoritos">
+                        <a href="/favoritos" aria-label="Favoritos">
                             <i class="bi bi-heart"></i>
                         </a>
                         <a href="#" aria-label="Carrinho" onclick="openCart(); return false;">
@@ -99,7 +99,7 @@
             <div class="row">
                 <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
                     <div class="footer-widget">
-                        <img src="./img/logoBiaModas.png" alt="Bia Modas" class="footer-logo">
+                        <img src="/assets/img/logoBiaModas.png" alt="Bia Modas" class="footer-logo">
                         <p>Moda feminina com estilo, qualidade e preços acessíveis. Há mais de 10 anos vestindo mulheres de Jaú e região.</p>
                         <div class="social-links">
                             <a href="https://www.instagram.com/lojabiamodass/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
@@ -156,7 +156,7 @@
                 cart: true,
                 toast: true,
                 footer: true,
-                logoHref: './index.html',
+                logoHref: '/',
                 contaHref: '#'
             }, options);
 

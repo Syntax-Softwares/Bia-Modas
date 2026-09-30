@@ -5,7 +5,7 @@
 const THREE_CDN = 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js';
 const ORBIT_CDN = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
 const GLTF_CDN  = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js';
-const AVATAR_MODEL_PATH = './model.glb';
+const AVATAR_MODEL_PATH = '/assets/models/model.glb';
 const AVATAR_TARGET_HEIGHT = 4.5;
 const FAKE_AVATAR_DELAY_MS = 2200; // tempo da animação de "gerando avatar"
 
@@ -44,7 +44,7 @@ function readQueryParams() {
     return {
         nome: params.get('nome') || 'Produto',
         preco: params.get('preco') || 'R$ 0,00',
-        imagem: params.get('imagem') || './img/logoBiaModas.png',
+        imagem: params.get('imagem') || '/assets/img/logoBiaModas.png',
         categoria: params.get('categoria') || 'Plus Size',
         badge: params.get('badge') || ''
     };
@@ -107,7 +107,7 @@ function handleNext() {
         if (typeof addToCart === 'function') {
             addToCart(state.product.nome, state.product.preco, state.product.imagem);
         }
-        window.location.href = './index.html';
+        window.location.href = '/';
     }
 }
 

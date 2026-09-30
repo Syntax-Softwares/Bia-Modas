@@ -1,0 +1,25 @@
+# BiaModas — front controller
+# Tudo que NAO for arquivo ou pasta real vai para o index.php.
+# Sem estas regras, /categoria, /produto, /login etc. dariam 404 do servidor
+# e o seu router nunca seria chamado.
+
+Options -Indexes
+
+# Garante que o PHP ganhe o DirectoryIndex (evita um index.html roubar a home)
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Se existir o arquivo ou pasta de verdade (css, js, img), serve direto.
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Senao, manda tudo pro front controller, preservando a query string.
+    RewriteRule ^ index.php [QSA,L]
+</IfModule>
+
+# Nao servir nada que nao seja asset ou entrada
+<FilesMatch "\.(env|ini|log|sql|md|json|lock|glb.bak)$">
+    Require all denied
+</FilesMatch>

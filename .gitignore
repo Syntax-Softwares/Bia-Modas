@@ -1,0 +1,32 @@
+# --- dependencias ---
+/vendor/
+
+# --- ambiente (NUNCA versionar) ---
+.env
+.env.local
+.env.*.local
+
+# --- runtime ---
+/storage/logs/*
+/storage/cache/*
+/storage/uploads/*
+!/storage/logs/.gitkeep
+!/storage/cache/.gitkeep
+!/storage/uploads/.gitkeep
+
+# --- sistema operacional ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- editores / IDE ---
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# --- PHP ---
+.phpunit.result.cache
+.php-cs-fixer.cache
+*.log

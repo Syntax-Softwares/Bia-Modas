@@ -12,24 +12,24 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="./css/base.css">
-    <link rel="stylesheet" href="./css/layout.css">
-    <link rel="stylesheet" href="./css/components.css">
-    <link rel="stylesheet" href="./css/responsive.css">
-    <link rel="stylesheet" href="./css/auth.css">
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/layout.css">
+    <link rel="stylesheet" href="/assets/css/components.css">
+    <link rel="stylesheet" href="/assets/css/responsive.css">
+    <link rel="stylesheet" href="/assets/css/auth.css">
 </head>
 <body>
-    <script src="./js/components.js"></script>
+    <script src="/assets/js/components.js"></script>
     <script>
         BiaModasComponents.inject({
             logoHref: '#',
-            contaHref: './usuario.html'
+            contaHref: '/usuario'
         });
     </script>
 
     <!-- Hero Section -->
     <section class="hero-section">
-        <img src="./img/Banner.png" alt="Coleção Primavera Verão Bia Modas">
+        <img src="/assets/img/Banner.png" alt="Coleção Primavera Verão Bia Modas">
         <div class="hero-overlay">
             <div class="container">
                 <div class="hero-content">
@@ -49,81 +49,81 @@
     <section class="category-grid-section">
         <div class="container">
             <div class="category-grid">
-                <a href="./categoria.html?categoria=Vestidos" class="category-circle-item">
+                <a href="/categoria?categoria=Vestidos" class="category-circle-item">
                     <div class="category-circle">
-                        <img src="./img/VestidoVerdePlusSize.png" alt="Vestidos">
+                        <img src="/assets/img/VestidoVerdePlusSize.png" alt="Vestidos">
                     </div>
                     <span class="category-circle-name">Vestidos</span>
                 </a>
-                <a href="./categoria.html?categoria=Blusas" class="category-circle-item">
+                <a href="/categoria?categoria=Blusas" class="category-circle-item">
                     <div class="category-circle">
-                        <img src="./img/BlusaPlusSizeVermelho.png" alt="Blusas">
+                        <img src="/assets/img/BlusaPlusSizeVermelho.png" alt="Blusas">
                     </div>
                     <span class="category-circle-name">Blusas</span>
                 </a>
-                <a href="./categoria.html?categoria=Calças" class="category-circle-item">
+                <a href="/categoria?categoria=Calças" class="category-circle-item">
                     <div class="category-circle">
-                        <img src="./img/calcas.png" alt="Calças">
+                        <img src="/assets/img/calcas.png" alt="Calças">
                     </div>
                     <span class="category-circle-name">Calças</span>
                 </a>
-                <a href="./categoria.html?categoria=Plus%20Size" class="category-circle-item">
+                <a href="/categoria?categoria=Plus%20Size" class="category-circle-item">
                     <div class="category-circle">
-                        <img src="./img/BlusaPlusSizePreta.png" alt="Plus Size">
+                        <img src="/assets/img/BlusaPlusSizePreta.png" alt="Plus Size">
                     </div>
                     <span class="category-circle-name">Plus Size</span>
                 </a>
-                <a href="./categoria.html?categoria=Acessórios" class="category-circle-item">
+                <a href="/categoria?categoria=Acessórios" class="category-circle-item">
                     <div class="category-circle">
-                        <img src="./img/acessorios.png" alt="Acessórios">
+                        <img src="/assets/img/acessorios.png" alt="Acessórios">
                     </div>
                     <span class="category-circle-name">Acessórios</span>
                 </a>
-                <a href="./categoria.html?categoria=Saias" class="category-circle-item">
+                <a href="/categoria?categoria=Saias" class="category-circle-item">
                     <div class="category-circle">
-                        <img src="./img/saia.png" alt="Saias">
+                        <img src="/assets/img/saia.png" alt="Saias">
                     </div>
                     <span class="category-circle-name">Saias</span>
                 </a>
-                <a href="./categoria.html?categoria=Shorts" class="category-circle-item">
+                <a href="/categoria?categoria=Shorts" class="category-circle-item">
                     <div class="category-circle">
-                        <img src="./img/shorts.png" alt="Shorts">
+                        <img src="/assets/img/shorts.png" alt="Shorts">
                     </div>
                     <span class="category-circle-name">Shorts</span>
                 </a>
-                <a href="./categoria.html?categoria=Casacos" class="category-circle-item">
+                <a href="/categoria?categoria=Casacos" class="category-circle-item">
                     <div class="category-circle">
-                        <img src="./img/casaco.png" alt="Casacos">
+                        <img src="/assets/img/casaco.png" alt="Casacos">
                     </div>
                     <span class="category-circle-name">Casacos</span>
                 </a>
-                <a href="./categoria.html?categoria=Moda%20Praia" class="category-circle-item">
+                <a href="/categoria?categoria=Moda%20Praia" class="category-circle-item">
                     <div class="category-circle">
-                        <img src="./img/modapraia.png" alt="Moda Praia">
+                        <img src="/assets/img/modapraia.png" alt="Moda Praia">
                     </div>
                     <span class="category-circle-name">Moda Praia</span>
                 </a>
-                <a href="./categoria.html?categoria=Fitness" class="category-circle-item">
+                <a href="/categoria?categoria=Fitness" class="category-circle-item">
                     <div class="category-circle">
-                        <img src="./img/fitness.png" alt="Fitness">
+                        <img src="/assets/img/fitness.png" alt="Fitness">
                     </div>
                     <span class="category-circle-name">Fitness</span>
                 </a>
-                <a href="./categoria.html?categoria=Infantil" class="category-circle-item">
+                <a href="/categoria?categoria=Infantil" class="category-circle-item">
                     <div class="category-circle">
-                        <img src="./img/infantil.png" alt="Infantil">
+                        <img src="/assets/img/infantil.png" alt="Infantil">
                     </div>
                     <span class="category-circle-name">Infantil</span>
                 </a>
-                <a href="./categoria.html?categoria=Moda%20Íntima" class="category-circle-item">
+                <a href="/categoria?categoria=Moda%20Íntima" class="category-circle-item">
                     <div class="category-circle">
-                        <img src="./img/modaintima.png" alt="Moda Íntima">
+                        <img src="/assets/img/modaintima.png" alt="Moda Íntima">
                     </div>
                     <span class="category-circle-name">Moda Íntima</span>
                 </a>
-                <a href="./categoria.html?categoria=Sapatos" class="category-circle-item">
+                <a href="/categoria?categoria=Sapatos" class="category-circle-item">
                     <div class="category-circle">
-                        <img src="./img/sapatos.png" alt="Sapatos">
+                        <img src="/assets/img/sapatos.png" alt="Sapatos">
                     </div>
                     <span class="category-circle-name">Sapatos</span>
                 </a>
@@ -202,7 +202,7 @@
                     <span class="section-number">01</span>
                     <h2>Novidades</h2>
                 </div>
-                <a href="./categoria.html" class="section-link">Ver todas <i class="bi bi-arrow-right"></i></a>
+                <a href="/categoria" class="section-link">Ver todas <i class="bi bi-arrow-right"></i></a>
             </div>
 
             <div class="carousel-container">
@@ -233,7 +233,7 @@
                     <span class="section-number">02</span>
                     <h2>Promoções</h2>
                 </div>
-                <a href="./categoria.html?promocoes=1" class="section-link">Ver tudo em oferta <i class="bi bi-arrow-right"></i></a>
+                <a href="/categoria?promocoes=1" class="section-link">Ver tudo em oferta <i class="bi bi-arrow-right"></i></a>
             </div>
 
             <div class="carousel-container">
@@ -279,8 +279,8 @@
         </div>
     </section>
 
-    <script src="./js/utils.js"></script>
-    <script src="./js/carousel.js"></script>
+    <script src="/assets/js/utils.js"></script>
+    <script src="/assets/js/carousel.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0t3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
