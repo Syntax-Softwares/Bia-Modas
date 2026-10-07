@@ -1,0 +1,208 @@
+DROP DATABASE IF EXISTS biamodas;
+
+CREATE DATABASE biamodas
+  CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+USE biamodas;
+
+CREATE TABLE usuarios(
+  id_usuario BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  senha_hash VARCHAR(255) NOT NULL,
+  cpf CHAR(11) NULL UNIQUE,
+  telefone VARCHAR(20) NULL,
+  data_nascimento DATE NULL,
+  is_admin BOOLEAN NOT NULL DEFAULT FALSE,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deletado_em DATETIME NULL,
+);
+
+CREATE TABLE enderecos(
+  id_endereco BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  usuario_id BIGINT UNSIGNED NOT NULL,
+  apelido VARCHAR(30) NOT NULL,
+  logradouro VARCHAR(255) NOT NULL,
+  numero VARCHAR(10) NOT NULL,
+  complemento VARCHAR(60) NULL,
+  bairro VARCHAR(60) NOT NULL,
+  cidade VARCHAR(60) NOT NULL,
+  uf CHAR(2) NOT NULL,
+  cep CHAR(8) NOT NULL,
+  principal BOOLEAN NOT NULL DEFAULT FALSE,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deletado_em DATETIME NULL,
+  CONSTRAINT enderecos_usuario_fk FOREIGN KEY (usuario_id)
+    REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
+);
+
+CREATE TABLE medidas(
+  id_medida BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  usuario_id BIGINT UNSIGNED NOT NULL,
+  busto DECIMAL(5,1) NULL,
+  cintura DECIMAL(5,1) NULL,
+  quadril DECIMAL(5,1) NULL,
+  ombro DECIMAL(5,1) NULL,
+  altura DECIMAL(5,1) NULL,
+  peso DECIMAL(5,1) NULL,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deletado_em DATETIME NULL,
+  CONSTRAINT medidas_usuario_fk FOREIGN KEY (usuario_id)
+    REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
+  CONSTRAINT medidas_positivas_ck CHECK (
+    (busto   IS NULL OR busto   > 0) AND
+    (cintura IS NULL OR cintura > 0) AND
+    (quadril IS NULL OR quadril > 0) AND
+    (ombro   IS NULL OR ombro   > 0) AND
+    (altura  IS NULL OR altura  > 0) AND
+    (peso    IS NULL OR peso    > 0)
+  )
+);
+
+CREATE TABLE categorias(
+  id_categoria BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(255) NOT NULL UNIQUE,
+  descricao VARCHAR(255) NULL,
+  categoria_pai_id BIGINT UNSIGNED NULL,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deletado_em DATETIME NULL,
+  CONSTRAINT categorias_pai_fk FOREIGN KEY (categoria_pai_id)
+    REFERENCES categorias(id_categoria) ON DELETE SET NULL
+);
+
+CREATE TABLE produtos(
+  id_produto BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(255) NOT NULL,
+  descricao VARCHAR(255) NULL,
+  preco DECIMAL(10,2) NOT NULL,
+  ativo BOOLEAN NOT NULL DEFAULT TRUE,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deletado_em DATETIME NULL,
+  CONSTRAINT produtos_preco_ck CHECK (preco >= 0)
+);
+
+CREATE TABLE categorias_produtos(
+  id_categoria_produto BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  produto_id BIGINT UNSIGNED NOT NULL,
+  categoria_id BIGINT UNSIGNED NOT NULL,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deletado_em DATETIME NULL,
+  CONSTRAINT categorias_produtos_uk UNIQUE (produto_id, categoria_id),
+  CONSTRAINT categorias_produtos_produto_fk FOREIGN KEY (produto_id)
+    REFERENCES produtos(id_produto) ON DELETE CASCADE,
+  CONSTRAINT categorias_produtos_categoria_fk FOREIGN KEY (categoria_id)
+    REFERENCES categorias(id_categoria) ON DELETE CASCADE
+);
+
+CREATE TABLE cores(
+  id_cor BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(255) NOT NULL UNIQUE,
+  hex CHAR(7) NULL,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deletado_em DATETIME NULL,
+);
+
+CREATE TABLE tamanhos(
+  id_tamanho BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  sigla VARCHAR(5) NOT NULL UNIQUE,
+  ordem TINYINT UNSIGNED NOT NULL,
+  descricao VARCHAR(40) NULL,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deletado_em DATETIME NULL
+);
+
+CREATE TABLE produtos_fotos(
+  id_produto_foto BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  produto_id BIGINT UNSIGNED NOT NULL,
+  caminho VARCHAR(255) NOT NULL,
+  alt_text VARCHAR(255) NULL,
+  ordem TINYINT UNSIGNED NOT NULL DEFAULT 1,
+  principal BOOLEAN NOT NULL DEFAULT FALSE,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deletado_em DATETIME NULL,
+  CONSTRAINT produtos_fotos_produto_fk FOREIGN KEY (produto_id)
+    REFERENCES produtos(id_produto) ON DELETE CASCADE,
+  CONSTRAINT produtos_fotos_ordem_uk UNIQUE (produto_id, ordem)
+);
+
+CREATE TABLE variacoes(
+  id_variacao BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  produto_id BIGINT UNSIGNED NOT NULL,
+  cor_id BIGINT UNSIGNED NOT NULL,
+  tamanho_id BIGINT UNSIGNED NOT NULL,
+  sku VARCHAR(40) NOT NULL UNIQUE,
+  estoque INT UNSIGNED NOT NULL DEFAULT 0,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deletado_em DATETIME NULL,
+  CONSTRAINT variacoes_uk UNIQUE (produto_id, cor_id, tamanho_id),
+  CONSTRAINT variacoes_produto_fk FOREIGN KEY (produto_id)
+    REFERENCES produtos(id_produto) ON DELETE CASCADE,
+  CONSTRAINT variacoes_cor_fk FOREIGN KEY (cor_id)
+    REFERENCES cores(id_cor),
+  CONSTRAINT variacoes_tamanho_fk FOREIGN KEY (tamanho_id)
+    REFERENCES tamanhos(id_tamanho)
+);
+
+CREATE TABLE descontos(
+  id_desconto BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  produto_id BIGINT UNSIGNED NULL,
+  codigo VARCHAR(30) NULL UNIQUE,
+  tipo ENUM('percentual','valor') NOT NULL,
+  valor DECIMAL(10,2) NOT NULL,
+  inicio_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  fim_em TIMESTAMP NULL,
+  ativo BOOLEAN NOT NULL DEFAULT TRUE,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deletado_em DATETIME NULL,
+  CONSTRAINT descontos_produto_fk FOREIGN KEY (produto_id)
+    REFERENCES produtos(id_produto) ON DELETE CASCADE,
+  CONSTRAINT descontos_valor_ck CHECK (valor > 0),
+  CONSTRAINT descontos_percentual_ck CHECK (tipo <> 'percentual' OR valor <= 100)
+);
+
+CREATE TABLE pedidos(
+  id_pedido BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  usuario_id BIGINT UNSIGNED NOT NULL,
+  endereco_id BIGINT UNSIGNED NOT NULL,
+  desconto_id BIGINT UNSIGNED NULL,
+  status ENUM('carrinho','pago','enviado','entregue','cancelado')
+    NOT NULL DEFAULT 'carrinho',
+  total DECIMAL(10,2) NOT NULL DEFAULT 0,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deletado_em DATETIME NULL,
+  CONSTRAINT pedidos_usuario_fk FOREIGN KEY (usuario_id)
+    REFERENCES usuarios(id_usuario),
+  CONSTRAINT pedidos_endereco_fk FOREIGN KEY (endereco_id)
+    REFERENCES enderecos(id_endereco),
+  CONSTRAINT pedidos_desconto_fk FOREIGN KEY (desconto_id)
+    REFERENCES descontos(id_desconto) ON DELETE SET NULL,
+  CONSTRAINT pedidos_total_ck CHECK (total >= 0)
+);
+
+CREATE TABLE pedidos_itens(
+  id_pedido_item BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  pedido_id BIGINT UNSIGNED NOT NULL,
+  variacao_id BIGINT UNSIGNED NOT NULL,
+  quantidade INT UNSIGNED NOT NULL,
+  preco_unitario DECIMAL(10,2) NOT NULL,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deletado_em DATETIME NULL,
+  CONSTRAINT pedidos_itens_pedido_fk FOREIGN KEY (pedido_id)
+    REFERENCES pedidos(id_pedido) ON DELETE CASCADE,
+  CONSTRAINT pedidos_itens_variacao_fk FOREIGN KEY (variacao_id)
+    REFERENCES variacoes(id_variacao),
+  CONSTRAINT pedidos_itens_quantidade_ck CHECK (quantidade > 0)
+);
