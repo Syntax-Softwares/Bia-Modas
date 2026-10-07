@@ -14,16 +14,17 @@ class Router{
     }
 
     public function dispatch($method,$route){
-        $arr = $this[$method];
-        if(!array_key_exists($route,$arr)){
+        
+        if(!array_key_exists($route,$this->arr[$method])){
             return http_response_code(405);
         }
 
-        if(!isset($arr[$route])){
+        if(!isset($this->arr[$method][$route])){
             return http_response_code(404);
         }
 
-        arr[$method][$route];
+        $callable = $this->arr[$method][$route];
+        $callable();
 
         
     }
