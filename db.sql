@@ -16,7 +16,7 @@ CREATE TABLE medidas(
   CONSTRAINT medidas_positivas_ck CHECK (
     (busto   IS NULL OR busto   > 0) AND
     (cintura IS NULL OR cintura > 0) AND
-    (quadril IS NULL OR quadril > 0) AND
+    (quadril IS NULL OR quadril > 0) 
   )
 );
 
@@ -38,7 +38,7 @@ CREATE TABLE usuarios(
   is_admin BOOLEAN NOT NULL DEFAULT FALSE,
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  deletado_em DATETIME NULL,
+  deletado_em DATETIME NULL
 );
 
 CREATE TABLE enderecos(
@@ -57,7 +57,7 @@ CREATE TABLE enderecos(
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   deletado_em DATETIME NULL,
   CONSTRAINT enderecos_usuario_fk FOREIGN KEY (usuario_id)
-    REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
+    REFERENCES usuarios(id_usuario) ON DELETE CASCADE
 );
 
 CREATE TABLE cupom(
@@ -65,18 +65,18 @@ CREATE TABLE cupom(
   codigo VARCHAR(255) NOT NULL,
   val_min DECIMAL(10,2) NOT NULL,
   val_max DECIMAL(10,2) NOT NULL,
-  deconto DECIMAL(3,2) NOT NULL,
+  desconto DECIMAL(3,2) NOT NULL,
   frete_gratis BOOLEAN NOT NULL DEFAULT FALSE,
   CONSTRAINT valores_ck CHECK (
     (val_min > 0) AND
     (val_max > 0) AND
-    (desconto < 1) AND
-  )
+    (desconto < 1) 
+  ),
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  deletado_em DATETIME NULL,
+  deletado_em DATETIME NULL
 
-)
+);
 
 CREATE TABLE compras(
   id_compra BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -91,14 +91,14 @@ CREATE TABLE compras(
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   deletado_em DATETIME NULL,
   CONSTRAINT compras_cupom_fk FOREIGN KEY (cupom_id)
-    REFERENCES cupom(id_cupom) ON DELETE CASCADE,
+    REFERENCES cupom(id_cupom),
   CONSTRAINT compras_usuario_fk FOREIGN KEY (usuario_id)
-    REFERENCES usuario(id_usuario) ON DELETE CASCADE,
+    REFERENCES usuarios(id_usuario)
 
 );
 
 CREATE TABLE medidas_produtos(
-  id_medidas BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  id_medida BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   busto DECIMAL NOT NULL,
   cintura DECIMAL NOT NULL,
   quadril DECIMAL NOT NULL,
@@ -110,23 +110,19 @@ CREATE TABLE medidas_produtos(
 
 CREATE TABLE ofertas(
   id_ofertas BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  codigo VARCHAR(30) NULL UNIQUE,
-  percentual DECIMAL NOT NULL,
-  valor_max DECIMAL(10,2) NOT NULL,
-  valor_min DECIMAL(10,2) NOT NULL,
+  percentual DECIMAL(3,2) NOT NULL,
   inicio_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   fim_em TIMESTAMP NULL,
   ativo BOOLEAN NOT NULL DEFAULT TRUE,
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   deletado_em DATETIME NULL,
-  CONSTRAINT descontos_valor_ck CHECK (valor > 0),
-  CONSTRAINT descontos_percentual_ck CHECK (tipo <> 'percentual' OR valor <= 100)
+  CONSTRAINT desconto_percentual_ck CHECK (percentual < 1)
 );
 
 CREATE TABLE produtos(
   id_produto BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  categoraia_id BIGINT UNSIGNED NOT NULL,
+  medida_id BIGINT UNSIGNED NOT NULL,
   ofertas_id BIGINT UNSIGNED NOT NULL,
   nome VARCHAR(255) NOT NULL,
   sku VARCHAR(255) NOT NULL,
@@ -137,11 +133,11 @@ CREATE TABLE produtos(
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   deletado_em DATETIME NULL,
-  CONSTRAINT produtos_preco_ck CHECK (preco > 0)
-  CONSTRAINT produtos_categoria_fk FOREIGN KEY (categoraia_id)
-    REFERENCES categorias(id_categoria) ON DELETE CASCADE,
+  CONSTRAINT produtos_preco_ck CHECK (valor > 0),
+  CONSTRAINT medidas_produtos_fk FOREIGN KEY (medida_id)
+    REFERENCES medidas_produtos(id_medida) ON DELETE CASCADE,
   CONSTRAINT produtos_oferta_fk FOREIGN KEY (ofertas_id)
-    REFERENCES ofertas(id_ofertas) ON DELETE CASCADE,
+    REFERENCES ofertas(id_ofertas) ON DELETE CASCADE
 );
 
 CREATE TABLE categorias(
@@ -164,7 +160,7 @@ CREATE TABLE imagem(
     REFERENCES produtos(id_produto),
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  deletado_em DATETIME NULL,
+  deletado_em DATETIME NULL
 );
 
 CREATE TABLE item_carrinho(
@@ -176,11 +172,11 @@ CREATE TABLE item_carrinho(
   CONSTRAINT produto_item_carrinho_fk FOREIGN KEY (produto_id)
     REFERENCES produtos(id_produto),
   CONSTRAINT carrinho_item_carrinho_fk FOREIGN KEY (carrinho_id)
-    REFERENCES carrinhos(carrinho_id),
+    REFERENCES carrinhos(id_carrinho),
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  deletado_em DATETIME NULL,
-)
+  deletado_em DATETIME NULL
+);
 
 CREATE TABLE item_compra(
   id_item_compra BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -192,8 +188,8 @@ CREATE TABLE item_compra(
   CONSTRAINT produto_item_compra_fk FOREIGN KEY (produto_id)
     REFERENCES produtos(id_produto),
   CONSTRAINT compra_item_compra_fk FOREIGN KEY (compra_id)
-    REFERENCES compra(id_compra),
+    REFERENCES compras(id_compra),
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  deletado_em DATETIME NULL,
-)
+  deletado_em DATETIME NULL
+);
