@@ -1,5 +1,6 @@
 DROP DATABASE IF EXISTS biamodas;
 
+
 CREATE DATABASE biamodas
   CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -29,6 +30,8 @@ CREATE TABLE carrinhos(
 
 CREATE TABLE usuarios(
   id_usuario BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  carrinho_id BIGINT UNSIGNED NOT NULL,
+  medida_id BIGINT UNSIGNED NOT NULL,
   nome VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL UNIQUE,
   senha_hash VARCHAR(255) NOT NULL,
@@ -36,6 +39,10 @@ CREATE TABLE usuarios(
   telefone VARCHAR(20) NULL,
   data_nascimento DATE NULL,
   is_admin BOOLEAN NOT NULL DEFAULT FALSE,
+  CONSTRAINT medidas_usuario_fk FOREIGN KEY (medida_id)
+	REFERENCES medidas(id_medida),
+  CONSTRAINT carrinho_usuario_fk FOREIGN KEY (carrinho_id)
+	REFERENCES carrinhos(id_carrinho),
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   deletado_em DATETIME NULL
