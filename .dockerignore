@@ -1,0 +1,14 @@
+.git
+.github
+.gitignore
+.vscode
+.idea
+.env
+
+**/*.log
+**/node_modules
+**/vendor
+
+# O schema e montado direto no container do banco, nao precisa ir na imagem
+db.sql
+README.md
