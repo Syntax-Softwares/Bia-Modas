@@ -1,11 +1,22 @@
-DROP DATABASE IF EXISTS biamodas;
+-- =====================================================================
+-- Bia Modas - schema do banco de dados
+--
+-- ATENCAO: script DESTRUTIVO. O DROP DATABASE abaixo apaga o banco
+-- "biamodas" inteiro. Use apenas em desenvolvimento/testes locais.
+-- =====================================================================
 
+DROP DATABASE IF EXISTS biamodas;
 
 CREATE DATABASE biamodas
   CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 USE biamodas;
 
+SET NAMES utf8mb4;
+
+-- ---------------------------------------------------------------------
+-- Medidas do usuario (1:1 opcional com usuarios)
+-- ---------------------------------------------------------------------
 CREATE TABLE medidas(
   id_medida BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   busto DECIMAL(5,1) NULL,
@@ -17,10 +28,13 @@ CREATE TABLE medidas(
   CONSTRAINT medidas_positivas_ck CHECK (
     (busto   IS NULL OR busto   > 0) AND
     (cintura IS NULL OR cintura > 0) AND
-    (quadril IS NULL OR quadril > 0) 
+    (quadril IS NULL OR quadril > 0)
   )
 );
 
+-- ---------------------------------------------------------------------
+-- Carrinho (1:1 opcional com usuarios)
+-- ---------------------------------------------------------------------
 CREATE TABLE carrinhos(
   id_carrinho BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -30,22 +44,26 @@ CREATE TABLE carrinhos(
 
 CREATE TABLE usuarios(
   id_usuario BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  carrinho_id BIGINT UNSIGNED NOT NULL,
-  medida_id BIGINT UNSIGNED NOT NULL,
+  carrinho_id BIGINT UNSIGNED NULL,
+  medida_id BIGINT UNSIGNED NULL,
   nome VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL UNIQUE,
+  email VARCHAR(255) NOT NULL,
   senha_hash VARCHAR(255) NOT NULL,
-  cpf CHAR(11) NULL UNIQUE,
+  cpf CHAR(11) NULL,
   telefone VARCHAR(20) NULL,
   data_nascimento DATE NULL,
   is_admin BOOLEAN NOT NULL DEFAULT FALSE,
-  CONSTRAINT medidas_usuario_fk FOREIGN KEY (medida_id)
-	REFERENCES medidas(id_medida),
-  CONSTRAINT carrinho_usuario_fk FOREIGN KEY (carrinho_id)
-	REFERENCES carrinhos(id_carrinho),
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  deletado_em DATETIME NULL
+  deletado_em DATETIME NULL,
+  CONSTRAINT usuarios_email_uk UNIQUE (email),
+  CONSTRAINT usuarios_cpf_uk UNIQUE (cpf),
+  CONSTRAINT usuarios_carrinho_uk UNIQUE (carrinho_id),
+  CONSTRAINT usuarios_medida_uk UNIQUE (medida_id),
+  CONSTRAINT usuarios_medida_fk FOREIGN KEY (medida_id)
+    REFERENCES medidas(id_medida) ON DELETE SET NULL,
+  CONSTRAINT usuarios_carrinho_fk FOREIGN KEY (carrinho_id)
+    REFERENCES carrinhos(id_carrinho) ON DELETE SET NULL
 );
 
 CREATE TABLE enderecos(
@@ -67,136 +85,186 @@ CREATE TABLE enderecos(
     REFERENCES usuarios(id_usuario) ON DELETE CASCADE
 );
 
-CREATE TABLE cupom(
+-- ---------------------------------------------------------------------
+-- Cupons de desconto
+-- `desconto` e uma fracao: 0.10 = 10%
+-- ---------------------------------------------------------------------
+CREATE TABLE cupons(
   id_cupom BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  codigo VARCHAR(255) NOT NULL,
+  codigo VARCHAR(50) NOT NULL,
   val_min DECIMAL(10,2) NOT NULL,
   val_max DECIMAL(10,2) NOT NULL,
-  desconto DECIMAL(3,2) NOT NULL,
+  desconto DECIMAL(5,2) NOT NULL,
   frete_gratis BOOLEAN NOT NULL DEFAULT FALSE,
-  CONSTRAINT valores_ck CHECK (
-    (val_min > 0) AND
-    (val_max > 0) AND
-    (desconto < 1) 
-  ),
-  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  deletado_em DATETIME NULL
-
-);
-
-CREATE TABLE compras(
-  id_compra BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  usuario_id BIGINT UNSIGNED NOT NULL,
-  cupom_id BIGINT UNSIGNED NOT NULL,
-  numero_pedido INT NOT NULL,
-  valor_total DECIMAL(10,2) NOT NULL,
-  situacao BOOLEAN NOT NULL DEFAULT FALSE,
-  frete DECIMAL NOT NULL,
-  desconto DECIMAL,
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   deletado_em DATETIME NULL,
-  CONSTRAINT compras_cupom_fk FOREIGN KEY (cupom_id)
-    REFERENCES cupom(id_cupom),
-  CONSTRAINT compras_usuario_fk FOREIGN KEY (usuario_id)
-    REFERENCES usuarios(id_usuario)
-
+  CONSTRAINT cupons_codigo_uk UNIQUE (codigo),
+  CONSTRAINT cupons_valores_ck CHECK (
+    val_min >= 0 AND
+    val_max >= val_min AND
+    desconto > 0 AND desconto < 1
+  )
 );
 
-CREATE TABLE medidas_produtos(
-  id_medida BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  busto DECIMAL NOT NULL,
-  cintura DECIMAL NOT NULL,
-  quadril DECIMAL NOT NULL,
-  tamanho DECIMAL NOT NULL,
-  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  deletado_em DATETIME NULL
-);
-
+-- ---------------------------------------------------------------------
+-- Ofertas (promocoes percentuais com vigencia)
+-- `percentual` e uma fracao: 0.15 = 15%
+-- ---------------------------------------------------------------------
 CREATE TABLE ofertas(
-  id_ofertas BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  percentual DECIMAL(3,2) NOT NULL,
+  id_oferta BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  percentual DECIMAL(5,2) NOT NULL,
   inicio_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   fim_em TIMESTAMP NULL,
   ativo BOOLEAN NOT NULL DEFAULT TRUE,
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   deletado_em DATETIME NULL,
-  CONSTRAINT desconto_percentual_ck CHECK (percentual < 1)
+  CONSTRAINT ofertas_percentual_ck CHECK (percentual > 0 AND percentual < 1),
+  CONSTRAINT ofertas_vigencia_ck CHECK (fim_em IS NULL OR fim_em >= inicio_em)
+);
+
+-- ---------------------------------------------------------------------
+-- Especificacao de tamanho/medidas de um produto
+-- ---------------------------------------------------------------------
+CREATE TABLE medidas_produtos(
+  id_medida_produto BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  tamanho VARCHAR(5) NOT NULL,
+  busto DECIMAL(5,1) NULL,
+  cintura DECIMAL(5,1) NULL,
+  quadril DECIMAL(5,1) NULL,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deletado_em DATETIME NULL,
+  CONSTRAINT medidas_produtos_positivas_ck CHECK (
+    (busto   IS NULL OR busto   > 0) AND
+    (cintura IS NULL OR cintura > 0) AND
+    (quadril IS NULL OR quadril > 0)
+  )
+);
+
+-- ---------------------------------------------------------------------
+-- Compras
+-- ---------------------------------------------------------------------
+CREATE TABLE compras(
+  id_compra BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  usuario_id BIGINT UNSIGNED NOT NULL,
+  endereco_id BIGINT UNSIGNED NULL,
+  cupom_id BIGINT UNSIGNED NULL,
+  numero_pedido INT NOT NULL,
+  valor_total DECIMAL(10,2) NOT NULL DEFAULT 0,
+  situacao BOOLEAN NOT NULL DEFAULT FALSE,
+  frete DECIMAL(10,2) NOT NULL DEFAULT 0,
+  desconto DECIMAL(10,2) NOT NULL DEFAULT 0,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deletado_em DATETIME NULL,
+  CONSTRAINT compras_numero_pedido_uk UNIQUE (numero_pedido),
+  CONSTRAINT compras_valores_ck CHECK (
+    valor_total >= 0 AND
+    frete >= 0 AND
+    desconto >= 0
+  ),
+  CONSTRAINT compras_usuario_fk FOREIGN KEY (usuario_id)
+    REFERENCES usuarios(id_usuario) ON DELETE RESTRICT,
+  CONSTRAINT compras_endereco_fk FOREIGN KEY (endereco_id)
+    REFERENCES enderecos(id_endereco) ON DELETE SET NULL,
+  CONSTRAINT compras_cupom_fk FOREIGN KEY (cupom_id)
+    REFERENCES cupons(id_cupom) ON DELETE SET NULL
 );
 
 CREATE TABLE produtos(
   id_produto BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  medida_id BIGINT UNSIGNED NOT NULL,
-  ofertas_id BIGINT UNSIGNED NOT NULL,
+  medida_produto_id BIGINT UNSIGNED NOT NULL,
+  oferta_id BIGINT UNSIGNED NULL,
   nome VARCHAR(255) NOT NULL,
-  sku VARCHAR(255) NOT NULL,
+  sku VARCHAR(50) NOT NULL,
   descricao VARCHAR(255) NULL,
-  estoque INT NOT NULL,
+  estoque INT NOT NULL DEFAULT 0,
   valor DECIMAL(10,2) NOT NULL,
   ativo BOOLEAN NOT NULL DEFAULT TRUE,
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   deletado_em DATETIME NULL,
-  CONSTRAINT produtos_preco_ck CHECK (valor > 0),
-  CONSTRAINT medidas_produtos_fk FOREIGN KEY (medida_id)
-    REFERENCES medidas_produtos(id_medida) ON DELETE CASCADE,
-  CONSTRAINT produtos_oferta_fk FOREIGN KEY (ofertas_id)
-    REFERENCES ofertas(id_ofertas) ON DELETE CASCADE
+  CONSTRAINT produtos_sku_uk UNIQUE (sku),
+  CONSTRAINT produtos_valor_ck CHECK (valor > 0),
+  CONSTRAINT produtos_estoque_ck CHECK (estoque >= 0),
+  CONSTRAINT produtos_medida_fk FOREIGN KEY (medida_produto_id)
+    REFERENCES medidas_produtos(id_medida_produto) ON DELETE RESTRICT,
+  CONSTRAINT produtos_oferta_fk FOREIGN KEY (oferta_id)
+    REFERENCES ofertas(id_oferta) ON DELETE SET NULL
 );
 
 CREATE TABLE categorias(
   id_categoria BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  categoria_pai_id BIGINT UNSIGNED NULL,
   nome VARCHAR(255) NOT NULL,
-  descricao VARCHAR(255) NOT NULL,
-  produto_id BIGINT UNSIGNED NOT NULL,
+  descricao VARCHAR(255) NULL,
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   deletado_em DATETIME NULL,
-  CONSTRAINT produtos_categoria_fk FOREIGN KEY (produto_id)
-    REFERENCES produtos(id_produto) 
+  CONSTRAINT categorias_nome_uk UNIQUE (nome),
+  CONSTRAINT categorias_pai_fk FOREIGN KEY (categoria_pai_id)
+    REFERENCES categorias(id_categoria) ON DELETE SET NULL
 );
 
-CREATE TABLE imagem(
-  id_imagem BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  caminho_imagem VARCHAR(255),
+CREATE TABLE categorias_produtos(
+  id_categoria_produto BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   produto_id BIGINT UNSIGNED NOT NULL,
-  CONSTRAINT produtos_imagem_fk FOREIGN KEY (produto_id)
-    REFERENCES produtos(id_produto),
+  categoria_id BIGINT UNSIGNED NOT NULL,
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  deletado_em DATETIME NULL
+  deletado_em DATETIME NULL,
+  CONSTRAINT categorias_produtos_uk UNIQUE (produto_id, categoria_id),
+  CONSTRAINT categorias_produtos_produto_fk FOREIGN KEY (produto_id)
+    REFERENCES produtos(id_produto) ON DELETE CASCADE,
+  CONSTRAINT categorias_produtos_categoria_fk FOREIGN KEY (categoria_id)
+    REFERENCES categorias(id_categoria) ON DELETE CASCADE
 );
 
-CREATE TABLE item_carrinho(
+CREATE TABLE imagens(
+  id_imagem BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  produto_id BIGINT UNSIGNED NOT NULL,
+  caminho_imagem VARCHAR(255) NOT NULL,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deletado_em DATETIME NULL,
+  CONSTRAINT imagens_produto_fk FOREIGN KEY (produto_id)
+    REFERENCES produtos(id_produto) ON DELETE CASCADE
+);
+
+CREATE TABLE itens_carrinho(
   id_item_carrinho BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   carrinho_id BIGINT UNSIGNED NOT NULL,
   produto_id BIGINT UNSIGNED NOT NULL,
   quantidade INT NOT NULL,
-  val_unit DECIMAL(10,2),
-  CONSTRAINT produto_item_carrinho_fk FOREIGN KEY (produto_id)
-    REFERENCES produtos(id_produto),
-  CONSTRAINT carrinho_item_carrinho_fk FOREIGN KEY (carrinho_id)
-    REFERENCES carrinhos(id_carrinho),
+  valor_unitario DECIMAL(10,2) NOT NULL,
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  deletado_em DATETIME NULL
+  deletado_em DATETIME NULL,
+  CONSTRAINT itens_carrinho_uk UNIQUE (carrinho_id, produto_id),
+  CONSTRAINT itens_carrinho_quantidade_ck CHECK (quantidade > 0),
+  CONSTRAINT itens_carrinho_valor_ck CHECK (valor_unitario >= 0),
+  CONSTRAINT itens_carrinho_carrinho_fk FOREIGN KEY (carrinho_id)
+    REFERENCES carrinhos(id_carrinho) ON DELETE CASCADE,
+  CONSTRAINT itens_carrinho_produto_fk FOREIGN KEY (produto_id)
+    REFERENCES produtos(id_produto) ON DELETE CASCADE
 );
 
-CREATE TABLE item_compra(
+CREATE TABLE itens_compra(
   id_item_compra BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  produto_id BIGINT UNSIGNED NOT NULL,
   compra_id BIGINT UNSIGNED NOT NULL,
+  produto_id BIGINT UNSIGNED NOT NULL,
   quantidade INT NOT NULL,
-  valor_unitario DECIMAL(10,2),
-  valor_total DECIMAL(10,2),
-  CONSTRAINT produto_item_compra_fk FOREIGN KEY (produto_id)
-    REFERENCES produtos(id_produto),
-  CONSTRAINT compra_item_compra_fk FOREIGN KEY (compra_id)
-    REFERENCES compras(id_compra),
+  valor_unitario DECIMAL(10,2) NOT NULL,
+  valor_total DECIMAL(10,2) NOT NULL,
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  deletado_em DATETIME NULL
+  deletado_em DATETIME NULL,
+  CONSTRAINT itens_compra_quantidade_ck CHECK (quantidade > 0),
+  CONSTRAINT itens_compra_valores_ck CHECK (valor_unitario >= 0 AND valor_total >= 0),
+  CONSTRAINT itens_compra_compra_fk FOREIGN KEY (compra_id)
+    REFERENCES compras(id_compra) ON DELETE CASCADE,
+  CONSTRAINT itens_compra_produto_fk FOREIGN KEY (produto_id)
+    REFERENCES produtos(id_produto) ON DELETE RESTRICT
 );
