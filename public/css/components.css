@@ -60,6 +60,17 @@
     color: var(--color-dark);
 }
 
+.btn-outline-dark {
+    color: var(--color-dark);
+    border-color: var(--color-dark);
+}
+
+.btn-outline-dark:hover {
+    background-color: var(--color-dark);
+    border-color: var(--color-dark);
+    color: white;
+}
+
 /* Products */
 .products-section {
     padding: 80px 0;
