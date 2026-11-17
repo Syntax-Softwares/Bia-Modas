@@ -398,3 +398,40 @@
         font-size: 1rem;
     }
 }
+
+/* --- Ajustes do backend PHP (MVC05/MVC06) --- */
+.product-breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    font-size: 0.78rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--color-gray);
+    margin-bottom: 28px;
+}
+
+.product-breadcrumb a {
+    color: var(--color-dark);
+    text-decoration: none;
+}
+
+.product-breadcrumb a:hover {
+    color: var(--color-primary);
+}
+
+.product-detail-price {
+    margin: 18px 0 24px;
+}
+
+.product-stock {
+    color: #1f8a3f;
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin: 10px 0 0;
+}
+
+.product-stock.out {
+    color: var(--color-primary);
+}
