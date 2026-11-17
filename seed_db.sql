@@ -254,3 +254,14 @@ SET cor = TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(descricao, 'Cor: ', -1), '.', 1))
     estilo = TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(descricao, 'Estilo: ', -1), '.', 1))
 WHERE descricao LIKE '%Cor: %'
   AND (cor IS NULL OR estilo IS NULL);
+
+-- Usuario administrador de desenvolvimento.
+-- E-mail: admin@biamodas.local | Senha: Admin@123
+-- Troque a senha apos o primeiro acesso em producao.
+INSERT INTO usuarios (nome, email, senha_hash, telefone, is_admin)
+SELECT 'Administrador', 'admin@biamodas.local',
+       '$2y$12$Pm5dOdmnfGzB5LGIvvM5Q.JLJYXh8qrmCz.n5LN389gb1IRNHiFRK',
+       '14999999999', TRUE
+WHERE NOT EXISTS (
+    SELECT 1 FROM usuarios WHERE email = 'admin@biamodas.local'
+);

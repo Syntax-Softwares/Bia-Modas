@@ -19,6 +19,7 @@ require_once __DIR__ . '/../repositories/endereco_repository.php';
 require_once __DIR__ . '/../repositories/catalogo_repository.php';
 require_once __DIR__ . '/../repositories/codigo_recuperacao_repository.php';
 require_once __DIR__ . '/../repositories/pedido_repository.php';
+require_once __DIR__ . '/../repositories/admin_repository.php';
 
 require_once __DIR__ . '/../controllers/home_controller.php';
 require_once __DIR__ . '/../controllers/auth_controller.php';
@@ -29,6 +30,11 @@ require_once __DIR__ . '/../controllers/favoritos_controller.php';
 require_once __DIR__ . '/../controllers/carrinho_controller.php';
 require_once __DIR__ . '/../controllers/checkout_controller.php';
 require_once __DIR__ . '/../controllers/pedidos_controller.php';
+require_once __DIR__ . '/../controllers/admin_controller.php';
+require_once __DIR__ . '/../controllers/admin_produtos_controller.php';
+require_once __DIR__ . '/../controllers/admin_categorias_controller.php';
+require_once __DIR__ . '/../controllers/admin_pedidos_controller.php';
+require_once __DIR__ . '/../controllers/admin_usuarios_controller.php';
 
 date_default_timezone_set(getenv('TZ') ?: 'America/Sao_Paulo');
 
@@ -103,6 +109,59 @@ $router->get('/checkout', [$checkoutController, 'index']);
 $router->post('/checkout', [$checkoutController, 'confirmar']);
 $router->get('/pedidos', [$pedidosController, 'index']);
 $router->get('/pedido', [$pedidosController, 'ver']);
+
+// Painel administrativo
+$router->get('/admin', static function () use ($pdo): void {
+    (new AdminController($pdo))->index();
+});
+$router->get('/admin/produtos', static function () use ($pdo): void {
+    (new AdminProdutosController($pdo))->index();
+});
+$router->get('/admin/produtos/novo', static function () use ($pdo): void {
+    (new AdminProdutosController($pdo))->novo();
+});
+$router->get('/admin/produtos/editar', static function () use ($pdo): void {
+    (new AdminProdutosController($pdo))->editar();
+});
+$router->post('/admin/produtos/salvar', static function () use ($pdo): void {
+    (new AdminProdutosController($pdo))->salvar();
+});
+$router->post('/admin/produtos/excluir', static function () use ($pdo): void {
+    (new AdminProdutosController($pdo))->excluir();
+});
+
+$router->get('/admin/categorias', static function () use ($pdo): void {
+    (new AdminCategoriasController($pdo))->index();
+});
+$router->post('/admin/categorias/salvar', static function () use ($pdo): void {
+    (new AdminCategoriasController($pdo))->salvar();
+});
+$router->post('/admin/categorias/excluir', static function () use ($pdo): void {
+    (new AdminCategoriasController($pdo))->excluir();
+});
+
+$router->get('/admin/pedidos', static function () use ($pdo): void {
+    (new AdminPedidosController($pdo))->index();
+});
+$router->get('/admin/pedidos/ver', static function () use ($pdo): void {
+    (new AdminPedidosController($pdo))->ver();
+});
+$router->post('/admin/pedidos/atualizar', static function () use ($pdo): void {
+    (new AdminPedidosController($pdo))->atualizar();
+});
+
+$router->get('/admin/usuarios', static function () use ($pdo): void {
+    (new AdminUsuariosController($pdo))->index();
+});
+$router->get('/admin/usuarios/ver', static function () use ($pdo): void {
+    (new AdminUsuariosController($pdo))->ver();
+});
+$router->post('/admin/usuarios/alternar-admin', static function () use ($pdo): void {
+    (new AdminUsuariosController($pdo))->alternarAdmin();
+});
+$router->post('/admin/usuarios/excluir', static function () use ($pdo): void {
+    (new AdminUsuariosController($pdo))->excluir();
+});
 
 $metodo = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
 

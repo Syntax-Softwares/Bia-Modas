@@ -6,7 +6,9 @@ $busca = (string) ($busca ?? '');
 $listaSugestoes = is_array($sugestoes ?? null) ? $sugestoes : [];
 $quantidadeCarrinho = (int) ($quantidadeCarrinho ?? ($data['quantidadeCarrinho'] ?? 0));
 $favoritosTotal = (int) ($favoritosTotal ?? ($data['favoritosTotal'] ?? 0));
+$ocultarTopBar = (bool) ($ocultarTopBar ?? false);
 ?>
+<?php if (!$ocultarTopBar): ?>
 <div class="top-bar">
     <div class="container">
         <div class="row align-items-center">
@@ -20,6 +22,7 @@ $favoritosTotal = (int) ($favoritosTotal ?? ($data['favoritosTotal'] ?? 0));
         </div>
     </div>
 </div>
+<?php endif; ?>
 
 <header class="main-header">
     <div class="container">
@@ -56,6 +59,11 @@ $favoritosTotal = (int) ($favoritosTotal ?? ($data['favoritosTotal'] ?? 0));
             </div>
             <div class="col-lg-3 col-md-3 col-6 text-end">
                 <div class="header-actions justify-content-end">
+                    <?php if ($estaLogado && !empty($usuarioHeader['is_admin'])): ?>
+                        <a href="/admin" class="auth-header-link" aria-label="Painel administrativo" title="Painel administrativo">
+                            <i class="bi bi-speedometer2"></i>
+                        </a>
+                    <?php endif; ?>
                     <a href="<?= e($contaHref) ?>" class="auth-header-link" aria-label="Minha conta">
                         <?php if ($estaLogado): ?>
                             <span class="auth-avatar-logged" title="<?= e($usuarioHeader['nome'] ?? '') ?>"><?= e(inicial((string) ($usuarioHeader['nome'] ?? ''))) ?></span>
