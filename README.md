@@ -12,11 +12,13 @@
 - [1. Introdução](#1-introdução)
 - [Objetivos](#-objetivos)
 - [Metodologia](#-metodologia)
+- [1.3 Cronograma](#13-cronograma)
 - [2. Requisitos](#2-requisitos)
 - [Requisitos funcionais](#-requisitos-funcionais)
 - [Requisitos não funcionais](#-requisitos-não-funcionais)
 - [3. Modelo de casos de uso](#3-modelo-de-casos-de-uso)
 - [4. Modelo do banco de dados](#4-modelo-do-banco-de-dados)
+- [4.1 Modelo implementado no repositório](#41-modelo-implementado-no-repositório)
 - [5. Banco de dados](#5-banco-de-dados)
 - [6. Diagrama de classes](#6-diagrama-de-classes)
 - [7. Estudo de viabilidade](#7-estudo-de-viabilidade)
@@ -24,6 +26,8 @@
 - [9. Design](#9-design)
 - [10. Protótipo](#10-protótipo)
 - [11. Aplicação](#11-aplicação)
+- [11.1 Como executar localmente](#111-como-executar-localmente)
+- [11.2 Módulos e branches](#112-módulos-e-branches)
 
 </details>
 
@@ -45,8 +49,33 @@ O projeto visa transformar a jornada de compra do consumidor plus size por meio 
 * **Escalabilidade:** Estruturar o catálogo como uma base robusta para a futura expansão rumo a um ecossistema de e-commerce completo.
   
 ## • Metodologia
-(Que métodos, tecnologias, modelos de processo, ferramentas irá utilizar?
-Responde à pergunta: Como? Com o que? Onde? Quando?)
+
+O projeto é desenvolvido com **PHP 8.4** e **Apache**, seguindo o padrão **MVC** (Model-View-Controller). A aplicação é organizada em `controllers`, `models`, `repositories`, `views`, `core` e `public`, com o front controller em `public/index.php`. O acesso ao banco é feito com **PDO** e **prepared statements**, e o banco utilizado é o **MariaDB 11**.
+
+| Camada | Tecnologias |
+|---|---|
+| Back-end | PHP 8.4 + Apache, arquitetura MVC |
+| Banco de dados | MariaDB 11 + PDO (prepared statements) |
+| Front-end | HTML5, CSS3, JavaScript e Bootstrap 5 |
+| Infraestrutura | Docker e Docker Compose |
+| Segurança | Sessões, CSRF, rate limit, CSP e bcrypt |
+| Design e processo | Figma, Scrum, Git/GitHub e GitHub Actions |
+
+**Fluxo da requisição:** `navegador → public/index.php → router → controller → repository → PDO → MariaDB → view`.
+
+O versionamento é feito no GitHub, com branches por módulo e integração na branch `integracao_backend`. O deploy é automatizado via GitHub Actions para uma VPS.
+
+## 1.3 Cronograma
+
+O MVP foi estimado em **8 a 10 semanas**, organizado em cinco fases:
+
+| Fase | Período | Entregas principais |
+|---|---|---|
+| Fase 1 — Validação | Semanas 1 e 2 | Validação com usuárias reais, fornecedores, requisitos e backlog inicial. |
+| Fase 2 — Fundação | Semanas 3 e 4 | Sprint 0, landing page, arquitetura, identidade visual e protótipo. |
+| Fase 3 — Catálogo | Semanas 5 e 6 | Cadastro/autenticação, catálogo, busca, filtros e detalhes do produto. |
+| Fase 4 — Compra | Semanas 7 e 8 | Carrinho, favoritos, checkout, pagamento e painel administrativo. |
+| Fase 5 — Beta | Semanas 9 e 10 | Testes, ajustes de UX, feedback e lançamento em beta fechado. |
 
 # 2. Requisitos
 
@@ -54,45 +83,289 @@ Responde à pergunta: Como? Com o que? Onde? Quando?)
 
 | Código | Nome | Descrição |
 |--------|------|----------|
-| RF01 | Cadastro de Usuário | O sistema deve permitir que o usuário se cadastre informando nome completo, CPF, e-mail, senha, data de nascimento, endereço completo e telefone. |
-| RF02 | Autenticação de Usuário | O sistema deve permitir login com e-mail e senha previamente cadastrados. |
-| RF03 | Recuperação de Senha | O sistema deve permitir redefinir a senha via e-mail. |
-| RF04 | Barra de Pesquisa | O sistema deve possuir busca com sugestões automáticas e redirecionamento para página de resultados. |
-| RF05 | Recomendações Personalizadas | O sistema deve permitir coleta de dados (com consentimento) para gerar recomendações em tempo real. |
-| RF06 | Catálogo e Visualização de Produtos | O sistema deve permitir acesso ao catálogo completo e visualização de detalhes dos produtos (descrição, especificações, imagens, preço e avaliações). |
-| RF07 | Experiência de Compra e Favoritos | O sistema deve permitir selecionar produtos, escolher variações, definir quantidades e favoritar itens para uso futuro. |
-| RF08 | Carrinho de Compras e Finalização | O sistema deve permitir adicionar produtos ao carrinho, visualizar itens e total, e finalizar a compra com integração a sistemas de pagamento. |
-| RF09 | Filtro de Produtos | O sistema deve permitir filtrar produtos por categoria, preço e relevância. |
-| RF10 | Dashboard Administrativa | O sistema deve disponibilizar uma área exclusiva para administradores com funcionalidades de gestão. |
-| RF11 | Gestão Administrativa | O administrador deve poder realizar CRUD de usuários e produtos, além de gerenciar promoções e descontos. |
-| RF12 | Histórico de Pedidos | O sistema deve permitir visualizar compras anteriores. |
-| RF13 | Avaliação de Produtos | O sistema deve permitir que usuários avaliem produtos. |
-| RF14 | Controle de Estoque | O sistema deve controlar automaticamente o estoque de produtos. |
+| RF01 | Barra de Pesquisa | O sistema deve disponibilizar uma barra de busca com sugestões automáticas durante a digitação e redirecionamento para a página de resultados. |
+| RF02 | Filtro de Produtos | O sistema deve permitir filtrar produtos por categoria, faixa de preço, relevância, tipo de corpo, elasticidade e compressão. |
+| RF03 | Cadastro de Usuário | O sistema deve permitir que a usuária realize seu cadastro fornecendo nome, CPF, RG, data de nascimento, endereço, telefone, e-mail e senha. |
+| RF04 | Autenticação de Usuário | O sistema deve permitir que usuárias previamente cadastradas acessem a plataforma por meio de autenticação com e-mail e senha. |
+| RF05 | Catálogo e Visualização de Produtos | O sistema deve permitir acesso ao catálogo completo e à visualização dos detalhes dos produtos: descrição, especificações, imagens, preço e avaliações. |
+| RF06 | Recomendações Personalizadas | O sistema deve permitir a coleta de dados, com consentimento, para gerar recomendações de produtos e de tamanho em tempo real. |
+| RF07 | Carrinho de Compras e Finalização | O sistema deve permitir adicionar produtos ao carrinho, visualizar itens e total e finalizar a compra com integração a sistemas de pagamento. |
+| RF08 | Experiência de Compra e Favoritos | O sistema deve permitir selecionar produtos, escolher variações, definir quantidades e favoritar itens para uso futuro. |
+| RF09 | Recuperação de Senha | O sistema deve permitir que a usuária redefina a senha por meio de um link enviado para o e-mail cadastrado. |
+| RF10 | Controle de Estoque | O sistema deve controlar automaticamente o estoque dos produtos, atualizando as quantidades após vendas e cancelamentos. |
+| RF11 | Histórico de Pedidos | O sistema deve permitir que a usuária visualize suas compras anteriores, com status e detalhes de cada pedido. |
+| RF12 | Gestão Administrativa | O sistema deve disponibilizar uma área exclusiva para administradores, com funcionalidades de gestão. |
+| RF13 | Avaliação de Produtos | O sistema deve permitir que as usuárias avaliem os produtos adquiridos, atribuindo nota e comentário. |
+| RF14 | Dashboard Administrativa | O administrador deve poder realizar o CRUD de usuários e produtos, gerenciar promoções e descontos e acompanhar indicadores no painel administrativo. |
 
 ## • Requisitos não funcionais
 
 | Código | Nome | Descrição |
 |--------|------|----------|
-| RNF01 | Desempenho | O sistema deve responder às requisições em até 2 segundos em condições normais. |
-| RNF02 | Escalabilidade | O sistema deve suportar múltiplos usuários simultâneos sem perda significativa de desempenho. |
-| RNF03 | Disponibilidade | O sistema deve estar disponível 24/7 com alta disponibilidade. |
-| RNF04 | Segurança de Dados | O sistema deve proteger os dados dos usuários com criptografia and boas práticas de segurança. |
-| RNF05 | Conformidade LGPD | O sistema deve garantir privacidade e consentimento no uso dos dados dos usuários. |
-| RNF06 | Usabilidade | O sistema deve possuir interface simples e intuitiva. |
-| RNF07 | Responsividade | O sistema deve funcionar corretamente em desktop, tablet e dispositivos móveis. |
-| RNF08 | Compatibilidade | O sistema deve ser compatível com os principais navegadores. |
-| RNF09 | Manutenibilidade | O sistema deve possuir código organizado e de fácil manutenção. |
-| RNF10 | Confiabilidade | O sistema deve garantir integridade e consistência dos dados. |
-| RNF11 | Autenticação Segura | O sistema deve armazenar senhas criptografadas e utilizar autenticação segura. |
-| RNF12 | Controle de Acesso | O sistema deve restringir o acesso à área administrativa apenas a administradores. |
-| RNF13 | Integração com APIs | O sistema deve integrar-se de forma eficiente com APIs externas. |
-| RNF14 | Backup | O sistema deve realizar backups periódicos dos dados. |
+| RNF01 | Usabilidade | O sistema deve possuir interface simples, intuitiva e acolhedora. |
+| RNF02 | Desempenho | O sistema deve responder às requisições da usuária em até 2 segundos, em condições normais de uso. |
+| RNF03 | Escalabilidade | O sistema deve suportar múltiplos acessos simultâneos sem degradação significativa de desempenho. |
+| RNF04 | Confiabilidade | O sistema deve garantir a integridade e a consistência dos dados. |
+| RNF05 | Disponibilidade | O sistema deve estar disponível 24 horas por dia, 7 dias por semana, com taxa mínima de 99%. |
+| RNF06 | Responsividade | O sistema deve funcionar corretamente em desktop, tablet e dispositivos móveis. |
+| RNF07 | Compatibilidade | O sistema deve ser compatível com os principais navegadores do mercado. |
+| RNF08 | Manutenibilidade | O sistema deve possuir código organizado e de fácil manutenção. |
+| RNF09 | Conformidade com a LGPD | O sistema deve garantir privacidade e consentimento no uso dos dados das usuárias. |
+| RNF10 | Segurança de Dados | O sistema deve proteger os dados contra acessos não autorizados, incluindo criptografia de senhas e informações sensíveis. |
+| RNF11 | Backup | O sistema deve realizar backups periódicos dos dados. |
+| RNF12 | Controle de Acesso | O sistema deve restringir o acesso à área administrativa apenas a administradores autorizados. |
+| RNF13 | Integração com APIs | O sistema deve integrar-se de forma eficiente com APIs externas, como pagamento, e-mail e serviços de recomendação. |
+| RNF14 | Autenticação Segura | O sistema deve armazenar senhas criptografadas e utilizar mecanismos seguros de autenticação. |
 | RNF15 | Recuperação de Falhas | O sistema deve ser capaz de se recuperar rapidamente após falhas. |
 
 # 3. Modelo de casos de uso
 
+O diagrama abaixo representa os atores e os casos de uso do sistema. Os atores são **Visitante**, **Cliente** e **Administrador**; o **Sistema de Pagamento** e o **Serviço de E-mail** atuam como sistemas externos.
+
+```mermaid
+flowchart LR
+    Visitante([Visitante])
+    Cliente([Cliente])
+    Admin([Administrador])
+    Email([Serviço de E-mail])
+    Pagamento([Sistema de Pagamento])
+
+    subgraph Sistema["Sistema Bia Modas"]
+        UC01["UC01 · Cadastrar usuário"]
+        UC02["UC02 · Autenticar usuário"]
+        UC03["UC03 · Recuperar senha"]
+        UC04["UC04 · Pesquisar produtos"]
+        UC05["UC05 · Receber recomendações"]
+        UC06["UC06 · Consultar catálogo"]
+        UC07["UC07 · Visualizar detalhes"]
+        UC08["UC08 · Selecionar variação"]
+        UC09["UC09 · Gerenciar favoritos"]
+        UC10["UC10 · Adicionar ao carrinho"]
+        UC11["UC11 · Consultar carrinho"]
+        UC12["UC12 · Finalizar compra"]
+        UC13["UC13 · Processar pagamento"]
+        UC14["UC14 · Filtrar produtos"]
+        UC15["UC15 · Acessar dashboard"]
+        UC16["UC16 · Gerenciar usuários"]
+        UC17["UC17 · Gerenciar produtos"]
+        UC18["UC18 · Gerenciar promoções"]
+        UC19["UC19 · Histórico de pedidos"]
+        UC20["UC20 · Avaliar produto"]
+        UC21["UC21 · Atualizar estoque"]
+    end
+
+    Visitante --> UC01
+    Visitante --> UC02
+    Visitante --> UC03
+    Visitante --> UC04
+    Visitante --> UC06
+    Visitante --> UC07
+    Visitante --> UC14
+
+    Cliente --> UC05
+    Cliente --> UC08
+    Cliente --> UC09
+    Cliente --> UC10
+    Cliente --> UC11
+    Cliente --> UC12
+    Cliente --> UC19
+    Cliente --> UC20
+
+    Admin --> UC15
+    Admin --> UC16
+    Admin --> UC17
+    Admin --> UC18
+
+    UC03 -.-> Email
+    UC10 -.-> UC08
+    UC12 -.-> UC13
+    UC12 -.-> Pagamento
+    UC13 -.-> Pagamento
+    UC13 -.-> UC21
+```
+
+## 3.1 Casos de uso resumidos
+
+| Código | Caso de uso | Atores | Descrição resumida |
+|---|---|---|---|
+| UC01 | Cadastrar usuário | Visitante | Cria uma conta com dados pessoais, e-mail e senha. |
+| UC02 | Autenticar usuário | Visitante | Acessa a plataforma com e-mail e senha cadastrados. |
+| UC03 | Recuperar senha | Visitante; Serviço de E-mail | Redefine a senha por meio de link enviado por e-mail. |
+| UC04 | Pesquisar produtos | Visitante | Busca produtos com sugestões automáticas durante a digitação. |
+| UC05 | Receber recomendações personalizadas | Cliente | Apresenta recomendações de produtos e de tamanho com base nos dados e preferências da cliente. |
+| UC06 | Consultar catálogo | Visitante | Exibe o catálogo completo de produtos disponíveis. |
+| UC07 | Visualizar detalhes do produto | Visitante | Mostra descrição, especificações, imagens, preço, medidas e avaliações. |
+| UC08 | Selecionar variação e quantidade | Cliente | Permite escolher cor, tamanho e quantidade antes de adicionar ao carrinho. |
+| UC09 | Gerenciar favoritos | Cliente | Permite salvar, consultar e remover produtos favoritos. |
+| UC10 | Adicionar produto ao carrinho | Cliente | Insere o produto selecionado no carrinho de compras. |
+| UC11 | Consultar carrinho | Cliente | Exibe itens, quantidades, subtotal, frete e total. |
+| UC12 | Finalizar compra | Cliente; Sistema de Pagamento | Conclui o pedido, registra a compra e aciona o pagamento. |
+| UC13 | Processar pagamento | Sistema de Pagamento | Autoriza e confirma a transação financeira. |
+| UC14 | Filtrar produtos | Visitante | Refina o catálogo por categoria, preço, relevância, tipo de corpo, elasticidade e compressão. |
+| UC15 | Acessar dashboard administrativa | Administrador | Acessa o painel com indicadores e atalhos de gestão. |
+| UC16 | Gerenciar usuários | Administrador | Consulta, edita, ativa, desativa e exclui usuários. |
+| UC17 | Gerenciar produtos | Administrador | Cadastra, edita, exclui e consulta produtos e estoque. |
+| UC18 | Gerenciar promoções e descontos | Administrador | Cria e acompanha ofertas e descontos. |
+| UC19 | Consultar histórico de pedidos | Cliente | Exibe compras anteriores, status e detalhes. |
+| UC20 | Avaliar produto | Cliente | Atribui nota e comentário a um produto adquirido. |
+| UC21 | Atualizar estoque | Sistema | Atualiza automaticamente o estoque após o pagamento aprovado. |
+
 # 4. Modelo do banco de dados
 
+O schema físico do repositório é composto por **14 tabelas**. O modelo abaixo representa as entidades e os relacionamentos implementados no `db.sql`, incluindo as tabelas de endereço, cupom, categorias e itens de carrinho/compra.
+
+```mermaid
+erDiagram
+    MEDIDAS {
+        BIGINT id_medida PK
+        DECIMAL busto
+        DECIMAL cintura
+        DECIMAL quadril
+    }
+    CARRINHOS {
+        BIGINT id_carrinho PK
+    }
+    USUARIOS {
+        BIGINT id_usuario PK
+        BIGINT carrinho_id FK
+        BIGINT medida_id FK
+        VARCHAR nome
+        VARCHAR email UK
+        VARCHAR senha_hash
+        CHAR cpf UK
+        VARCHAR telefone
+        DATE data_nascimento
+        BOOLEAN is_admin
+    }
+    ENDERECOS {
+        BIGINT id_endereco PK
+        BIGINT usuario_id FK
+        VARCHAR nome_endereco
+        VARCHAR logradouro
+        VARCHAR numero
+        VARCHAR complemento
+        VARCHAR bairro
+        VARCHAR cidade
+        CHAR uf
+        CHAR cep
+        BOOLEAN principal
+    }
+    CUPONS {
+        BIGINT id_cupom PK
+        VARCHAR codigo UK
+        DECIMAL val_min
+        DECIMAL val_max
+        DECIMAL desconto
+        BOOLEAN frete_gratis
+    }
+    OFERTAS {
+        BIGINT id_oferta PK
+        DECIMAL percentual
+        TIMESTAMP inicio_em
+        TIMESTAMP fim_em
+        BOOLEAN ativo
+    }
+    MEDIDAS_PRODUTOS {
+        BIGINT id_medida_produto PK
+        VARCHAR tamanho
+        DECIMAL busto
+        DECIMAL cintura
+        DECIMAL quadril
+    }
+    COMPRAS {
+        BIGINT id_compra PK
+        BIGINT usuario_id FK
+        BIGINT endereco_id FK
+        BIGINT cupom_id FK
+        INT numero_pedido UK
+        DECIMAL valor_total
+        BOOLEAN situacao
+        DECIMAL frete
+        DECIMAL desconto
+    }
+    PRODUTOS {
+        BIGINT id_produto PK
+        BIGINT medida_produto_id FK
+        BIGINT oferta_id FK
+        VARCHAR nome
+        VARCHAR sku UK
+        VARCHAR descricao
+        VARCHAR cor
+        VARCHAR estilo
+        INT estoque
+        DECIMAL valor
+        BOOLEAN ativo
+    }
+    CATEGORIAS {
+        BIGINT id_categoria PK
+        BIGINT categoria_pai_id FK
+        VARCHAR nome UK
+        VARCHAR descricao
+    }
+    CATEGORIAS_PRODUTOS {
+        BIGINT id_categoria_produto PK
+        BIGINT produto_id FK
+        BIGINT categoria_id FK
+    }
+    IMAGENS {
+        BIGINT id_imagem PK
+        BIGINT produto_id FK
+        VARCHAR caminho_imagem
+    }
+    ITENS_CARRINHO {
+        BIGINT id_item_carrinho PK
+        BIGINT carrinho_id FK
+        BIGINT produto_id FK
+        INT quantidade
+        DECIMAL valor_unitario
+    }
+    ITENS_COMPRA {
+        BIGINT id_item_compra PK
+        BIGINT compra_id FK
+        BIGINT produto_id FK
+        INT quantidade
+        DECIMAL valor_unitario
+        DECIMAL valor_total
+    }
+
+    USUARIOS ||--o| MEDIDAS : "possui"
+    USUARIOS ||--o| CARRINHOS : "possui"
+    USUARIOS ||--o{ ENDERECOS : "cadastra"
+    USUARIOS ||--o{ COMPRAS : "realiza"
+    ENDERECOS ||--o{ COMPRAS : "entrega"
+    CUPONS ||--o{ COMPRAS : "aplica"
+    CARRINHOS ||--o{ ITENS_CARRINHO : "contém"
+    PRODUTOS ||--o{ ITENS_CARRINHO : "referencia"
+    COMPRAS ||--o{ ITENS_COMPRA : "contém"
+    PRODUTOS ||--o{ ITENS_COMPRA : "referencia"
+    MEDIDAS_PRODUTOS ||--o{ PRODUTOS : "mede"
+    OFERTAS ||--o{ PRODUTOS : "promove"
+    PRODUTOS ||--o{ IMAGENS : "possui"
+    CATEGORIAS ||--o{ CATEGORIAS_PRODUTOS : "classifica"
+    PRODUTOS ||--o{ CATEGORIAS_PRODUTOS : "pertence"
+    CATEGORIAS ||--o{ CATEGORIAS : "subcategoria"
+```
+
+### 4.1 Modelo implementado no repositório
+
+| Tabela | Papel |
+|---|---|
+| `usuarios` | Cliente/administrador, credenciais, perfil e vínculo com carrinho/medidas. |
+| `medidas` | Medidas corporais do usuário (busto, cintura e quadril). |
+| `carrinhos` | Carrinho persistente do usuário. |
+| `enderecos` | Endereços de entrega, com endereço principal. |
+| `cupons` | Cupons de desconto e frete grátis. |
+| `ofertas` | Promoções percentuais com vigência. |
+| `medidas_produtos` | Tamanho e medidas da peça. |
+| `compras` | Pedido finalizado (total, frete, desconto e situação). |
+| `produtos` | Peça comercializada, SKU, estoque, valor, cor e estilo. |
+| `categorias` | Categorias hierárquicas do catálogo. |
+| `categorias_produtos` | Relação N:N entre produtos e categorias. |
+| `imagens` | Fotos associadas aos produtos. |
+| `itens_carrinho` | Itens do carrinho e quantidade. |
+| `itens_compra` | Itens que compõem o pedido. |
+
+> A branch de catálogo adiciona as colunas `cor` e `estilo` em `produtos`; o restante do schema já está em `integracao_backend`.
 
 # 5. Banco de dados
 ## 5.1 Modelo Conceitual
@@ -107,7 +380,108 @@ Responde à pergunta: Como? Com o que? Onde? Quando?)
     alt="Modelo Lógico do Banco de Dados" 
   />
 
+> **Nota:** as imagens 5.1 e 5.2 representam o modelo conceitual/lógico do MVP (11 entidades). O schema físico implementado no repositório possui **14 tabelas**, detalhadas na seção [4.1](#41-modelo-implementado-no-repositório). A branch de catálogo acrescenta `cor` e `estilo` em `produtos`.
+
 # 6. Diagrama de classes
+
+O diagrama abaixo representa as classes do domínio e suas relações principais. O schema físico usa as tabelas `usuarios`, `medidas`, `carrinhos`, `produtos`, `medidas_produtos`, `categorias`, `imagens`, `ofertas`, `compras`, `itens_carrinho` e `itens_compra`.
+
+```mermaid
+classDiagram
+    class Usuario {
+        +int id_usuario
+        +string nome
+        +string email
+        +string cpf
+        +string senha_hash
+        +string telefone
+        +date data_nascimento
+        +bool is_admin
+    }
+    class MedidaUsuario {
+        +int id_medida
+        +decimal busto
+        +decimal cintura
+        +decimal quadril
+    }
+    class Produto {
+        +int id_produto
+        +string nome
+        +string sku
+        +string descricao
+        +string cor
+        +string estilo
+        +int estoque
+        +decimal valor
+        +bool ativo
+    }
+    class MedidaProduto {
+        +int id_medida_produto
+        +string tamanho
+        +decimal busto
+        +decimal cintura
+        +decimal quadril
+    }
+    class Categoria {
+        +int id_categoria
+        +string nome
+        +string descricao
+    }
+    class Imagem {
+        +int id_imagem
+        +string caminho_imagem
+    }
+    class Oferta {
+        +int id_oferta
+        +decimal percentual
+        +timestamp inicio_em
+        +timestamp fim_em
+        +bool ativo
+    }
+    class Carrinho {
+        +int id_carrinho
+    }
+    class ItemCarrinho {
+        +int id_item_carrinho
+        +int quantidade
+        +decimal valor_unitario
+    }
+    class Compra {
+        +int id_compra
+        +int numero_pedido
+        +decimal valor_total
+        +bool situacao
+        +decimal frete
+        +decimal desconto
+    }
+    class ItemCompra {
+        +int id_item_compra
+        +int quantidade
+        +decimal valor_unitario
+        +decimal valor_total
+    }
+    class Avaliacao {
+        +int id_avaliacao
+        +int nota
+        +string comentario
+        +date data
+    }
+
+    Usuario "1" --> "1" MedidaUsuario : possui
+    Usuario "1" --> "1" Carrinho : possui
+    Usuario "1" --> "*" Compra : realiza
+    Carrinho "1" --> "*" ItemCarrinho : contém
+    ItemCarrinho "*" --> "1" Produto : referencia
+    Compra "1" --> "*" ItemCompra : contém
+    ItemCompra "*" --> "1" Produto : referencia
+    Produto "1" --> "1" MedidaProduto : mede
+    Produto "*" --> "1" Categoria : pertence
+    Produto "1" --> "*" Imagem : possui
+    Produto "1" --> "0..1" Oferta : promove
+    Produto "1" --> "*" Avaliacao : recebe
+```
+
+> **Observações:** no schema físico, a relação Produto–Categoria é N:N por `categorias_produtos`; `Avaliacao` ainda não possui tabela física; `enderecos` e `cupons` são tabelas do schema físico que não aparecem no diagrama conceitual do MVP.
 
 # 7. Estudo de Viabilidade
 
@@ -166,21 +540,22 @@ Enquanto os grandes players mantêm processos engessados e abordagens padronizad
 ## 7.5 Especificação Técnica
 
 ### Funcionalidades do MVP
-* Catálogo com filtros avançados;
-* Página detalhada de produtos;
-* Guia de tamanhos interativo;
-* Recomendação de tamanho;
-* Cadastro de usuários;
-* Wishlist;
+* Catálogo com busca, filtros e página de produto;
+* Guia de tamanhos interativo e recomendação de tamanho;
+* Cadastro, autenticação e recuperação de senha;
+* Perfil, endereços e segurança;
+* Favoritos;
+* Carrinho persistente e checkout (em integração);
+* Histórico de pedidos e avaliações (em evolução);
+* Área administrativa (em evolução);
 * Interface responsiva e acessível.
 
 ### Funcionalidades Futuras
-* Integração com pagamentos;
-* Carrinho de compras;
-* Provador virtual;
+* Provador virtual com IA;
 * Aplicativo mobile;
 * Programa de fidelidade;
-* Integração com redes sociais.
+* Integrações com redes sociais e marketplaces;
+* IA avançada de recomendação de tamanho e produtos.
 
 ---
 
@@ -237,6 +612,19 @@ O desenvolvimento da aplicação é viável devido ao baixo investimento operaci
     alt="BMCanvas" 
   />
 
+## 8.1 Blocos do Canvas
+
+| Bloco | Conteúdo |
+|---|---|
+| Parcerias-chave | Time de Marketing, responsável pela divulgação, comunicação e ações promocionais. |
+| Atividades-chave | Catalogação de produtos, personalização, avaliações e “Try it now” com IA. |
+| Proposta de valor | Vitrine plus size, recomendações personalizadas e experiência de compra acolhedora. |
+| Relacionamento com clientes | Atendimento via WhatsApp, com acompanhamento de dúvidas de tamanho, caimento e pedidos. |
+| Segmentos de clientes | Mulheres de 18 a 50 anos (foco 26–40), mobile-first, que valorizam conforto, estilo e preço claro. |
+| Recursos-chave | Plataforma digital, estoque, dados das clientes, integração com Tray e consentimento LGPD. |
+| Canais | Instagram, Facebook, YouTube e tráfego pago. |
+| Estrutura de custos | Hospedagem e banco de dados; bootstrapping, com custo mensal estimado em R$ 120. |
+| Fontes de receita | Venda de roupas e frete pago pela cliente. |
 
 # 9. Design
 # Bia Modas — Design System
@@ -305,9 +693,9 @@ Todas as 7 páginas HTML importam as mesmas duas famílias via CDN:
 
 ---
 
-### `--color-primary` → `#d1001f` (Vermelho da marca)
+### `--color-primary` → `#d1001f` (Vermelho de CTA e interação)
 
-**Propósito:** Cor principal da marca. Usada em todos os elementos de destaque, CTA e identidade visual.
+**Propósito:** Cor de CTA e destaques interativos. O vermelho institucional da marca é o `#AE031C`, aplicado em hover e na identidade visual.
 
 | Onde é usada | Arquivo → Seletor |
 |--------------|-------------------|
@@ -344,9 +732,9 @@ Todas as 7 páginas HTML importam as mesmas duas famílias via CDN:
 
 ---
 
-### `--color-primary-dark` → `#ae031c` (Vermelho escuro)
+### `--color-primary-dark` → `#ae031c` (Vermelho institucional)
 
-**Propósito:** Estado hover/ativo dos elementos primários.
+**Propósito:** Vermelho institucional da marca e estado hover/ativo dos elementos primários.
 
 | Onde é usada | Arquivo → Seletor |
 |--------------|-------------------|
@@ -521,12 +909,83 @@ Quando `data-theme="dark"` está ativo no `<html>`:
 ---
 
 
+## Logo
+
+<img src="./img/logoBiaModas.png" alt="Logo da Bia Modas" width="180">
+
+A logo combina a letra **B** com a silhueta de uma maçã e uma folha verde. O vermelho **#AE031C** reforça a identidade da marca, enquanto o verde da folha acrescenta frescor e conexão com o universo natural. A forma arredondada e a leitura simples favorecem a aplicação em diferentes tamanhos e suportes.
+
 # 10. Protótipo
-Link do Protótipo feito no Figma:
-figma.com/design/2RQ8GsM3Q9YBE8vV1GWRhu/Bia-Modas?node-id=0-1&t=GSP5pfwupi3Na32n-1
+
+**Protótipo (Figma):** [Bia Modas no Figma](https://www.figma.com/design/2RQ8GsM3Q9YBE8vV1GWRhu/Bia-Modas?node-id=0-1&t=GSP5pfwupi3Na32n-1)
+
+Telas contempladas:
+
+- Home: hero banner, categorias, produtos em destaque e newsletter.
+- Catálogo: busca, filtros, ordenação e cards de produto.
+- Produto: galeria, descrição, medidas, guia de tamanho, recomendação e avaliações.
+- Carrinho e checkout: itens, frete, descontos, pagamento e confirmação.
+- Conta: login, cadastro, perfil, favoritos e histórico de pedidos.
+- Administração: dashboard, produtos, usuários, estoque e promoções.
 
 # 11. Aplicação
-Link da Aplicação para Apresentação:
-https://biamodasjau.com.br/
 
-Caso queira rodar ela localmente, acesse a branch apresentacao-pi
+**Site:** [biamodasjau.com.br](https://biamodasjau.com.br/)
+
+**Repositório:** [github.com/orgs/Syntax-Softwares](https://github.com/orgs/Syntax-Softwares)
+
+A aplicação utiliza **PHP 8.4 + Apache** com arquitetura **MVC**, banco **MariaDB 11** acessado via **PDO** (prepared statements) e ambiente **Docker/Docker Compose**. O front-end usa HTML5, CSS3, JavaScript e Bootstrap 5.
+
+## 11.1 Como executar localmente
+
+A versão com back-end PHP, schema e Docker está na branch **`integracao_backend`** (a `main` mantém o front-end/visual).
+
+```bash
+git clone https://github.com/Syntax-Softwares/Bia-Modas.git
+cd Bia-Modas
+git checkout integracao_backend
+docker compose up -d --build
+```
+
+Acesse **http://localhost:8080**. O banco é inicializado pelo `db.sql` na primeira subida. Para recriar o banco do zero:
+
+```bash
+docker compose down -v
+docker compose up -d --build
+```
+
+As credenciais de desenvolvimento estão definidas no `docker-compose.yml`.
+
+## 11.2 Módulos e branches
+
+| Módulo | Branch / status |
+|---|---|
+| Front-end visual (HTML/CSS/JS) | `main` |
+| Base PHP/MVC + schema + Docker | `integracao_backend` |
+| Perfil, endereços e segurança | `implementacao-perfil-e-usuario` |
+| Catálogo, busca e filtros | `implementar-catalogo-busca-e-filtros` |
+| Carrinho e favoritos | `mazzi/carrinhos_e_favoritos` |
+| Checkout, pedidos e pagamentos | `mazzi/checkout_pedidos_e_pagamentos` |
+| Recuperação de senha | `luiz/recuperacao-senha` |
+| Provador virtual | `feature/provador-virtual-pagina` |
+| Responsividade mobile | `melhorias/responsividade-mobile` |
+
+Os módulos são integrados na branch `integracao_backend` antes do merge final.
+
+## 11.3 Segurança
+
+- PDO com **prepared statements** e `ATTR_EMULATE_PREPARES = false`.
+- **CSRF** em formulários, sessões com `HttpOnly`, `SameSite=Lax` e regeneração de ID.
+- **Rate limit** por IP/usuário e bloqueio de tentativas de senha.
+- Senhas com **bcrypt** (`password_hash` / `password_verify`).
+- Cabeçalhos **CSP**, `X-Frame-Options`, `nosniff` e `Cache-Control` para páginas autenticadas.
+- Escapes de saída (`Html::e` / `htmlspecialchars`) contra XSS.
+
+## 11.4 Deploy
+
+O deploy é automatizado por **GitHub Actions** para uma VPS:
+
+- `main` → `/var/www/html/`
+- `apresentacao-pi` → `/var/www/html/apresentacao/`
+
+O workflow usa `rsync` via SSH e ignora `.git` e `.github`.
