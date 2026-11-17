@@ -37,9 +37,11 @@ CREATE TABLE medidas(
 -- ---------------------------------------------------------------------
 CREATE TABLE carrinhos(
   id_carrinho BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  sessao_id CHAR(64) NULL,
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  deletado_em DATETIME NULL
+  deletado_em DATETIME NULL,
+  CONSTRAINT carrinhos_sessao_uk UNIQUE (sessao_id)
 );
 
 CREATE TABLE usuarios(
@@ -136,6 +138,7 @@ CREATE TABLE medidas_produtos(
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   deletado_em DATETIME NULL,
+  INDEX medidas_produtos_tamanho_idx (tamanho),
   CONSTRAINT medidas_produtos_positivas_ck CHECK (
     (busto   IS NULL OR busto   > 0) AND
     (cintura IS NULL OR cintura > 0) AND
@@ -148,7 +151,8 @@ CREATE TABLE medidas_produtos(
 -- ---------------------------------------------------------------------
 CREATE TABLE compras(
   id_compra BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  usuario_id BIGINT UNSIGNED NOT NULL,
+  usuario_id BIGINT UNSIGNED NULL,
+  sessao_id CHAR(64) NULL,
   endereco_id BIGINT UNSIGNED NULL,
   cupom_id BIGINT UNSIGNED NULL,
   numero_pedido INT NOT NULL,
@@ -156,10 +160,21 @@ CREATE TABLE compras(
   situacao BOOLEAN NOT NULL DEFAULT FALSE,
   frete DECIMAL(10,2) NOT NULL DEFAULT 0,
   desconto DECIMAL(10,2) NOT NULL DEFAULT 0,
+  destinatario VARCHAR(255) NOT NULL,
+  telefone VARCHAR(20) NOT NULL,
+  endereco_cep CHAR(8) NOT NULL,
+  endereco_logradouro VARCHAR(255) NOT NULL,
+  endereco_numero VARCHAR(10) NOT NULL,
+  endereco_complemento VARCHAR(60) NULL,
+  endereco_bairro VARCHAR(60) NOT NULL,
+  endereco_cidade VARCHAR(60) NOT NULL,
+  endereco_uf CHAR(2) NOT NULL,
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   deletado_em DATETIME NULL,
   CONSTRAINT compras_numero_pedido_uk UNIQUE (numero_pedido),
+  INDEX compras_sessao_idx (sessao_id),
+  CONSTRAINT compras_dono_ck CHECK ((usuario_id IS NULL) <> (sessao_id IS NULL)),
   CONSTRAINT compras_valores_ck CHECK (
     valor_total >= 0 AND
     frete >= 0 AND
@@ -173,6 +188,23 @@ CREATE TABLE compras(
     REFERENCES cupons(id_cupom) ON DELETE SET NULL
 );
 
+CREATE TABLE pagamentos(
+  id_pagamento BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  compra_id BIGINT UNSIGNED NOT NULL,
+  metodo VARCHAR(20) NOT NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'pendente',
+  valor DECIMAL(10,2) NOT NULL,
+  codigo_transacao VARCHAR(64) NULL,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deletado_em DATETIME NULL,
+  CONSTRAINT pagamentos_metodo_ck CHECK (metodo IN ('pix', 'cartao', 'boleto')),
+  CONSTRAINT pagamentos_status_ck CHECK (status IN ('pendente', 'pago', 'cancelado')),
+  CONSTRAINT pagamentos_valor_ck CHECK (valor >= 0),
+  CONSTRAINT pagamentos_compra_fk FOREIGN KEY (compra_id)
+    REFERENCES compras(id_compra) ON DELETE CASCADE
+);
+
 CREATE TABLE produtos(
   id_produto BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   medida_produto_id BIGINT UNSIGNED NOT NULL,
@@ -180,6 +212,8 @@ CREATE TABLE produtos(
   nome VARCHAR(255) NOT NULL,
   sku VARCHAR(50) NOT NULL,
   descricao VARCHAR(255) NULL,
+  cor VARCHAR(30) NULL,
+  estilo VARCHAR(30) NULL,
   estoque INT NOT NULL DEFAULT 0,
   valor DECIMAL(10,2) NOT NULL,
   ativo BOOLEAN NOT NULL DEFAULT TRUE,
@@ -189,6 +223,10 @@ CREATE TABLE produtos(
   CONSTRAINT produtos_sku_uk UNIQUE (sku),
   CONSTRAINT produtos_valor_ck CHECK (valor > 0),
   CONSTRAINT produtos_estoque_ck CHECK (estoque >= 0),
+  INDEX produtos_cor_idx (cor),
+  INDEX produtos_estilo_idx (estilo),
+  INDEX produtos_valor_idx (valor),
+  INDEX produtos_ativo_idx (ativo, deletado_em),
   CONSTRAINT produtos_medida_fk FOREIGN KEY (medida_produto_id)
     REFERENCES medidas_produtos(id_medida_produto) ON DELETE RESTRICT,
   CONSTRAINT produtos_oferta_fk FOREIGN KEY (oferta_id)
@@ -251,6 +289,23 @@ CREATE TABLE itens_carrinho(
     REFERENCES produtos(id_produto) ON DELETE CASCADE
 );
 
+CREATE TABLE favoritos(
+  id_favorito BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  usuario_id BIGINT UNSIGNED NULL,
+  sessao_id CHAR(64) NULL,
+  produto_id BIGINT UNSIGNED NOT NULL,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deletado_em DATETIME NULL,
+  CONSTRAINT favoritos_usuario_produto_uk UNIQUE (usuario_id, produto_id),
+  CONSTRAINT favoritos_sessao_produto_uk UNIQUE (sessao_id, produto_id),
+  CONSTRAINT favoritos_dono_ck CHECK ((usuario_id IS NULL) <> (sessao_id IS NULL)),
+  CONSTRAINT favoritos_usuario_fk FOREIGN KEY (usuario_id)
+    REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
+  CONSTRAINT favoritos_produto_fk FOREIGN KEY (produto_id)
+    REFERENCES produtos(id_produto) ON DELETE CASCADE
+);
+
 CREATE TABLE itens_compra(
   id_item_compra BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   compra_id BIGINT UNSIGNED NOT NULL,
@@ -267,4 +322,21 @@ CREATE TABLE itens_compra(
     REFERENCES compras(id_compra) ON DELETE CASCADE,
   CONSTRAINT itens_compra_produto_fk FOREIGN KEY (produto_id)
     REFERENCES produtos(id_produto) ON DELETE RESTRICT
+);
+
+-- ---------------------------------------------------------------------
+-- Recuperacao de senha por codigo de 6 digitos.
+-- O codigo nunca e gravado em texto puro: guardamos o hash do password_hash().
+-- ---------------------------------------------------------------------
+CREATE TABLE codigos_recuperacao_senha(
+  id_codigo BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  usuario_id BIGINT UNSIGNED NOT NULL,
+  codigo_hash VARCHAR(255) NOT NULL,
+  tentativas TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  expira_em DATETIME NOT NULL,
+  usado_em DATETIME NULL,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT codigos_recuperacao_usuario_fk FOREIGN KEY (usuario_id)
+    REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
+  INDEX codigos_recuperacao_usuario_idx (usuario_id, usado_em)
 );
