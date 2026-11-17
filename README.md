@@ -17,6 +17,7 @@
 - [Requisitos funcionais](#-requisitos-funcionais)
 - [Requisitos não funcionais](#-requisitos-não-funcionais)
 - [3. Modelo de casos de uso](#3-modelo-de-casos-de-uso)
+- [4. Modelo do banco de dados](#4-modelo-do-banco-de-dados)
 - [5. Banco de dados](#5-banco-de-dados)
 - [6. Diagrama de classes](#6-diagrama-de-classes)
 - [7. Estudo de viabilidade](#7-estudo-de-viabilidade)
@@ -147,6 +148,50 @@ O diagrama abaixo representa os atores e os casos de uso do sistema. Os atores s
 | UC19 | Consultar histórico de pedidos | Cliente | Exibe compras anteriores, status e detalhes. |
 | UC20 | Avaliar produto | Cliente | Atribui nota e comentário a um produto adquirido. |
 | UC21 | Atualizar estoque | Sistema | Atualiza automaticamente o estoque após o pagamento aprovado. |
+
+# 4. Modelo do banco de dados
+
+O modelo físico atual está implementado no [`db.sql`](https://github.com/Syntax-Softwares/Bia-Modas/blob/integracao_backend/db.sql) da branch **`integracao_backend`** e possui **17 tabelas**. As imagens das seções 5.1 e 5.2 continuam sendo a visão conceitual/lógica do MVP.
+
+| Tabela | Principais colunas | Chaves e relações |
+|---|---|---|
+| `medidas` | `id_medida`, `busto`, `cintura`, `quadril` | PK `id_medida`; referenciada por `usuarios.medida_id` |
+| `carrinhos` | `id_carrinho`, `sessao_id` | PK; `sessao_id` único; referenciada por `usuarios.carrinho_id` e `itens_carrinho` |
+| `usuarios` | `id_usuario`, `carrinho_id`, `medida_id`, `nome`, `email`, `senha_hash`, `cpf`, `telefone`, `data_nascimento`, `is_admin` | PK; `email`/`cpf` únicos; FKs para `carrinhos` e `medidas` |
+| `enderecos` | `id_endereco`, `usuario_id`, `nome_endereco`, `logradouro`, `numero`, `complemento`, `bairro`, `cidade`, `uf`, `cep`, `principal` | FK `usuario_id` → `usuarios` (CASCADE) |
+| `cupons` | `id_cupom`, `codigo`, `val_min`, `val_max`, `desconto`, `frete_gratis` | `codigo` único; referenciado por `compras.cupom_id` |
+| `ofertas` | `id_oferta`, `percentual`, `inicio_em`, `fim_em`, `ativo` | referenciada por `produtos.oferta_id` |
+| `medidas_produtos` | `id_medida_produto`, `tamanho`, `busto`, `cintura`, `quadril` | referenciada por `produtos.medida_produto_id` |
+| `compras` | `id_compra`, `usuario_id`, `sessao_id`, `endereco_id`, `cupom_id`, `numero_pedido`, `valor_total`, `situacao`, `frete`, `desconto`, snapshot de destinatário/endereço | `numero_pedido` único; FKs para `usuarios`, `enderecos` e `cupons` |
+| `pagamentos` | `id_pagamento`, `compra_id`, `metodo`, `status`, `valor`, `codigo_transacao` | FK `compra_id` → `compras` (CASCADE); checks de método e status |
+| `produtos` | `id_produto`, `medida_produto_id`, `oferta_id`, `nome`, `sku`, `descricao`, `cor`, `estilo`, `estoque`, `valor`, `ativo` | `sku` único; FKs para `medidas_produtos` e `ofertas` |
+| `categorias` | `id_categoria`, `categoria_pai_id`, `nome`, `descricao` | `nome` único; auto-relacionamento hierárquico |
+| `categorias_produtos` | `id_categoria_produto`, `produto_id`, `categoria_id` | N:N; FKs para `produtos` e `categorias`; único por par |
+| `imagens` | `id_imagem`, `produto_id`, `caminho_imagem` | FK `produto_id` → `produtos` (CASCADE) |
+| `itens_carrinho` | `id_item_carrinho`, `carrinho_id`, `produto_id`, `quantidade`, `valor_unitario` | FKs para `carrinhos` e `produtos`; único por carrinho/produto |
+| `favoritos` | `id_favorito`, `usuario_id`, `sessao_id`, `produto_id` | FK `produto_id`; único por usuário/produto e por sessão/produto |
+| `itens_compra` | `id_item_compra`, `compra_id`, `produto_id`, `quantidade`, `valor_unitario`, `valor_total` | FKs para `compras` e `produtos` |
+| `codigos_recuperacao_senha` | `id_codigo`, `usuario_id`, `codigo_hash`, `tentativas`, `expira_em`, `usado_em` | FK `usuario_id` → `usuarios` (CASCADE); código armazenado como hash |
+
+### Relações principais
+
+- `usuarios` tem relação **1:1 opcional** com `carrinhos` e `medidas`.
+- `usuarios` tem relação **1:N** com `enderecos` e `compras`.
+- `carrinhos` tem **1:N** `itens_carrinho`; cada item referencia um `produto`.
+- `compras` tem **1:N** `itens_compra` e `pagamentos`; pode referenciar um `endereco` e um `cupom`.
+- `produtos` tem relação **N:N** com `categorias` via `categorias_produtos`, **1:N** com `imagens`, **1:1** com `medidas_produtos` e **N:1** com `ofertas`.
+- `favoritos` liga um usuário (ou uma sessão anônima) a produtos.
+- `codigos_recuperacao_senha` liga um usuário a códigos temporários com hash, tentativas e expiração.
+
+### Convenções do schema
+
+- Chaves primárias `BIGINT UNSIGNED AUTO_INCREMENT`.
+- `criado_em`, `alterado_em` e `deletado_em` (soft delete) na maioria das tabelas; `codigos_recuperacao_senha` usa apenas `criado_em`.
+- Banco `utf8mb4` com collation `utf8mb4_unicode_ci`.
+- FKs com `ON DELETE` explícito (`CASCADE`, `SET NULL` ou `RESTRICT`).
+- `CHECK` para valores positivos, estoque, quantidade, faixa de cupom e método/status de pagamento.
+- `compras` e `favoritos` aceitam **usuário logado ou sessão anônima** (`sessao_id`), com `CHECK` garantindo que apenas um dos dois é informado.
+- `produtos` possui `cor` e `estilo` para os filtros do catálogo.
 
 # 5. Banco de dados
 ## 5.1 Modelo Conceitual
