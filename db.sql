@@ -1,13 +1,18 @@
 -- =====================================================================
 -- Bia Modas - schema do banco de dados
 --
--- ATENCAO: script DESTRUTIVO. O DROP DATABASE abaixo apaga o banco
--- "biamodas" inteiro. Use apenas em desenvolvimento/testes locais.
+-- Script IDEMPOTENTE: pode ser executado quantas vezes for preciso e nao
+-- apaga dados existentes (nao ha DROP DATABASE nem DROP TABLE).
+--
+-- Aplicar em um banco que ja existe:
+--   docker compose exec -T db mariadb -uroot -proot < db.sql
+--   docker compose exec -T db mariadb -uroot -proot < seed_db.sql
+--
+-- Recriar do zero (apaga tudo):
+--   docker compose down -v && docker compose up -d
 -- =====================================================================
 
-DROP DATABASE IF EXISTS biamodas;
-
-CREATE DATABASE biamodas
+CREATE DATABASE IF NOT EXISTS biamodas
   CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 USE biamodas;
@@ -17,7 +22,7 @@ SET NAMES utf8mb4;
 -- ---------------------------------------------------------------------
 -- Medidas do usuario (1:1 opcional com usuarios)
 -- ---------------------------------------------------------------------
-CREATE TABLE medidas(
+CREATE TABLE IF NOT EXISTS medidas(
   id_medida BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   busto DECIMAL(5,1) NULL,
   cintura DECIMAL(5,1) NULL,
@@ -35,14 +40,14 @@ CREATE TABLE medidas(
 -- ---------------------------------------------------------------------
 -- Carrinho (1:1 opcional com usuarios)
 -- ---------------------------------------------------------------------
-CREATE TABLE carrinhos(
+CREATE TABLE IF NOT EXISTS carrinhos(
   id_carrinho BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   deletado_em DATETIME NULL
 );
 
-CREATE TABLE usuarios(
+CREATE TABLE IF NOT EXISTS usuarios(
   id_usuario BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   carrinho_id BIGINT UNSIGNED NULL,
   medida_id BIGINT UNSIGNED NULL,
@@ -66,7 +71,7 @@ CREATE TABLE usuarios(
     REFERENCES carrinhos(id_carrinho) ON DELETE SET NULL
 );
 
-CREATE TABLE enderecos(
+CREATE TABLE IF NOT EXISTS enderecos(
   id_endereco BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   usuario_id BIGINT UNSIGNED NOT NULL,
   nome_endereco VARCHAR(30) NOT NULL,
@@ -89,7 +94,7 @@ CREATE TABLE enderecos(
 -- Cupons de desconto
 -- `desconto` e uma fracao: 0.10 = 10%
 -- ---------------------------------------------------------------------
-CREATE TABLE cupons(
+CREATE TABLE IF NOT EXISTS cupons(
   id_cupom BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   codigo VARCHAR(50) NOT NULL,
   val_min DECIMAL(10,2) NOT NULL,
@@ -111,7 +116,7 @@ CREATE TABLE cupons(
 -- Ofertas (promocoes percentuais com vigencia)
 -- `percentual` e uma fracao: 0.15 = 15%
 -- ---------------------------------------------------------------------
-CREATE TABLE ofertas(
+CREATE TABLE IF NOT EXISTS ofertas(
   id_oferta BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   percentual DECIMAL(5,2) NOT NULL,
   inicio_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -127,7 +132,7 @@ CREATE TABLE ofertas(
 -- ---------------------------------------------------------------------
 -- Especificacao de tamanho/medidas de um produto
 -- ---------------------------------------------------------------------
-CREATE TABLE medidas_produtos(
+CREATE TABLE IF NOT EXISTS medidas_produtos(
   id_medida_produto BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   tamanho VARCHAR(5) NOT NULL,
   busto DECIMAL(5,1) NULL,
@@ -146,7 +151,7 @@ CREATE TABLE medidas_produtos(
 -- ---------------------------------------------------------------------
 -- Compras
 -- ---------------------------------------------------------------------
-CREATE TABLE compras(
+CREATE TABLE IF NOT EXISTS compras(
   id_compra BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   usuario_id BIGINT UNSIGNED NOT NULL,
   endereco_id BIGINT UNSIGNED NULL,
@@ -173,7 +178,7 @@ CREATE TABLE compras(
     REFERENCES cupons(id_cupom) ON DELETE SET NULL
 );
 
-CREATE TABLE produtos(
+CREATE TABLE IF NOT EXISTS produtos(
   id_produto BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   medida_produto_id BIGINT UNSIGNED NOT NULL,
   oferta_id BIGINT UNSIGNED NULL,
@@ -195,7 +200,7 @@ CREATE TABLE produtos(
     REFERENCES ofertas(id_oferta) ON DELETE SET NULL
 );
 
-CREATE TABLE categorias(
+CREATE TABLE IF NOT EXISTS categorias(
   id_categoria BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   categoria_pai_id BIGINT UNSIGNED NULL,
   nome VARCHAR(255) NOT NULL,
@@ -208,7 +213,7 @@ CREATE TABLE categorias(
     REFERENCES categorias(id_categoria) ON DELETE SET NULL
 );
 
-CREATE TABLE categorias_produtos(
+CREATE TABLE IF NOT EXISTS categorias_produtos(
   id_categoria_produto BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   produto_id BIGINT UNSIGNED NOT NULL,
   categoria_id BIGINT UNSIGNED NOT NULL,
@@ -222,18 +227,19 @@ CREATE TABLE categorias_produtos(
     REFERENCES categorias(id_categoria) ON DELETE CASCADE
 );
 
-CREATE TABLE imagens(
+CREATE TABLE IF NOT EXISTS imagens(
   id_imagem BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   produto_id BIGINT UNSIGNED NOT NULL,
   caminho_imagem VARCHAR(255) NOT NULL,
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   deletado_em DATETIME NULL,
+  CONSTRAINT imagens_produto_caminho_uk UNIQUE (produto_id, caminho_imagem),
   CONSTRAINT imagens_produto_fk FOREIGN KEY (produto_id)
     REFERENCES produtos(id_produto) ON DELETE CASCADE
 );
 
-CREATE TABLE itens_carrinho(
+CREATE TABLE IF NOT EXISTS itens_carrinho(
   id_item_carrinho BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   carrinho_id BIGINT UNSIGNED NOT NULL,
   produto_id BIGINT UNSIGNED NOT NULL,
@@ -251,7 +257,49 @@ CREATE TABLE itens_carrinho(
     REFERENCES produtos(id_produto) ON DELETE CASCADE
 );
 
-CREATE TABLE itens_compra(
+-- ---------------------------------------------------------------------
+-- Favoritos do usuario.
+-- Uma linha por usuario+produto. Remover = preencher deletado_em e
+-- "refavoritar" = limpar deletado_em (mesma linha, sem duplicar).
+-- ---------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS favoritos(
+  id_favorito BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  usuario_id BIGINT UNSIGNED NOT NULL,
+  produto_id BIGINT UNSIGNED NOT NULL,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deletado_em DATETIME NULL,
+  CONSTRAINT favoritos_usuario_produto_uk UNIQUE (usuario_id, produto_id),
+  CONSTRAINT favoritos_usuario_fk FOREIGN KEY (usuario_id)
+    REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
+  CONSTRAINT favoritos_produto_fk FOREIGN KEY (produto_id)
+    REFERENCES produtos(id_produto) ON DELETE CASCADE,
+  INDEX favoritos_usuario_idx (usuario_id, deletado_em)
+);
+
+-- ---------------------------------------------------------------------
+-- Avaliacoes de produto (1 por usuario por produto).
+-- A media exibida ignora as linhas com deletado_em preenchido.
+-- ---------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS avaliacoes(
+  id_avaliacao BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  usuario_id BIGINT UNSIGNED NOT NULL,
+  produto_id BIGINT UNSIGNED NOT NULL,
+  nota TINYINT UNSIGNED NOT NULL,
+  comentario VARCHAR(500) NULL,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deletado_em DATETIME NULL,
+  CONSTRAINT avaliacoes_usuario_produto_uk UNIQUE (usuario_id, produto_id),
+  CONSTRAINT avaliacoes_nota_ck CHECK (nota BETWEEN 1 AND 5),
+  CONSTRAINT avaliacoes_usuario_fk FOREIGN KEY (usuario_id)
+    REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
+  CONSTRAINT avaliacoes_produto_fk FOREIGN KEY (produto_id)
+    REFERENCES produtos(id_produto) ON DELETE CASCADE,
+  INDEX avaliacoes_produto_idx (produto_id, deletado_em)
+);
+
+CREATE TABLE IF NOT EXISTS itens_compra(
   id_item_compra BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   compra_id BIGINT UNSIGNED NOT NULL,
   produto_id BIGINT UNSIGNED NOT NULL,
@@ -272,7 +320,7 @@ CREATE TABLE itens_compra(
 -- Recuperação de senha por código de 6 dígitos.
 -- O código nunca é gravado em texto puro: guardamos o hash do password_hash().
 -- expira_em é calculado no SQL (NOW() + 10 min) para não depender do fuso do PHP.
-CREATE TABLE codigos_recuperacao_senha(
+CREATE TABLE IF NOT EXISTS codigos_recuperacao_senha(
   id_codigo BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   usuario_id BIGINT UNSIGNED NOT NULL,
   codigo_hash VARCHAR(255) NOT NULL,

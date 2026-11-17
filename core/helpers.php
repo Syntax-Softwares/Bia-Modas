@@ -77,3 +77,65 @@ function algum_preenchido(array $values): bool
 
     return false;
 }
+
+/**
+ * Lê um inteiro enviado por POST. Devolve null quando ausente ou inválido.
+ */
+function post_int(string $campo): ?int
+{
+    $valor = filter_input(INPUT_POST, $campo, FILTER_VALIDATE_INT);
+
+    return $valor === false || $valor === null ? null : (int) $valor;
+}
+
+/**
+ * Encerra a requisição devolvendo JSON.
+ */
+function json_response(array $dados, int $status = 200): never
+{
+    http_response_code($status);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode($dados, JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+/**
+ * Resposta JSON de erro, no formato esperado pelo JS (`{ ok: false, mensagem }`).
+ */
+function json_erro(string $mensagem, int $status = 422): never
+{
+    json_response(['ok' => false, 'mensagem' => $mensagem], $status);
+}
+
+/**
+ * Desenha 5 estrelas a partir de uma nota (aceita decimais: 4.3 -> 4 cheias
+ * e 1 pela metade).
+ */
+function estrelas(float $nota, string $classe = ''): string
+{
+    $nota = max(0.0, min(5.0, $nota));
+    $cheias = (int) floor($nota);
+    $resto = $nota - $cheias;
+
+    $meia = $resto >= 0.25 && $resto < 0.75;
+    if ($resto >= 0.75) {
+        $cheias++;
+        $meia = false;
+    }
+
+    $html = '<span class="estrelas' . ($classe !== '' ? ' ' . e($classe) : '') . '" aria-hidden="true">';
+
+    for ($i = 1; $i <= 5; $i++) {
+        if ($i <= $cheias) {
+            $icone = 'bi-star-fill';
+        } elseif ($meia && $i === $cheias + 1) {
+            $icone = 'bi-star-half';
+        } else {
+            $icone = 'bi-star';
+        }
+
+        $html .= '<i class="bi ' . $icone . '"></i>';
+    }
+
+    return $html . '</span>';
+}

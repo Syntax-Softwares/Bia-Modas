@@ -117,6 +117,215 @@ class ProdutoRepository
         return $produto === false ? null : $this->map($produto);
     }
 
+    /**
+     * Busca vários produtos por id. A ordem devolvida segue a do banco;
+     * quem precisa de uma ordem específica reordena em PHP.
+     *
+     * @param array<int, int> $ids
+     * @return array<int, array<string, mixed>>
+     */
+    public function getPorIds(array $ids): array
+    {
+        $ids = array_values(array_unique(array_filter(
+            array_map('intval', $ids),
+            static fn (int $id): bool => $id > 0
+        )));
+
+        if ($ids === []) {
+            return [];
+        }
+
+        $sql = $this->selectBase()
+            . ' WHERE p.id_produto IN (' . implode(',', $ids) . ')
+                AND p.ativo = TRUE
+                AND p.deletado_em IS NULL';
+
+        return $this->mapMany($this->pdo->query($sql)->fetchAll());
+    }
+
+    /**
+     * "Para Você": produtos das categorias das 3 peças favoritadas mais
+     * recentes, excluindo o que já está favoritado. Oferta primeiro, depois
+     * proximidade de preço com a média dos favoritos.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getParaVoce(int $usuarioId, int $limite = 8): array
+    {
+        $stmt = $this->pdo->prepare(
+            'SELECT f.produto_id, p.valor
+             FROM favoritos f
+             INNER JOIN produtos p ON p.id_produto = f.produto_id
+             WHERE f.usuario_id = :usuario
+               AND f.deletado_em IS NULL
+               AND p.deletado_em IS NULL
+               AND p.ativo = TRUE
+             ORDER BY f.criado_em DESC, f.id_favorito DESC
+             LIMIT 3'
+        );
+        $stmt->bindValue(':usuario', $usuarioId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $favoritos = $stmt->fetchAll();
+
+        if ($favoritos === []) {
+            return [];
+        }
+
+        $ids = array_map(static fn (array $row): int => (int) $row['produto_id'], $favoritos);
+        $soma = array_sum(array_map(static fn (array $row): float => (float) $row['valor'], $favoritos));
+        $precoMedio = $soma / count($favoritos);
+        $listaIds = implode(',', $ids);
+
+        $sql = $this->selectBase()
+            . "
+            WHERE p.ativo = TRUE
+              AND p.deletado_em IS NULL
+              AND p.id_produto NOT IN ($listaIds)
+              AND EXISTS (
+                  SELECT 1
+                  FROM categorias_produtos cp_rec
+                  INNER JOIN categorias_produtos cp_fav
+                      ON cp_fav.categoria_id = cp_rec.categoria_id
+                  WHERE cp_rec.produto_id = p.id_produto
+                    AND cp_rec.deletado_em IS NULL
+                    AND cp_fav.deletado_em IS NULL
+                    AND cp_fav.produto_id IN ($listaIds)
+              )
+            ORDER BY
+                (o.id_oferta IS NOT NULL) DESC,
+                ABS(p.valor - :preco_medio) ASC,
+                p.criado_em DESC
+            LIMIT :limite
+            ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':preco_medio', $precoMedio);
+        $stmt->bindValue(':limite', $limite, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $this->mapMany($stmt->fetchAll());
+    }
+
+    /**
+     * Produtos mais favoritados da loja (fallback da seção "Para Você"
+     * quando o visitante não tem favoritos).
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getMaisDesejados(int $limite = 8): array
+    {
+        $sql = '
+            SELECT * FROM (
+                SELECT
+                    base.*,
+                    (
+                        SELECT COUNT(*)
+                        FROM favoritos f
+                        WHERE f.produto_id = base.id_produto
+                          AND f.deletado_em IS NULL
+                    ) AS total_favoritos
+                FROM (' . $this->selectBase() . '
+                    WHERE p.ativo = TRUE
+                      AND p.deletado_em IS NULL
+                ) base
+            ) ranking
+            WHERE total_favoritos > 0
+            ORDER BY total_favoritos DESC, ranking.criado_em DESC, ranking.id_produto DESC
+            LIMIT :limite
+        ';
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':limite', $limite, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $this->mapMany($stmt->fetchAll());
+    }
+
+    /**
+     * "Você também pode gostar": produtos que compartilham categoria com o
+     * produto atual (N:N), oferta primeiro e preço próximo. Se sobrarem
+     * menos de 4, completa com produtos na mesma faixa de preço.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getRelacionados(int $produtoId, int $limite = 8): array
+    {
+        $produto = $this->getPorId($produtoId);
+
+        if ($produto === null) {
+            return [];
+        }
+
+        $preco = (float) $produto['valor'];
+
+        $sql = $this->selectBase()
+            . "
+            WHERE p.ativo = TRUE
+              AND p.deletado_em IS NULL
+              AND p.id_produto <> :produto
+              AND EXISTS (
+                  SELECT 1
+                  FROM categorias_produtos cp_rel
+                  INNER JOIN categorias_produtos cp_atual
+                      ON cp_atual.categoria_id = cp_rel.categoria_id
+                  WHERE cp_rel.produto_id = p.id_produto
+                    AND cp_rel.deletado_em IS NULL
+                    AND cp_atual.deletado_em IS NULL
+                    AND cp_atual.produto_id = :produto_categoria
+              )
+            ORDER BY
+                (o.id_oferta IS NOT NULL) DESC,
+                ABS(p.valor - :preco_ordem) ASC,
+                p.criado_em DESC
+            LIMIT :limite
+            ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':produto', $produtoId, PDO::PARAM_INT);
+        $stmt->bindValue(':produto_categoria', $produtoId, PDO::PARAM_INT);
+        $stmt->bindValue(':preco_ordem', $preco);
+        $stmt->bindValue(':limite', $limite, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $relacionados = $this->mapMany($stmt->fetchAll());
+
+        if (count($relacionados) >= 4 || count($relacionados) >= $limite) {
+            return $relacionados;
+        }
+
+        $excluir = array_map(
+            static fn (array $item): int => (int) $item['id_produto'],
+            $relacionados
+        );
+        $excluir[] = $produtoId;
+
+        $faltam = $limite - count($relacionados);
+        $faixa = max(20.0, $preco * 0.3);
+
+        $sql = $this->selectBase()
+            . '
+            WHERE p.ativo = TRUE
+              AND p.deletado_em IS NULL
+              AND p.id_produto NOT IN (' . implode(',', $excluir) . ')
+              AND ABS(p.valor - :preco_faixa) <= :faixa
+            ORDER BY
+                (o.id_oferta IS NOT NULL) DESC,
+                ABS(p.valor - :preco_ordem) ASC,
+                p.criado_em DESC
+            LIMIT :limite
+            ';
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':preco_faixa', $preco);
+        $stmt->bindValue(':faixa', $faixa);
+        $stmt->bindValue(':preco_ordem', $preco);
+        $stmt->bindValue(':limite', $faltam, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return array_merge($relacionados, $this->mapMany($stmt->fetchAll()));
+    }
+
     private function selectBase(): string
     {
         return "

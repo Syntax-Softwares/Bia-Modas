@@ -2,14 +2,17 @@
 
 require_once __DIR__ . '/../core/auth.php';
 require_once __DIR__ . '/../repositories/produto_repository.php';
+require_once __DIR__ . '/../repositories/favorito_repository.php';
 
 class CategoriaController
 {
     private ProdutoRepository $repository;
+    private FavoritoRepository $favoritos;
 
     public function __construct(private PDO $pdo)
     {
         $this->repository = new ProdutoRepository($pdo);
+        $this->favoritos = new FavoritoRepository($pdo);
     }
 
     public function index(): void
@@ -43,6 +46,9 @@ class CategoriaController
             'busca' => $busca,
             'somentePromocoes' => $somentePromocoes,
             'titulo' => $titulo,
+            'favoritosIds' => Auth::check()
+                ? $this->favoritos->ids((int) Auth::user()['id_usuario'])
+                : [],
             'estaLogado' => Auth::check(),
             'usuario' => Auth::user(),
             'contaHref' => Auth::check() ? '/conta' : '/login',

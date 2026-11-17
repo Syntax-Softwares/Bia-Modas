@@ -2,13 +2,17 @@ USE biamodas;
 
 -- =========================================================
 -- Dados iniciais (catálogo real). Execute após db.sql.
--- Script de desenvolvimento: recrie o volume para reaplicar.
+--
+-- Script IDEMPOTENTE: usa INSERT IGNORE apoiado nas chaves únicas
+-- (ids fixos, sku, e-mail e pares produto+categoria/imagem). Rodar de
+-- novo não duplica linhas.
+--   docker compose exec -T db mariadb -uroot -proot < seed_db.sql
 -- =========================================================
 
 SET NAMES utf8mb4;
 
 -- Categorias
-INSERT INTO categorias (id_categoria, nome) VALUES
+INSERT IGNORE INTO categorias (id_categoria, nome) VALUES
 (1, 'Plus Size'),
 (2, 'Blusas'),
 (3, 'Calças'),
@@ -17,7 +21,7 @@ INSERT INTO categorias (id_categoria, nome) VALUES
 (6, 'Vestidos');
 
 -- Tamanhos / medidas base dos produtos
-INSERT INTO medidas_produtos (id_medida_produto, tamanho) VALUES
+INSERT IGNORE INTO medidas_produtos (id_medida_produto, tamanho) VALUES
 (1, 'P'),
 (2, 'M'),
 (3, 'G'),
@@ -32,7 +36,7 @@ INSERT INTO medidas_produtos (id_medida_produto, tamanho) VALUES
 (12, '46');
 
 -- Ofertas
-INSERT INTO ofertas (id_oferta, percentual, inicio_em, ativo) VALUES
+INSERT IGNORE INTO ofertas (id_oferta, percentual, inicio_em, ativo) VALUES
 (1, 0.22, DATE_SUB(NOW(), INTERVAL 7 DAY), TRUE),
 (2, 0.24, DATE_SUB(NOW(), INTERVAL 7 DAY), TRUE),
 (3, 0.20, DATE_SUB(NOW(), INTERVAL 7 DAY), TRUE),
@@ -50,7 +54,7 @@ INSERT INTO ofertas (id_oferta, percentual, inicio_em, ativo) VALUES
 (15, 0.15, DATE_SUB(NOW(), INTERVAL 7 DAY), TRUE);
 
 -- Produtos
-INSERT INTO produtos
+INSERT IGNORE INTO produtos
     (id_produto, medida_produto_id, oferta_id, nome, sku, descricao, estoque, valor, ativo, criado_em)
 VALUES
 (1, 1, NULL, 'Conjunto Social Marrom', 'BM-0001', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Marrom.', 5, 249.90, TRUE, DATE_SUB(NOW(), INTERVAL 0 DAY)),
@@ -115,7 +119,12 @@ VALUES
 (60, 1, NULL, 'Blusa Marsala', 'BM-0060', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Vermelho.', 24, 99.90, TRUE, DATE_SUB(NOW(), INTERVAL 118 DAY));
 
 -- Fotos dos produtos
-INSERT INTO imagens (produto_id, caminho_imagem) VALUES
+-- Garante a chave única usada pelo INSERT IGNORE abaixo em bancos criados
+-- antes desta restrição existir (volumes antigos).
+CREATE UNIQUE INDEX IF NOT EXISTS imagens_produto_caminho_uk
+  ON imagens (produto_id, caminho_imagem);
+
+INSERT IGNORE INTO imagens (produto_id, caminho_imagem) VALUES
 (1, '/img/produtos/655763783_18587522434040712_5117797556536014863_n.jpg'),
 (2, '/img/produtos/656166026_18573763729040712_759498418098033265_n.jpg'),
 (3, '/img/produtos/656202496_18587522443040712_9008272828061942804_n.jpg'),
@@ -178,7 +187,7 @@ INSERT INTO imagens (produto_id, caminho_imagem) VALUES
 (60, '/img/produtos/702611507_18587522398040712_7839140292566599040_n.jpg');
 
 -- Relação N:N entre produtos e categorias
-INSERT INTO categorias_produtos (produto_id, categoria_id) VALUES
+INSERT IGNORE INTO categorias_produtos (produto_id, categoria_id) VALUES
 (1, 4),
 (2, 6),
 (3, 1),
@@ -247,3 +256,76 @@ INSERT INTO categorias_produtos (produto_id, categoria_id) VALUES
 (58, 2),
 (59, 4),
 (60, 2);
+
+-- =========================================================
+-- Higiene do catálogo
+--
+-- O seed original repetia nomes (ex.: 5x "Camisa Xadrez Preta"), o que
+-- fazia a recomendação sugerir a mesma peça várias vezes. Mantém ativo
+-- apenas o produto de menor id de cada nome.
+-- =========================================================
+DROP TEMPORARY TABLE IF EXISTS produtos_duplicados;
+
+CREATE TEMPORARY TABLE produtos_duplicados AS
+SELECT nome, MIN(id_produto) AS mantido
+FROM produtos
+WHERE deletado_em IS NULL
+GROUP BY nome
+HAVING COUNT(*) > 1;
+
+UPDATE produtos p
+INNER JOIN produtos_duplicados d ON d.nome = p.nome
+SET p.ativo = FALSE
+WHERE p.id_produto <> d.mantido;
+
+DROP TEMPORARY TABLE produtos_duplicados;
+
+-- =========================================================
+-- Usuários de demonstração
+-- Senha de todos: demo123
+-- (hash gerado com password_hash('demo123', PASSWORD_DEFAULT))
+-- =========================================================
+INSERT IGNORE INTO usuarios (id_usuario, nome, email, senha_hash, telefone, is_admin) VALUES
+(1, 'Ana Beatriz Ferreira', 'demo@biamodas.test', '$2y$12$qpmUb7omNhMnJhcK6PEqCOKJxTtkrpHfkGiezUUBTaPDe32V2POKy', '(14) 99999-0001', FALSE),
+(2, 'Carla Mendes', 'carla@biamodas.test', '$2y$12$0fFWbs3RlCS43J4h3lWq0u903MGnXGWxXiFJmvMnP/je0DvzvNZay', '(14) 99999-0002', FALSE),
+(3, 'Marina Alves', 'marina@biamodas.test', '$2y$12$c24HZPfL4pf97Ie1yw6BeuznNxN.VvJkx9Fn/bBMqjdrjomA2x5fS', '(14) 99999-0003', FALSE);
+
+-- =========================================================
+-- Favoritos da usuária demo
+--
+-- Alimentam a seção "Para Você". Os 3 mais recentes são de Vestidos,
+-- Blusas e Conjuntos, garantindo recomendação variada na apresentação.
+-- =========================================================
+INSERT IGNORE INTO favoritos (usuario_id, produto_id, criado_em) VALUES
+(1, 44, DATE_SUB(NOW(), INTERVAL 8 HOUR)),
+(1, 35, DATE_SUB(NOW(), INTERVAL 7 HOUR)),
+(1, 26, DATE_SUB(NOW(), INTERVAL 6 HOUR)),
+(1, 12, DATE_SUB(NOW(), INTERVAL 5 HOUR)),
+(1, 5,  DATE_SUB(NOW(), INTERVAL 4 HOUR)),
+(1, 1,  DATE_SUB(NOW(), INTERVAL 3 HOUR)),
+(1, 7,  DATE_SUB(NOW(), INTERVAL 2 HOUR)),
+(1, 2,  DATE_SUB(NOW(), INTERVAL 1 HOUR));
+
+-- =========================================================
+-- Avaliações de demonstração
+--
+-- Notas variadas (4 e 5 na maioria, algumas 3) para as médias não
+-- ficarem todas em 5,0. A usuária demo tem uma avaliação própria no
+-- produto 2, para permitir testar edição e remoção.
+-- =========================================================
+INSERT IGNORE INTO avaliacoes (usuario_id, produto_id, nota, comentario, criado_em) VALUES
+(1, 2,  5, 'Caimento perfeito, comprei o P e serviu como uma luva.', DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(2, 2,  4, 'Tecido leve e confortável, só achei um pouco longo.', DATE_SUB(NOW(), INTERVAL 5 DAY)),
+(3, 2,  4, 'Chegou rápido e é lindo. Usei num casamento.', DATE_SUB(NOW(), INTERVAL 9 DAY)),
+(2, 1,  5, 'Conjunto impecável, recebi elogios o dia todo.', DATE_SUB(NOW(), INTERVAL 3 DAY)),
+(3, 5,  4, 'Jeans de qualidade, veste bem no quadril.', DATE_SUB(NOW(), INTERVAL 6 DAY)),
+(2, 7,  5, 'Blusa básica que virou a minha favorita.', DATE_SUB(NOW(), INTERVAL 4 DAY)),
+(3, 12, 5, 'Branco de verdade, não é aquele branco amarelado.', DATE_SUB(NOW(), INTERVAL 11 DAY)),
+(2, 20, 3, 'Tecido mais fino do que eu esperava, mas o caimento é bom.', DATE_SUB(NOW(), INTERVAL 13 DAY)),
+(3, 25, 4, 'Saia linda, só veste justa. Peguei um tamanho acima.', DATE_SUB(NOW(), INTERVAL 8 DAY)),
+(2, 26, 5, 'Acabamento de loja cara.', DATE_SUB(NOW(), INTERVAL 12 DAY)),
+(3, 28, 4, 'Confortável e veste super bem.', DATE_SUB(NOW(), INTERVAL 15 DAY)),
+(2, 40, 5, 'O degradê é ainda mais bonito ao vivo.', DATE_SUB(NOW(), INTERVAL 17 DAY)),
+(3, 44, 4, 'Blusa delicada, usei em jantar.', DATE_SUB(NOW(), INTERVAL 19 DAY)),
+(2, 52, 3, 'Blazer bom, mas o ombro é estruturado demais para o meu gosto.', DATE_SUB(NOW(), INTERVAL 21 DAY)),
+(3, 60, 5, 'Cor marsala maravilhosa.', DATE_SUB(NOW(), INTERVAL 23 DAY));

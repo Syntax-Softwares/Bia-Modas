@@ -4,6 +4,7 @@ $desconto = $emOferta ? (int) round((float) $produto['oferta_percentual'] * 100)
 $precoOriginal = $produto['preco_original'] ?? null;
 $urlProduto = '/produto?id=' . (int) $produto['id_produto'];
 $textoBadge = $emOferta ? '-' . $desconto . '%' : ($badge ?? null);
+$favoritado = in_array((int) $produto['id_produto'], $favoritosIds ?? [], true);
 ?>
 <?php if (empty($semCarousel)): ?>
 <div class="carousel-slide">
@@ -17,6 +18,16 @@ $textoBadge = $emOferta ? '-' . $desconto . '%' : ($badge ?? null);
                 <span class="product-badge<?= $emOferta ? ' is-sale' : '' ?>"><?= e($textoBadge) ?></span>
             <?php endif; ?>
             <div class="product-actions">
+                <button
+                    type="button"
+                    class="product-favorite<?= $favoritado ? ' active' : '' ?>"
+                    data-favorito="<?= (int) $produto['id_produto'] ?>"
+                    aria-pressed="<?= $favoritado ? 'true' : 'false' ?>"
+                    aria-label="<?= $favoritado ? 'Remover dos favoritos' : 'Salvar nos favoritos' ?>"
+                    title="<?= $favoritado ? 'Remover dos favoritos' : 'Salvar nos favoritos' ?>"
+                >
+                    <i class="bi <?= $favoritado ? 'bi-heart-fill' : 'bi-heart' ?>"></i>
+                </button>
                 <a href="<?= e($urlProduto) ?>" class="product-view-link" aria-label="Visualizar <?= e($produto['nome']) ?>">
                     <i class="bi bi-eye"></i>
                 </a>

@@ -10,6 +10,7 @@ $busca = '';
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Bia Modas - Moda feminina em Jaú, SP. Tendências, qualidade e preços incríveis para realçar sua beleza." />
+    <meta name="csrf-token" content="<?= e(Auth::csrfToken()) ?>" />
     <title>Bia Modas | Moda Feminina em Jaú</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
@@ -190,23 +191,33 @@ $busca = '';
     </section>
 
     <!-- Recomendados para Você -->
-    <section class="products-section" id="section-recomendados" style="display: none;">
-        <div class="container">
-            <div class="section-header">
-                <div class="section-header-meta">
-                    <span class="section-number">★</span>
-                    <h2>Para Você</h2>
+    <?php if ($data['paraVoce'] !== []): ?>
+        <section class="products-section" id="section-recomendados">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-header-meta">
+                        <span class="section-number">★</span>
+                        <h2><?= e($data['tituloParaVoce']) ?></h2>
+                    </div>
+                    <span class="section-header-side"><?= e($data['subtituloParaVoce']) ?></span>
                 </div>
-                <span class="section-header-side">Selecionados com base no seu perfil</span>
+                <div class="carousel-container">
+                    <button class="carousel-btn prev" onclick="moveCarousel('recomendados', -1)" aria-label="Anterior"><i class="bi bi-chevron-left"></i></button>
+                    <div class="carousel-track" id="carousel-recomendados">
+                        <?php foreach ($data['paraVoce'] as $produto): ?>
+                            <?php
+                            $badge = null;
+                            $semCarousel = false;
+                            require __DIR__ . '/partials/product_card.php';
+                            ?>
+                        <?php endforeach; ?>
+                    </div>
+                    <button class="carousel-btn next" onclick="moveCarousel('recomendados', 1)" aria-label="Próximo"><i class="bi bi-chevron-right"></i></button>
+                    <div class="carousel-dots" id="dots-recomendados"></div>
+                </div>
             </div>
-            <div class="carousel-container">
-                <button class="carousel-btn prev" onclick="moveCarousel('recomendados', -1)" aria-label="Anterior"><i class="bi bi-chevron-left"></i></button>
-                <div class="carousel-track" id="carousel-recomendados"></div>
-                <button class="carousel-btn next" onclick="moveCarousel('recomendados', 1)" aria-label="Próximo"><i class="bi bi-chevron-right"></i></button>
-                <div class="carousel-dots" id="dots-recomendados"></div>
-            </div>
-        </div>
-    </section>
+        </section>
+    <?php endif; ?>
 
     <!-- Products - Novidades -->
     <section class="products-section">
@@ -323,5 +334,7 @@ $busca = '';
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0t3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="/js/site.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/favoritos.js"></script>
 </body>
 </html>
