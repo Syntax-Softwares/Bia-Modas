@@ -268,3 +268,19 @@ CREATE TABLE itens_compra(
   CONSTRAINT itens_compra_produto_fk FOREIGN KEY (produto_id)
     REFERENCES produtos(id_produto) ON DELETE RESTRICT
 );
+
+-- Recuperação de senha por código de 6 dígitos.
+-- O código nunca é gravado em texto puro: guardamos o hash do password_hash().
+-- expira_em é calculado no SQL (NOW() + 10 min) para não depender do fuso do PHP.
+CREATE TABLE codigos_recuperacao_senha(
+  id_codigo BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  usuario_id BIGINT UNSIGNED NOT NULL,
+  codigo_hash VARCHAR(255) NOT NULL,
+  tentativas TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  expira_em DATETIME NOT NULL,
+  usado_em DATETIME NULL,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT codigos_recuperacao_usuario_fk FOREIGN KEY (usuario_id)
+    REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
+  INDEX codigos_recuperacao_usuario_idx (usuario_id, usado_em)
+);

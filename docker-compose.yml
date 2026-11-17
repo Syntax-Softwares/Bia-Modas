@@ -7,9 +7,36 @@ services:
       - .:/var/www/html
     environment:
       TZ: America/Sao_Paulo
+      # Mailpit (desenvolvimento). Para um provedor real, preencha também
+      # MAIL_USERNAME, MAIL_PASSWORD e MAIL_SECURE (tls|ssl).
+      MAIL_HOST: mailpit
+      MAIL_PORT: 1025
+      MAIL_USERNAME: ""
+      MAIL_PASSWORD: ""
+      MAIL_SECURE: ""
+      MAIL_FROM: "nao-responda@biamodas.local"
+      MAIL_FROM_NAME: "Bia Modas"
     depends_on:
       db:
         condition: service_healthy
+      mailpit:
+        condition: service_started
+
+  mailpit:
+    image: axllent/mailpit
+    ports:
+      - "1025:1025" # SMTP
+      - "8025:8025" # Interface web
+
+  # Serviço utilitário, fora do "up" normal (profile tools).
+  # Uso: docker compose run --rm composer
+  composer:
+    image: composer:2
+    profiles: ["tools"]
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: install --no-interaction --prefer-dist
 
   db:
     image: mariadb:11
