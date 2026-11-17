@@ -19,7 +19,7 @@
         const icone = elemento.querySelector('i');
 
         if (texto) texto.textContent = mensagem;
-        if (icone) icone.className = erro ? 'bi bi-exclamation-circle' : 'bi bi-check-circle';
+        if (icone) icone.className = erro ? 'icon-circle-alert' : 'icon-circle-check';
 
         elemento.classList.toggle('is-error', Boolean(erro));
         elemento.classList.add('show');

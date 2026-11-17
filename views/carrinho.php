@@ -15,8 +15,8 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
     <title>Meu Carrinho | Bia Modas</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@latest/font/lucide.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -48,7 +48,7 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
             <?php require __DIR__ . '/partials/alerts.php'; ?>
 
             <div class="empty-state" id="carrinho-vazio" <?= $itens === [] ? '' : 'hidden' ?>>
-                <i class="bi bi-bag"></i>
+                <i class="icon-shopping-bag"></i>
                 <h2>Seu carrinho está vazio</h2>
                 <p>Explore a coleção e adicione as peças que você gostou.</p>
                 <a href="/" class="btn-outline-custom btn-outline-dark mt-3">Ver produtos</a>
@@ -73,7 +73,7 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
                             </div>
                             <div class="carrinho-item-subtotal" data-cart-subtotal><?= money($item['subtotal']) ?></div>
                             <button type="button" class="cart-item-remove" data-cart-remover data-produto-id="<?= (int) $item['produto_id'] ?>" aria-label="Remover <?= e($item['nome']) ?> do carrinho">
-                                <i class="bi bi-trash"></i>
+                                <i class="icon-trash-2"></i>
                             </button>
                         </article>
                     <?php endforeach; ?>
@@ -96,11 +96,11 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
                         <span id="carrinho-total"><?= money($resumo['subtotal']) ?></span>
                     </div>
                     <a class="btn-checkout" href="/checkout">
-                        <i class="bi bi-credit-card"></i>
+                        <i class="icon-credit-card"></i>
                         Finalizar compra
                     </a>
                     <a href="/" class="btn-outline-custom btn-outline-dark carrinho-continuar">Continuar comprando</a>
-                    <a href="/pedidos" class="carrinho-link-pedidos"><i class="bi bi-receipt me-1"></i>Ver meus pedidos</a>
+                    <a href="/pedidos" class="carrinho-link-pedidos"><i class="icon-receipt me-1"></i>Ver meus pedidos</a>
                 </aside>
             </div>
         </div>

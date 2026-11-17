@@ -17,7 +17,12 @@
 
             const icone = botao.querySelector('i');
             if (icone) {
-                icone.className = favorito ? 'bi bi-heart-fill' : 'bi bi-heart';
+                icone.className = 'icon-heart';
+            }
+
+            const rotulo = botao.querySelector('[data-favorito-label]');
+            if (rotulo) {
+                rotulo.textContent = favorito ? 'Nos favoritos' : 'Favoritar';
             }
         });
     }

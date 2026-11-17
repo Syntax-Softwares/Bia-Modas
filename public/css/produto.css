@@ -435,3 +435,44 @@
 .product-stock.out {
     color: var(--color-primary);
 }
+
+/* === Ações principais do produto (Lucide + alinhamento) === */
+.product-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.product-buttons > .btn-primary-solid,
+.product-buttons > .btn-outline-catalogo,
+.product-buttons > button {
+    width: 100%;
+    min-height: 54px;
+    padding: 14px 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    letter-spacing: 0.7px;
+    white-space: nowrap;
+}
+
+.product-buttons .favorito-btn.active {
+    background: var(--color-primary);
+    color: #fff;
+}
+
+.product-buttons .icon-shopping-bag,
+.product-buttons .icon-heart,
+.product-buttons .icon-circle-x {
+    font-size: 1.05rem;
+}
+
+@media (max-width: 480px) {
+    .product-buttons {
+        grid-template-columns: 1fr;
+    }
+}

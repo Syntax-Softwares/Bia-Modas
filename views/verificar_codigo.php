@@ -7,8 +7,8 @@
     <title>Verificar código | Bia Modas</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@latest/font/lucide.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -71,7 +71,7 @@
                                 required
                             >
                             <button type="button" class="password-toggle" onclick="togglePassword('verificar-senha', this)" aria-label="Mostrar senha">
-                                <i class="bi bi-eye"></i>
+                                <i class="icon-eye"></i>
                             </button>
                         </div>
                         <?php if (isset($errors['senha'])): ?>
@@ -92,7 +92,7 @@
                                 required
                             >
                             <button type="button" class="password-toggle" onclick="togglePassword('verificar-senha-confirmar', this)" aria-label="Mostrar senha">
-                                <i class="bi bi-eye"></i>
+                                <i class="icon-eye"></i>
                             </button>
                         </div>
                         <?php if (isset($errors['senha_confirmar'])): ?>
@@ -101,7 +101,7 @@
                     </div>
 
                     <button type="submit" class="btn-primary-solid btn-block">
-                        <i class="bi bi-shield-check me-2"></i>Redefinir senha
+                        <i class="icon-shield-check me-2"></i>Redefinir senha
                     </button>
                 </form>
 
@@ -128,13 +128,13 @@
 
             if (input.type === 'password') {
                 input.type = 'text';
-                icon.classList.remove('bi-eye');
-                icon.classList.add('bi-eye-slash');
+                icon.classList.remove('icon-eye');
+                icon.classList.add('icon-eye-off');
                 button.setAttribute('aria-label', 'Ocultar senha');
             } else {
                 input.type = 'password';
-                icon.classList.remove('bi-eye-slash');
-                icon.classList.add('bi-eye');
+                icon.classList.remove('icon-eye-off');
+                icon.classList.add('icon-eye');
                 button.setAttribute('aria-label', 'Mostrar senha');
             }
         }

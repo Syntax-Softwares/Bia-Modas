@@ -9,7 +9,7 @@ require __DIR__ . '/partials/header.php';
 
     <?php if ($usuarios === []): ?>
         <div class="admin-empty-state">
-            <i class="bi bi-people"></i>
+            <i class="icon-users"></i>
             <h2>Nenhum usuário cadastrado</h2>
             <p>As contas criadas na loja aparecerão aqui.</p>
         </div>
@@ -46,7 +46,7 @@ require __DIR__ . '/partials/header.php';
                             <td><?= data_hora($usuario['criado_em']) ?></td>
                             <td class="text-end">
                                 <a class="admin-btn admin-btn-ghost" href="/admin/usuarios/ver?id=<?= $id ?>">
-                                    <i class="bi bi-eye"></i> Detalhes
+                                    <i class="icon-eye"></i> Detalhes
                                 </a>
                             </td>
                         </tr>

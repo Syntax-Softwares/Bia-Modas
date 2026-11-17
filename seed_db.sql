@@ -265,3 +265,13 @@ SELECT 'Administrador', 'admin@biamodas.local',
 WHERE NOT EXISTS (
     SELECT 1 FROM usuarios WHERE email = 'admin@biamodas.local'
 );
+
+-- Usuario cliente de desenvolvimento.
+-- E-mail: cliente@biamodas.local | Senha: Cliente@123
+INSERT INTO usuarios (nome, email, senha_hash, telefone, is_admin)
+SELECT 'Cliente Teste', 'cliente@biamodas.local',
+       '$2y$12$Q3F0p4GTK8.v82X7mvdNPu1.4y/5SnwvEk14gzlKsUhs2mKGRmVVe',
+       '14988887777', FALSE
+WHERE NOT EXISTS (
+    SELECT 1 FROM usuarios WHERE email = 'cliente@biamodas.local'
+);

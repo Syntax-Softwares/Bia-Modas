@@ -517,3 +517,162 @@ body.sidebar-open .filter-open-btn {
         justify-content: flex-end;
     }
 }
+
+/* === Ajustes do catálogo PHP (mantendo o visual da apresentação) === */
+.filter-estilo {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border: 1px solid var(--color-light-gray);
+    background: #fff;
+    color: var(--color-dark);
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.filter-estilo:hover,
+.filter-estilo.active {
+    border-color: var(--color-dark);
+    background: var(--color-dark);
+    color: #fff;
+}
+
+.filter-promo-toggle {
+    text-decoration: none;
+    color: var(--color-dark);
+}
+
+.filter-promo-toggle.active {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.filter-chip a {
+    display: flex;
+    align-items: center;
+    color: var(--color-gray);
+    text-decoration: none;
+    line-height: 1;
+}
+
+.filter-chip a:hover {
+    color: var(--color-primary);
+}
+
+.empty-state h2 {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    color: var(--color-dark);
+    margin-bottom: 8px;
+}
+
+.empty-state p {
+    margin-bottom: 22px;
+}
+
+.product-meta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+    font-size: 0.75rem;
+    color: var(--color-gray);
+}
+
+.product-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.product-badge.is-out {
+    left: auto;
+    right: 12px;
+    background: var(--color-dark);
+    color: #fff;
+}
+
+.product-card.is-out .product-image img {
+    opacity: 0.75;
+}
+
+/* Paginação do catálogo */
+.catalogo-paginacao {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 46px;
+    flex-wrap: wrap;
+}
+
+.catalogo-paginacao a,
+.catalogo-paginacao span {
+    min-width: 38px;
+    height: 38px;
+    padding: 0 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-light-gray);
+    color: var(--color-dark);
+    text-decoration: none;
+    font-size: 0.85rem;
+}
+
+.catalogo-paginacao a:hover {
+    border-color: var(--color-dark);
+}
+
+.catalogo-paginacao .active {
+    background: var(--color-dark);
+    border-color: var(--color-dark);
+    color: #fff;
+}
+
+.catalogo-paginacao .paginacao-nav {
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+.catalogo-paginacao .paginacao-reticencias {
+    border: 0;
+    min-width: 20px;
+}
+
+/* Links usados como botões de filtro (PHP) */
+a.filter-price-btn,
+a.filter-size-btn,
+a.filter-estilo,
+a.filter-promo-toggle {
+    text-decoration: none;
+    color: var(--color-dark);
+}
+
+a.filter-price-btn {
+    display: block;
+}
+
+a.filter-size-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+a.filter-price-btn:hover,
+a.filter-price-btn.active,
+a.filter-size-btn:hover,
+a.filter-size-btn.active {
+    color: #fff;
+}
+
+/* Com a sidebar aberta no desktop, usa 3 colunas para as fotos respirarem */
+@media (min-width: 992px) and (max-width: 1399px) {
+    body.sidebar-open .category-content [data-produto-card] {
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+    }
+}

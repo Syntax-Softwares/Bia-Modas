@@ -9,7 +9,7 @@ require __DIR__ . '/partials/header.php';
 
     <?php if ($pedidos === []): ?>
         <div class="admin-empty-state">
-            <i class="bi bi-receipt"></i>
+            <i class="icon-receipt"></i>
             <h2>Nenhum pedido recebido</h2>
             <p>Os pedidos do checkout aparecerão aqui.</p>
         </div>
@@ -57,7 +57,7 @@ require __DIR__ . '/partials/header.php';
                             </td>
                             <td class="text-end">
                                 <a class="admin-btn admin-btn-ghost" href="/admin/pedidos/ver?id=<?= (int) $pedido['id_compra'] ?>">
-                                    <i class="bi bi-eye"></i> Detalhes
+                                    <i class="icon-eye"></i> Detalhes
                                 </a>
                             </td>
                         </tr>

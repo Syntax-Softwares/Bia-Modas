@@ -59,8 +59,8 @@ $formAction = $editando !== null ? '/perfil/enderecos/atualizar' : '/perfil/ende
     <title>Minha Conta | Bia Modas</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@latest/font/lucide.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -169,7 +169,7 @@ $formAction = $editando !== null ? '/perfil/enderecos/atualizar' : '/perfil/ende
 
                                     <div class="text-center mt-3">
                                         <button type="submit" class="btn-primary-solid">
-                                            <i class="bi bi-check-lg me-2"></i>Salvar Alterações
+                                            <i class="icon-check me-2"></i>Salvar Alterações
                                         </button>
                                     </div>
                                 </form>
@@ -218,7 +218,7 @@ $formAction = $editando !== null ? '/perfil/enderecos/atualizar' : '/perfil/ende
 
                                                 <div class="address-actions">
                                                     <a href="/perfil/enderecos?editar=<?= (int) $endereco['id_endereco'] ?>" class="btn-outline-account">
-                                                        <i class="bi bi-pencil me-1"></i>Editar
+                                                        <i class="icon-pencil me-1"></i>Editar
                                                     </a>
 
                                                     <?php if (!$principal): ?>
@@ -226,13 +226,13 @@ $formAction = $editando !== null ? '/perfil/enderecos/atualizar' : '/perfil/ende
                                                             <?= Sessao::csrfCampo() ?>
                                                             <input type="hidden" name="id_endereco" value="<?= (int) $endereco['id_endereco'] ?>">
                                                             <button type="submit" class="btn-outline-account">
-                                                                <i class="bi bi-star me-1"></i>Tornar principal
+                                                                <i class="icon-star me-1"></i>Tornar principal
                                                             </button>
                                                         </form>
                                                     <?php endif; ?>
 
                                                     <a href="/perfil/enderecos?excluir=<?= (int) $endereco['id_endereco'] ?>" class="btn-outline-account is-danger">
-                                                        <i class="bi bi-trash me-1"></i>Excluir
+                                                        <i class="icon-trash-2 me-1"></i>Excluir
                                                     </a>
                                                 </div>
                                             </article>
@@ -325,7 +325,7 @@ $formAction = $editando !== null ? '/perfil/enderecos/atualizar' : '/perfil/ende
 
                                     <div class="text-center mt-3">
                                         <button type="submit" class="btn-primary-solid">
-                                            <i class="bi bi-check-lg me-2"></i>
+                                            <i class="icon-check me-2"></i>
                                             <?= $editando !== null ? 'Salvar Endereço' : 'Adicionar Endereço' ?>
                                         </button>
 
@@ -370,7 +370,7 @@ $formAction = $editando !== null ? '/perfil/enderecos/atualizar' : '/perfil/ende
 
                                     <div class="text-center mt-3">
                                         <button type="submit" class="btn-primary-solid">
-                                            <i class="bi bi-shield-check me-2"></i>Atualizar Senha
+                                            <i class="icon-shield-check me-2"></i>Atualizar Senha
                                         </button>
                                     </div>
                                 </form>
@@ -380,7 +380,7 @@ $formAction = $editando !== null ? '/perfil/enderecos/atualizar' : '/perfil/ende
                                     <form method="post" action="/perfil/sair">
                                         <?= Sessao::csrfCampo() ?>
                                         <button type="submit" class="btn-primary-solid btn-logout">
-                                            <i class="bi bi-box-arrow-right me-2"></i>Sair da Conta
+                                            <i class="icon-log-out me-2"></i>Sair da Conta
                                         </button>
                                     </form>
                                 </div>

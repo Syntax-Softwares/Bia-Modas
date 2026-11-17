@@ -49,7 +49,7 @@ $textoBadge = $emOferta ? '-' . $desconto . '%' : ($badge ?? null);
 
             <div class="product-actions">
                 <a href="<?= e($urlProduto) ?>" class="product-view-link" aria-label="Visualizar <?= e($produto['nome']) ?>">
-                    <i class="bi bi-eye"></i>
+                    <i class="icon-eye"></i>
                 </a>
                 <button type="button"
                         class="favorito-btn<?= $ehFavorito ? ' active' : '' ?>"
@@ -58,7 +58,7 @@ $textoBadge = $emOferta ? '-' . $desconto . '%' : ($badge ?? null);
                         data-produto-nome="<?= e($produto['nome']) ?>"
                         aria-pressed="<?= $ehFavorito ? 'true' : 'false' ?>"
                         aria-label="<?= $ehFavorito ? 'Remover dos favoritos' : 'Adicionar aos favoritos' ?>">
-                    <i class="bi bi-heart<?= $ehFavorito ? '-fill' : '' ?>"></i>
+                    <i class="icon-heart"></i>
                 </button>
                 <button type="button"
                         class="botao-carrinho<?= $noCarrinho ? ' active' : '' ?>"
@@ -68,7 +68,7 @@ $textoBadge = $emOferta ? '-' . $desconto . '%' : ($badge ?? null);
                         aria-pressed="<?= $noCarrinho ? 'true' : 'false' ?>"
                         <?= $esgotado ? 'disabled' : '' ?>
                         aria-label="<?= $esgotado ? 'Produto esgotado' : ($noCarrinho ? 'Remover ' . e($produto['nome']) . ' do carrinho' : 'Adicionar ' . e($produto['nome']) . ' ao carrinho') ?>">
-                    <i class="bi bi-bag-<?= $noCarrinho ? 'check-fill' : 'plus' ?>"></i>
+                    <i class="icon-shopping-bag"></i>
                 </button>
             </div>
         </div>
@@ -91,10 +91,10 @@ $textoBadge = $emOferta ? '-' . $desconto . '%' : ($badge ?? null);
             <?php if (($produto['tamanho'] ?? '') !== '' || ($produto['cor'] ?? null) !== null): ?>
                 <div class="product-meta">
                     <?php if (($produto['tamanho'] ?? '') !== ''): ?>
-                        <span><i class="bi bi-rulers"></i> <?= e($produto['tamanho']) ?></span>
+                        <span><i class="icon-ruler"></i> <?= e($produto['tamanho']) ?></span>
                     <?php endif; ?>
                     <?php if (($produto['cor'] ?? null) !== null): ?>
-                        <span><i class="bi bi-palette"></i> <?= e($produto['cor']) ?></span>
+                        <span><i class="icon-palette"></i> <?= e($produto['cor']) ?></span>
                     <?php endif; ?>
                 </div>
             <?php endif; ?>

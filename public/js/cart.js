@@ -49,7 +49,12 @@
 
             const icone = botao.querySelector('i');
             if (icone) {
-                icone.className = noCarrinho ? 'bi bi-bag-check-fill' : 'bi bi-bag-plus';
+                icone.className = 'icon-shopping-bag';
+            }
+
+            const rotulo = botao.querySelector('[data-cart-label]');
+            if (rotulo) {
+                rotulo.textContent = noCarrinho ? 'Remover do carrinho' : 'Adicionar ao carrinho';
             }
         });
     }
@@ -92,7 +97,7 @@
     }
 
     function htmlVazio() {        return '<div class="cart-empty">'
-            + '<i class="bi bi-bag"></i>'
+            + '<i class="icon-shopping-bag"></i>'
             + '<p>Seu carrinho está vazio</p>'
             + '<p style="font-size: 0.9rem;">Adicione produtos para continuar</p>'
             + '</div>';
@@ -126,7 +131,7 @@
                     </div>
                 </div>
                 <button type="button" class="cart-item-remove" data-cart-remover data-produto-id="${item.produto_id}" aria-label="Remover ${escaparHtml(item.nome)} do carrinho">
-                    <i class="bi bi-trash"></i>
+                    <i class="icon-trash-2"></i>
                 </button>
             </div>
         `).join('');

@@ -31,7 +31,7 @@ $editandoId = (int) ($editando['id_categoria'] ?? 0);
 
             <div class="admin-form-actions">
                 <button type="submit" class="admin-btn admin-btn-primary">
-                    <i class="bi bi-check-lg"></i> <?= $editando ? 'Salvar' : 'Criar categoria' ?>
+                    <i class="icon-check"></i> <?= $editando ? 'Salvar' : 'Criar categoria' ?>
                 </button>
             </div>
         </form>
@@ -66,13 +66,13 @@ $editandoId = (int) ($editando['id_categoria'] ?? 0);
                                 <td class="text-end">
                                     <div class="admin-row-actions">
                                         <a class="admin-btn admin-btn-ghost" href="/admin/categorias?editar=<?= $id ?>">
-                                            <i class="bi bi-pencil"></i> Editar
+                                            <i class="icon-pencil"></i> Editar
                                         </a>
                                         <form method="post" action="/admin/categorias/excluir" data-confirm="Excluir esta categoria?">
                                             <?= Sessao::csrfCampo() ?>
                                             <input type="hidden" name="id_categoria" value="<?= $id ?>">
                                             <button type="submit" class="admin-btn admin-btn-danger">
-                                                <i class="bi bi-trash"></i>
+                                                <i class="icon-trash-2"></i>
                                             </button>
                                         </form>
                                     </div>
