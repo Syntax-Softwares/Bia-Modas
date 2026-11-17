@@ -37,9 +37,11 @@ CREATE TABLE medidas(
 -- ---------------------------------------------------------------------
 CREATE TABLE carrinhos(
   id_carrinho BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  sessao_id CHAR(64) NULL,
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  deletado_em DATETIME NULL
+  deletado_em DATETIME NULL,
+  CONSTRAINT carrinhos_sessao_uk UNIQUE (sessao_id)
 );
 
 CREATE TABLE usuarios(
@@ -248,6 +250,23 @@ CREATE TABLE itens_carrinho(
   CONSTRAINT itens_carrinho_carrinho_fk FOREIGN KEY (carrinho_id)
     REFERENCES carrinhos(id_carrinho) ON DELETE CASCADE,
   CONSTRAINT itens_carrinho_produto_fk FOREIGN KEY (produto_id)
+    REFERENCES produtos(id_produto) ON DELETE CASCADE
+);
+
+CREATE TABLE favoritos(
+  id_favorito BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  usuario_id BIGINT UNSIGNED NULL,
+  sessao_id CHAR(64) NULL,
+  produto_id BIGINT UNSIGNED NOT NULL,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deletado_em DATETIME NULL,
+  CONSTRAINT favoritos_usuario_produto_uk UNIQUE (usuario_id, produto_id),
+  CONSTRAINT favoritos_sessao_produto_uk UNIQUE (sessao_id, produto_id),
+  CONSTRAINT favoritos_dono_ck CHECK ((usuario_id IS NULL) <> (sessao_id IS NULL)),
+  CONSTRAINT favoritos_usuario_fk FOREIGN KEY (usuario_id)
+    REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
+  CONSTRAINT favoritos_produto_fk FOREIGN KEY (produto_id)
     REFERENCES produtos(id_produto) ON DELETE CASCADE
 );
 

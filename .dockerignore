@@ -11,4 +11,5 @@
 
 # O schema e montado direto no container do banco, nao precisa ir na imagem
 db.sql
+db/
 README.md
