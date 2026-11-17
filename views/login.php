@@ -71,6 +71,12 @@
                         <?php endif; ?>
                     </div>
 
+                    <div class="form-group" style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
+                        <a href="/recuperar-senha" style="color: var(--color-primary); text-decoration: none; font-weight: 500; font-size: 0.9rem;">
+                            Esqueceu a senha?
+                        </a>
+                    </div>
+
                     <button type="submit" class="btn-primary-solid btn-block">
                         <i class="bi bi-box-arrow-in-right me-2"></i>Entrar
                     </button>
