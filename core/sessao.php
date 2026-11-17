@@ -93,6 +93,46 @@ final class Sessao
         return $_SESSION['visitante_id'];
     }
 
+    /**
+     * Identificador anonimo atual, sem criar um novo.
+     *
+     * Usado no login para migrar carrinho/favoritos do visitante sem gerar
+     * um identificador vazio quando a sessao nunca teve um.
+     */
+    public static function visitanteIdAtual(): ?string
+    {
+        $visitante = $_SESSION['visitante_id'] ?? null;
+
+        return is_string($visitante) && $visitante !== '' ? $visitante : null;
+    }
+
+    /**
+     * Guarda um destino interno para retomar depois do login/cadastro.
+     *
+     * Aceita apenas caminhos relativos ao proprio site para evitar open
+     * redirect (ex.: "//outro-site" ou "https://...").
+     */
+    public static function definirDestinoAposLogin(string $destino): void
+    {
+        if ($destino === '' || $destino[0] !== '/' || str_starts_with($destino, '//')) {
+            return;
+        }
+
+        $_SESSION['destino_apos_login'] = $destino;
+    }
+
+    public static function consumirDestinoAposLogin(): ?string
+    {
+        $destino = $_SESSION['destino_apos_login'] ?? null;
+        unset($_SESSION['destino_apos_login']);
+
+        if (!is_string($destino) || $destino === '' || $destino[0] !== '/' || str_starts_with($destino, '//')) {
+            return null;
+        }
+
+        return $destino;
+    }
+
     public static function exigirLogin(): array
     {
         $usuario = self::usuario();

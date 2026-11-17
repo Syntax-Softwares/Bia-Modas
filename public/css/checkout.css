@@ -22,6 +22,16 @@
     background: rgba(217, 164, 0, 0.1);
 }
 
+.alerta-info {
+    border-color: #0d6efd;
+    background: rgba(13, 110, 253, 0.08);
+}
+
+.alerta-info a {
+    color: inherit;
+    text-decoration: underline;
+}
+
 .checkout-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 380px;

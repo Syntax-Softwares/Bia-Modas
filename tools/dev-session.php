@@ -88,6 +88,6 @@ if (is_file($arquivo)) {
 
 echo "Sessao criada para o usuario {$usuario['nome']} (id {$usuario['id_usuario']}).\n";
 echo "Cookie: BIAMODAS_SESSID={$idSessao}\n";
-echo "Navegador: http://localhost:8080/perfil\n";
+echo "Navegador: http://localhost:8081/perfil\n";
 echo "Teste via curl:\n";
-echo "  curl -b 'BIAMODAS_SESSID={$idSessao}' http://localhost:8080/perfil\n";
+echo "  curl -b 'BIAMODAS_SESSID={$idSessao}' http://localhost:8081/perfil\n";

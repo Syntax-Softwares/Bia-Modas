@@ -1,15 +1,18 @@
 <?php
 
 require_once __DIR__ . '/../core/sessao.php';
+require_once __DIR__ . '/../core/comprador.php';
 require_once __DIR__ . '/../repositories/carrinho_repository.php';
 require_once __DIR__ . '/../repositories/favorito_repository.php';
 require_once __DIR__ . '/../repositories/pedido_repository.php';
+require_once __DIR__ . '/../repositories/usuario_repository.php';
 
 class CheckoutController
 {
     private CarrinhoRepository $carrinho;
     private FavoritoRepository $favoritos;
     private PedidoRepository $pedidos;
+    private UsuarioRepository $usuarios;
 
     private const FORMAS_PAGAMENTO = ['pix', 'cartao', 'boleto'];
 
@@ -18,22 +21,26 @@ class CheckoutController
         $this->carrinho = new CarrinhoRepository($pdo);
         $this->favoritos = new FavoritoRepository($pdo);
         $this->pedidos = new PedidoRepository($pdo);
+        $this->usuarios = new UsuarioRepository($pdo);
     }
 
     public function index(): void
     {
-        $resumo = $this->carrinho->resumoPorVisitante(Sessao::visitanteId());
+        $usuarioId = $this->exigirLogin();
+        $resumo = $this->carrinho->resumoDe(Comprador::atual());
 
         if ($resumo['itens'] === []) {
             Sessao::flash('aviso', 'Adicione produtos ao carrinho antes de finalizar.');
             redirecionar('/carrinho');
         }
 
-        $this->renderizar($resumo, [], $this->dadosVazios());
+        $this->renderizar($resumo, [], $this->dadosDoCadastro($usuarioId));
     }
 
     public function confirmar(): void
     {
+        $usuarioId = $this->exigirLogin();
+
         $token = $_POST['_csrf'] ?? null;
 
         if (!Sessao::validarCsrf(is_string($token) ? $token : null)) {
@@ -41,8 +48,7 @@ class CheckoutController
             redirecionar('/checkout');
         }
 
-        $visitante = Sessao::visitanteId();
-        $resumo = $this->carrinho->resumoPorVisitante($visitante);
+        $resumo = $this->carrinho->resumoDe(Comprador::atual());
 
         if ($resumo['itens'] === []) {
             Sessao::flash('aviso', 'Seu carrinho está vazio.');
@@ -56,8 +62,8 @@ class CheckoutController
             return;
         }
 
-        $carrinhoId = $this->carrinho->obterPorVisitante($visitante);
-        $resultado = $this->pedidos->criar($visitante, $carrinhoId, $dados['dados']);
+        $carrinhoId = $this->carrinho->obter(Comprador::atual());
+        $resultado = $this->pedidos->criar($usuarioId, $carrinhoId, $dados['dados']);
 
         if (!$resultado['ok']) {
             $this->renderizar($resumo, ['geral' => $resultado['mensagem']], $dados['dados']);
@@ -65,6 +71,33 @@ class CheckoutController
         }
 
         redirecionar('/pedido?numero=' . $resultado['numero_pedido'] . '&novo=1');
+    }
+
+    /**
+     * Dados iniciais do checkout: nome, telefone e endereco principal do
+     * cadastro. O cliente ainda pode ajustar antes de confirmar; o pedido
+     * guarda uma copia (snapshot) do que foi enviado.
+     */
+    private function dadosDoCadastro(int $usuarioId): array
+    {
+        $dados = $this->dadosVazios();
+        $usuario = $this->usuarios->buscarPorId($usuarioId);
+
+        if ($usuario === null) {
+            return $dados;
+        }
+
+        $dados['destinatario'] = (string) ($usuario['nome'] ?? '');
+        $dados['telefone'] = (string) ($usuario['telefone'] ?? '');
+        $dados['endereco_cep'] = (string) ($usuario['endereco_cep'] ?? '');
+        $dados['endereco_logradouro'] = (string) ($usuario['endereco_logradouro'] ?? '');
+        $dados['endereco_numero'] = (string) ($usuario['endereco_numero'] ?? '');
+        $dados['endereco_complemento'] = (string) ($usuario['endereco_complemento'] ?? '');
+        $dados['endereco_bairro'] = (string) ($usuario['endereco_bairro'] ?? '');
+        $dados['endereco_cidade'] = (string) ($usuario['endereco_cidade'] ?? '');
+        $dados['endereco_uf'] = (string) ($usuario['endereco_uf'] ?? '');
+
+        return $dados;
     }
 
     private function validar(array $entrada): array
@@ -156,10 +189,25 @@ class CheckoutController
         ];
     }
 
+    private function exigirLogin(): int
+    {
+        $usuarioId = Sessao::id();
+
+        if ($usuarioId === null) {
+            Sessao::definirDestinoAposLogin('/checkout');
+            Sessao::flash('info', 'Entre na sua conta para finalizar a compra.');
+            Sessao::redirecionar('/login');
+        }
+
+        return $usuarioId;
+    }
+
     private function renderizar(array $resumo, array $erros, array $dados): void
     {
-        $visitante = Sessao::visitanteId();
-        $favoritosIds = $this->favoritos->ids($visitante);
+        $comprador = Comprador::atual();
+        $favoritosIds = $this->favoritos->ids($comprador);
+        $usuarioId = Sessao::id();
+        $usuario = $usuarioId !== null ? $this->usuarios->buscarPorId($usuarioId) : null;
 
         $data = [
             'resumo' => $resumo,
@@ -169,6 +217,7 @@ class CheckoutController
             'favoritosTotal' => count($favoritosIds),
             'carrinhoIds' => array_column($resumo['itens'], 'produto_id'),
             'quantidadeCarrinho' => $resumo['quantidade'],
+            'temEnderecoPrincipal' => $usuario !== null && !empty($usuario['endereco_logradouro']),
             'flashes' => Sessao::flashes(),
         ];
 

@@ -253,7 +253,7 @@ docker compose exec app sh -c "find /var/www/html -name '*.php' -exec php -l {} 
 docker compose exec app php tools/dev-session.php 1
 
 # teste rápido
-curl.exe -b "BIAMODAS_SESSID=<valor>" http://localhost:8080/perfil
+curl.exe -b "BIAMODAS_SESSID=<valor>" http://localhost:8081/perfil
 ```
 
 ### Dados de teste
