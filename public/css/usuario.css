@@ -78,3 +78,177 @@
     border: none;
     background: #dc3545;
 }
+
+/* Abas como links (navegacao server-side, sem depender de JS) */
+.profile-tab {
+    display: inline-block;
+    text-decoration: none;
+}
+
+.profile-tab.disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.profile-tab.disabled:hover {
+    color: var(--color-gray);
+}
+
+.profile-subtitle {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    margin: 35px 0 20px;
+}
+
+/* Mensagens de validacao */
+.field-error {
+    display: block;
+    margin-top: 6px;
+    color: #b02a37;
+    font-size: 0.85rem;
+}
+
+.form-hint {
+    display: block;
+    margin-top: 6px;
+    color: var(--color-gray);
+    font-size: 0.82rem;
+}
+
+.profile-alerts {
+    margin-bottom: 20px;
+}
+
+.profile-alerts .alert {
+    border-radius: 0;
+}
+
+.account-empty {
+    color: var(--color-gray);
+    margin: 20px 0;
+}
+
+/* Lista de enderecos */
+.address-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+}
+
+.address-card {
+    background: #fff;
+    border: 1px solid var(--color-light-gray);
+    padding: 20px;
+}
+
+.address-card.is-primary {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 1px var(--color-primary);
+}
+
+.address-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.address-card-header h3 {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.badge-primary {
+    background: var(--color-primary);
+    color: #fff;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    white-space: nowrap;
+}
+
+.account-address {
+    font-style: normal;
+    line-height: 1.7;
+    color: var(--color-gray);
+    margin: 0 0 15px;
+}
+
+.address-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.address-actions form {
+    display: inline;
+    margin: 0;
+}
+
+.btn-outline-account {
+    display: inline-block;
+    padding: 10px 16px;
+    border: 1px solid var(--color-primary);
+    background: transparent;
+    color: var(--color-primary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-outline-account:hover {
+    background: var(--color-primary);
+    color: #fff;
+}
+
+.btn-outline-account.is-danger {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.btn-outline-account.is-danger:hover {
+    background: #dc3545;
+    color: #fff;
+}
+
+/* Confirmacao de exclusao (sem depender de window.confirm) */
+.confirm-box {
+    border: 1px solid #f1aeb5;
+    background: #fdf2f3;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.confirm-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+}
+
+.confirm-actions form {
+    display: inline;
+    margin: 0;
+}
+
+.confirm-actions .btn-primary-solid {
+    padding: 10px 20px;
+    font-size: 0.85rem;
+}
+
+@media (max-width: 576px) {
+    .profile-card {
+        padding: 22px 16px;
+    }
+
+    .address-list {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,8 @@
+# Dependencias locais e arquivos gerados em tempo de execucao
+/storage/
+.env
+*.log
+
+# Editores
+.vscode/
+.idea/
