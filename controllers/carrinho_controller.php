@@ -143,7 +143,7 @@ class CarrinhoController
         $token = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? ($_POST['_csrf'] ?? null);
 
         if (!Sessao::validarCsrf(is_string($token) ? $token : null)) {
-            json_erro('Sessão expirada. Recarregue a página e tente novamente.', 419);
+            json_erro('Sessão expirada. Recarregue a página e tente novamente.', 403);
         }
     }
 }
