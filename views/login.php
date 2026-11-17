@@ -15,15 +15,16 @@
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/layout.css">
     <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/responsive.css">
     <link rel="stylesheet" href="/css/auth.css">
+    <link rel="stylesheet" href="/css/carrinho.css">
 </head>
 <body class="auth-page">
+    <?php $ocultarTopBar = true; require __DIR__ . '/partials/site_header.php'; ?>
+
     <div class="auth-container">
         <div class="auth-card">
             <div class="auth-card-header">
-                <a href="/" class="logo auth-logo-link">
-                    <img src="/img/logoBiaModas.png" alt="Bia Modas">
-                </a>
                 <h1>Bem-vinda de volta!</h1>
                 <p>Entre com seus dados para continuar</p>
             </div>
@@ -71,11 +72,11 @@
                         <?php endif; ?>
                     </div>
 
-                    <div class="text-end mb-3">
-                        <a href="/recuperar-senha" class="auth-link">Esqueci minha senha</a>
+                    <div class="form-group" style="display: flex; justify-content: flex-end; align-items: center; font-size: 0.9rem;">
+                        <a href="/recuperar-senha" style="color: var(--color-primary); text-decoration: none; font-weight: 500;">Esqueceu a senha?</a>
                     </div>
 
-                    <button type="submit" class="btn-primary-solid btn-block">
+                    <button type="submit" class="btn-primary-solid" style="width: 100%; margin-top: 4px;">
                         <i class="bi bi-box-arrow-in-right me-2"></i>Entrar
                     </button>
                 </form>
@@ -107,6 +108,6 @@
             }
         }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <?php require __DIR__ . '/partials/scripts.php'; ?>
 </body>
 </html>
