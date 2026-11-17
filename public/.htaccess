@@ -1,0 +1,6 @@
+RewriteEngine On
+
+# Arquivos e diretórios reais (CSS, imagens, JS) são servidos diretamente.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]

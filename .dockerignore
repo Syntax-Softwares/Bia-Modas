@@ -9,6 +9,8 @@
 **/node_modules
 **/vendor
 
-# O schema e montado direto no container do banco, nao precisa ir na imagem
+# O schema e os dados iniciais são montados direto no container do banco,
+# então não precisam ir na imagem da aplicação
 db.sql
+seed_db.sql
 README.md

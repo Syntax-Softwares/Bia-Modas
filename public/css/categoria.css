@@ -517,3 +517,28 @@ body.sidebar-open .filter-open-btn {
         justify-content: flex-end;
     }
 }
+
+/* --- Estado vazio do catálogo --- */
+.catalog-empty {
+    text-align: center;
+    padding: 70px 20px;
+    color: var(--color-gray);
+}
+
+.catalog-empty i {
+    display: block;
+    font-size: 2.4rem;
+    color: var(--color-primary);
+    margin-bottom: 16px;
+}
+
+.catalog-empty h2 {
+    font-family: var(--font-display);
+    color: var(--color-dark);
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+}
+
+.catalog-empty p {
+    margin-bottom: 24px;
+}
