@@ -9,6 +9,9 @@
 **/node_modules
 **/vendor
 
+# Arquivos gerados em runtime (rate limit, sessoes locais, seeds)
+storage/
+
 # O schema e montado direto no container do banco, nao precisa ir na imagem
 db.sql
 README.md

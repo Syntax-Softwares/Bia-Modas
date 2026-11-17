@@ -7,6 +7,13 @@ services:
       - .:/var/www/html
     environment:
       TZ: America/Sao_Paulo
+      # Habilita apenas ferramentas de desenvolvimento (tools/dev-session.php).
+      APP_ENV: development
+      # A aplicacao usa o usuario nao-root criado pelo MariaDB (menor privilegio).
+      DB_HOST: db
+      DB_NAME: biamodas
+      DB_USER: syntax
+      DB_PASSWORD: Syntax@123
     depends_on:
       db:
         condition: service_healthy
@@ -15,7 +22,8 @@ services:
     image: mariadb:11
     restart: unless-stopped
     ports:
-      - "3306:3306"
+      # Expoe o banco apenas para a maquina local, nao para a rede.
+      - "127.0.0.1:3306:3306"
     environment:
       MARIADB_ROOT_PASSWORD: root
       MARIADB_DATABASE: biamodas

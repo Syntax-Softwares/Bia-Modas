@@ -136,6 +136,7 @@ CREATE TABLE medidas_produtos(
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   deletado_em DATETIME NULL,
+  INDEX medidas_produtos_tamanho_idx (tamanho),
   CONSTRAINT medidas_produtos_positivas_ck CHECK (
     (busto   IS NULL OR busto   > 0) AND
     (cintura IS NULL OR cintura > 0) AND
@@ -180,6 +181,8 @@ CREATE TABLE produtos(
   nome VARCHAR(255) NOT NULL,
   sku VARCHAR(50) NOT NULL,
   descricao VARCHAR(255) NULL,
+  cor VARCHAR(30) NULL,
+  estilo VARCHAR(30) NULL,
   estoque INT NOT NULL DEFAULT 0,
   valor DECIMAL(10,2) NOT NULL,
   ativo BOOLEAN NOT NULL DEFAULT TRUE,
@@ -189,6 +192,10 @@ CREATE TABLE produtos(
   CONSTRAINT produtos_sku_uk UNIQUE (sku),
   CONSTRAINT produtos_valor_ck CHECK (valor > 0),
   CONSTRAINT produtos_estoque_ck CHECK (estoque >= 0),
+  INDEX produtos_cor_idx (cor),
+  INDEX produtos_estilo_idx (estilo),
+  INDEX produtos_valor_idx (valor),
+  INDEX produtos_ativo_idx (ativo, deletado_em),
   CONSTRAINT produtos_medida_fk FOREIGN KEY (medida_produto_id)
     REFERENCES medidas_produtos(id_medida_produto) ON DELETE RESTRICT,
   CONSTRAINT produtos_oferta_fk FOREIGN KEY (oferta_id)
