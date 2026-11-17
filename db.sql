@@ -150,7 +150,8 @@ CREATE TABLE medidas_produtos(
 -- ---------------------------------------------------------------------
 CREATE TABLE compras(
   id_compra BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  usuario_id BIGINT UNSIGNED NOT NULL,
+  usuario_id BIGINT UNSIGNED NULL,
+  sessao_id CHAR(64) NULL,
   endereco_id BIGINT UNSIGNED NULL,
   cupom_id BIGINT UNSIGNED NULL,
   numero_pedido INT NOT NULL,
@@ -158,10 +159,21 @@ CREATE TABLE compras(
   situacao BOOLEAN NOT NULL DEFAULT FALSE,
   frete DECIMAL(10,2) NOT NULL DEFAULT 0,
   desconto DECIMAL(10,2) NOT NULL DEFAULT 0,
+  destinatario VARCHAR(255) NOT NULL,
+  telefone VARCHAR(20) NOT NULL,
+  endereco_cep CHAR(8) NOT NULL,
+  endereco_logradouro VARCHAR(255) NOT NULL,
+  endereco_numero VARCHAR(10) NOT NULL,
+  endereco_complemento VARCHAR(60) NULL,
+  endereco_bairro VARCHAR(60) NOT NULL,
+  endereco_cidade VARCHAR(60) NOT NULL,
+  endereco_uf CHAR(2) NOT NULL,
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   deletado_em DATETIME NULL,
   CONSTRAINT compras_numero_pedido_uk UNIQUE (numero_pedido),
+  INDEX compras_sessao_idx (sessao_id),
+  CONSTRAINT compras_dono_ck CHECK ((usuario_id IS NULL) <> (sessao_id IS NULL)),
   CONSTRAINT compras_valores_ck CHECK (
     valor_total >= 0 AND
     frete >= 0 AND
@@ -173,6 +185,23 @@ CREATE TABLE compras(
     REFERENCES enderecos(id_endereco) ON DELETE SET NULL,
   CONSTRAINT compras_cupom_fk FOREIGN KEY (cupom_id)
     REFERENCES cupons(id_cupom) ON DELETE SET NULL
+);
+
+CREATE TABLE pagamentos(
+  id_pagamento BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  compra_id BIGINT UNSIGNED NOT NULL,
+  metodo VARCHAR(20) NOT NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'pendente',
+  valor DECIMAL(10,2) NOT NULL,
+  codigo_transacao VARCHAR(64) NULL,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deletado_em DATETIME NULL,
+  CONSTRAINT pagamentos_metodo_ck CHECK (metodo IN ('pix', 'cartao', 'boleto')),
+  CONSTRAINT pagamentos_status_ck CHECK (status IN ('pendente', 'pago', 'cancelado')),
+  CONSTRAINT pagamentos_valor_ck CHECK (valor >= 0),
+  CONSTRAINT pagamentos_compra_fk FOREIGN KEY (compra_id)
+    REFERENCES compras(id_compra) ON DELETE CASCADE
 );
 
 CREATE TABLE produtos(
