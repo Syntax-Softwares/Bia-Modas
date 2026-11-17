@@ -16,8 +16,8 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
     <title>Finalizar Compra | Bia Modas</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@latest/font/lucide.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -178,7 +178,7 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
                                 <input type="radio" name="forma_pagamento" value="pix"
                                     <?= ($dados['forma_pagamento'] ?? '') === 'pix' ? 'checked' : '' ?>>
                                 <span class="pagamento-conteudo">
-                                    <i class="bi bi-qr-code"></i>
+                                    <i class="icon-qr-code"></i>
                                     <strong>PIX</strong>
                                     <small>Pague pelo aplicativo do banco</small>
                                 </span>
@@ -188,7 +188,7 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
                                 <input type="radio" name="forma_pagamento" value="cartao"
                                     <?= ($dados['forma_pagamento'] ?? '') === 'cartao' ? 'checked' : '' ?>>
                                 <span class="pagamento-conteudo">
-                                    <i class="bi bi-credit-card"></i>
+                                    <i class="icon-credit-card"></i>
                                     <strong>Cartão de crédito</strong>
                                     <small>Em até 12x, sujeito à análise da loja</small>
                                 </span>
@@ -198,7 +198,7 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
                                 <input type="radio" name="forma_pagamento" value="boleto"
                                     <?= ($dados['forma_pagamento'] ?? '') === 'boleto' ? 'checked' : '' ?>>
                                 <span class="pagamento-conteudo">
-                                    <i class="bi bi-upc-scan"></i>
+                                    <i class="icon-scan-barcode"></i>
                                     <strong>Boleto</strong>
                                     <small>Vencimento em 2 dias úteis</small>
                                 </span>
@@ -211,7 +211,7 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
                     </fieldset>
 
                     <button type="submit" class="btn-checkout">
-                        <i class="bi bi-bag-check"></i>
+                        <i class="icon-shopping-bag"></i>
                         Finalizar pedido
                     </button>
                     <a href="/carrinho" class="checkout-voltar">Voltar ao carrinho</a>

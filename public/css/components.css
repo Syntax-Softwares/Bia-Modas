@@ -27,7 +27,12 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     transition: all 0.3s;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    line-height: 1.2;
+    text-align: center;
     border: 2px solid var(--color-primary);
     cursor: pointer;
 }
@@ -47,7 +52,12 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     transition: all 0.3s;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    line-height: 1.2;
+    text-align: center;
     border: 2px solid white;
 }
 

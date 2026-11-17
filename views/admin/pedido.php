@@ -115,7 +115,7 @@ foreach ($itens as $item) {
 
                 <div class="admin-form-actions">
                     <button type="submit" class="admin-btn admin-btn-primary">
-                        <i class="bi bi-check-lg"></i> Salvar status
+                        <i class="icon-check"></i> Salvar status
                     </button>
                 </div>
             </form>

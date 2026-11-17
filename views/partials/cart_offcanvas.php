@@ -16,15 +16,15 @@ $resumoInicial = $resumoInicial ?? ($data['resumo'] ?? null);
 
 <aside class="cart-offcanvas" id="cart-offcanvas" aria-label="Meu carrinho" aria-hidden="true">
     <div class="cart-header">
-        <h3><i class="bi bi-bag me-2"></i>Meu Carrinho</h3>
+        <h3><i class="icon-shopping-bag me-2"></i>Meu Carrinho</h3>
         <button type="button" class="cart-close" data-cart-close aria-label="Fechar carrinho">
-            <i class="bi bi-x-lg"></i>
+            <i class="icon-x"></i>
         </button>
     </div>
 
     <div class="cart-items" id="cart-items">
         <div class="cart-empty">
-            <i class="bi bi-bag"></i>
+            <i class="icon-shopping-bag"></i>
             <p>Seu carrinho está vazio</p>
             <p style="font-size: 0.9rem;">Adicione produtos para continuar</p>
         </div>

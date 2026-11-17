@@ -12,8 +12,8 @@ $busca = '';
     <title>Minha Conta | Bia Modas</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@latest/font/lucide.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -101,7 +101,7 @@ $busca = '';
                     <form method="post" action="/logout">
                         <?= Auth::csrfField() ?>
                         <button type="submit" class="btn-primary-solid">
-                            <i class="bi bi-box-arrow-right me-2"></i>Sair da conta
+                            <i class="icon-log-out me-2"></i>Sair da conta
                         </button>
                     </form>
                 </div>

@@ -22,7 +22,7 @@ $urlProduto = '/produto?id=' . (int) $produto['id_produto'];
 
         <div class="product-actions">
             <a href="<?= Html::e($urlProduto) ?>" class="product-view-link" aria-label="Visualizar <?= Html::e($produto['nome']) ?>">
-                <i class="bi bi-eye"></i>
+                <i class="icon-eye"></i>
             </a>
         </div>
     </div>
@@ -48,10 +48,10 @@ $urlProduto = '/produto?id=' . (int) $produto['id_produto'];
         <?php if ($produto['tamanho'] !== '' || $produto['cor'] !== null): ?>
             <div class="product-meta">
                 <?php if ($produto['tamanho'] !== ''): ?>
-                    <span><i class="bi bi-rulers"></i> <?= Html::e($produto['tamanho']) ?></span>
+                    <span><i class="icon-ruler"></i> <?= Html::e($produto['tamanho']) ?></span>
                 <?php endif; ?>
                 <?php if ($produto['cor'] !== null): ?>
-                    <span><i class="bi bi-palette"></i> <?= Html::e($produto['cor']) ?></span>
+                    <span><i class="icon-palette"></i> <?= Html::e($produto['cor']) ?></span>
                 <?php endif; ?>
             </div>
         <?php endif; ?>

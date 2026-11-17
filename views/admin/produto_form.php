@@ -105,7 +105,7 @@ $imagemPreview = $valorCampo('imagem') !== '' ? $valorCampo('imagem') : '/img/lo
         <div class="admin-form-actions">
             <a href="/admin/produtos" class="admin-btn admin-btn-ghost">Cancelar</a>
             <button type="submit" class="admin-btn admin-btn-primary">
-                <i class="bi bi-check-lg"></i> <?= $isEdicao ? 'Salvar alterações' : 'Cadastrar produto' ?>
+                <i class="icon-check"></i> <?= $isEdicao ? 'Salvar alterações' : 'Cadastrar produto' ?>
             </button>
         </div>
     </form>

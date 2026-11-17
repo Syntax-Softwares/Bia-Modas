@@ -4,18 +4,18 @@ require __DIR__ . '/partials/header.php';
 <section class="admin-panel">
     <div class="admin-toolbar">
         <form class="admin-search" method="get" action="/admin/produtos" role="search">
-            <i class="bi bi-search"></i>
+            <i class="icon-search"></i>
             <input type="search" name="busca" value="<?= e($busca ?? '') ?>" placeholder="Buscar por nome ou SKU" aria-label="Buscar produtos">
             <button type="submit">Buscar</button>
         </form>
         <a href="/admin/produtos/novo" class="admin-btn admin-btn-primary">
-            <i class="bi bi-plus-lg"></i> Novo produto
+            <i class="icon-plus"></i> Novo produto
         </a>
     </div>
 
     <?php if ($produtos === []): ?>
         <div class="admin-empty-state">
-            <i class="bi bi-bag-x"></i>
+            <i class="icon-shopping-bag"></i>
             <h2>Nenhum produto encontrado</h2>
             <p>Cadastre o primeiro produto ou ajuste a busca.</p>
             <a href="/admin/produtos/novo" class="admin-btn admin-btn-primary">Cadastrar produto</a>
@@ -73,13 +73,13 @@ require __DIR__ . '/partials/header.php';
                             <td class="text-end">
                                 <div class="admin-row-actions">
                                     <a class="admin-btn admin-btn-ghost" href="/admin/produtos/editar?id=<?= $id ?>">
-                                        <i class="bi bi-pencil"></i> Editar
+                                        <i class="icon-pencil"></i> Editar
                                     </a>
                                     <form method="post" action="/admin/produtos/excluir" data-confirm="Remover este produto do catálogo?">
                                         <?= Sessao::csrfCampo() ?>
                                         <input type="hidden" name="id_produto" value="<?= $id ?>">
                                         <button type="submit" class="admin-btn admin-btn-danger">
-                                            <i class="bi bi-trash"></i>
+                                            <i class="icon-trash-2"></i>
                                         </button>
                                     </form>
                                 </div>

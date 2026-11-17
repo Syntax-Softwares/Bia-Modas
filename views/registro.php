@@ -19,8 +19,8 @@ if (isset($errors['medidas'])) {
     <title>Criar Conta | Bia Modas</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@latest/font/lucide.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -132,7 +132,7 @@ if (isset($errors['medidas'])) {
                                         required
                                     >
                                     <button type="button" class="password-toggle" onclick="togglePassword('reg-senha', this)" aria-label="Mostrar senha">
-                                        <i class="bi bi-eye"></i>
+                                        <i class="icon-eye"></i>
                                     </button>
                                 </div>
                                 <?php if (isset($errors['senha'])): ?>
@@ -154,7 +154,7 @@ if (isset($errors['medidas'])) {
                                         required
                                     >
                                     <button type="button" class="password-toggle" onclick="togglePassword('reg-senha-confirmar', this)" aria-label="Mostrar senha">
-                                        <i class="bi bi-eye"></i>
+                                        <i class="icon-eye"></i>
                                     </button>
                                 </div>
                                 <?php if (isset($errors['senha_confirmar'])): ?>
@@ -315,11 +315,11 @@ if (isset($errors['medidas'])) {
 
                     <div class="wizard-nav">
                         <button type="button" class="btn btn-secondary" id="btn-prev" <?= $passoInicial === 1 ? 'style="visibility: hidden;"' : '' ?>>
-                            <i class="bi bi-arrow-left"></i> Voltar
+                            <i class="icon-arrow-left"></i> Voltar
                         </button>
                         <button type="button" class="btn btn-primary" id="btn-next">
                             <span id="btn-next-label"><?= $passoInicial === 3 ? 'Criar conta' : 'Próximo' ?></span>
-                            <i class="bi <?= $passoInicial === 3 ? 'bi-person-check' : 'bi-arrow-right' ?>" id="btn-next-icon"></i>
+                            <i class="<?= $passoInicial === 3 ? 'icon-user-check' : 'icon-arrow-right' ?>" id="btn-next-icon"></i>
                         </button>
                     </div>
                 </form>
@@ -340,13 +340,13 @@ if (isset($errors['medidas'])) {
 
             if (input.type === 'password') {
                 input.type = 'text';
-                icon.classList.remove('bi-eye');
-                icon.classList.add('bi-eye-slash');
+                icon.classList.remove('icon-eye');
+                icon.classList.add('icon-eye-off');
                 button.setAttribute('aria-label', 'Ocultar senha');
             } else {
                 input.type = 'password';
-                icon.classList.remove('bi-eye-slash');
-                icon.classList.add('bi-eye');
+                icon.classList.remove('icon-eye-off');
+                icon.classList.add('icon-eye');
                 button.setAttribute('aria-label', 'Mostrar senha');
             }
         }
@@ -377,7 +377,7 @@ if (isset($errors['medidas'])) {
 
                 const last = current === steps.length - 1;
                 btnLabel.textContent = last ? 'Criar conta' : 'Próximo';
-                btnIcon.className = last ? 'bi bi-person-check' : 'bi bi-arrow-right';
+                btnIcon.className = last ? 'icon-user-check' : 'icon-arrow-right';
             }
 
             function validateStep(index) {

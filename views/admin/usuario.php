@@ -42,7 +42,7 @@ $ehProprioUsuario = (int) $usuario['id_usuario'] === (int) $adminAtual['id_usuar
                     <input type="hidden" name="id_usuario" value="<?= (int) $usuario['id_usuario'] ?>">
                     <input type="hidden" name="novo_valor" value="<?= $ehAdmin ? '0' : '1' ?>">
                     <button type="submit" class="admin-btn <?= $ehAdmin ? 'admin-btn-danger' : 'admin-btn-primary' ?>" <?= $ehProprioUsuario && $ehAdmin ? 'disabled' : '' ?>>
-                        <i class="bi bi-shield-<?= $ehAdmin ? 'x' : 'check' ?>"></i>
+                        <i class="icon-<?= $ehAdmin ? 'shield-x' : 'shield-check' ?>"></i>
                         <?= $ehAdmin ? 'Remover admin' : 'Tornar administrador' ?>
                     </button>
                 </form>
@@ -51,7 +51,7 @@ $ehProprioUsuario = (int) $usuario['id_usuario'] === (int) $adminAtual['id_usuar
                     <?= Sessao::csrfCampo() ?>
                     <input type="hidden" name="id_usuario" value="<?= (int) $usuario['id_usuario'] ?>">
                     <button type="submit" class="admin-btn admin-btn-danger" <?= $ehProprioUsuario ? 'disabled' : '' ?>>
-                        <i class="bi bi-trash"></i> Excluir usuário
+                        <i class="icon-trash-2"></i> Excluir usuário
                     </button>
                 </form>
             </div>

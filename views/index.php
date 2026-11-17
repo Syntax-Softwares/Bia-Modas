@@ -14,8 +14,8 @@ $busca = '';
     <title>Bia Modas | Moda Feminina em Jaú</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@latest/font/lucide.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -155,7 +155,7 @@ $busca = '';
                 <div class="col-md-3 col-6">
                     <div class="feature-box">
                         <div class="feature-icon">
-                            <i class="bi bi-truck"></i>
+                            <i class="icon-truck"></i>
                         </div>
                         <h3>Frete Grátis</h3>
                         <p>Para Jaú em compras acima de R$ 199</p>
@@ -164,7 +164,7 @@ $busca = '';
                 <div class="col-md-3 col-6">
                     <div class="feature-box">
                         <div class="feature-icon">
-                            <i class="bi bi-shield-check"></i>
+                            <i class="icon-shield-check"></i>
                         </div>
                         <h3>Compra Segura</h3>
                         <p>Ambiente 100% seguro e protegido</p>
@@ -173,7 +173,7 @@ $busca = '';
                 <div class="col-md-3 col-6">
                     <div class="feature-box">
                         <div class="feature-icon">
-                            <i class="bi bi-arrow-repeat"></i>
+                            <i class="icon-repeat"></i>
                         </div>
                         <h3>Troca Fácil</h3>
                         <p>7 dias para trocar sem burocracia</p>
@@ -182,7 +182,7 @@ $busca = '';
                 <div class="col-md-3 col-6">
                     <div class="feature-box">
                         <div class="feature-icon">
-                            <i class="bi bi-credit-card"></i>
+                            <i class="icon-credit-card"></i>
                         </div>
                         <h3>Até 12x</h3>
                         <p>Parcelamento em todos os cartões</p>
@@ -203,9 +203,9 @@ $busca = '';
                 <span class="section-header-side">Selecionados com base no seu perfil</span>
             </div>
             <div class="carousel-container">
-                <button class="carousel-btn prev" onclick="moveCarousel('recomendados', -1)" aria-label="Anterior"><i class="bi bi-chevron-left"></i></button>
+                <button class="carousel-btn prev" onclick="moveCarousel('recomendados', -1)" aria-label="Anterior"><i class="icon-chevron-left"></i></button>
                 <div class="carousel-track" id="carousel-recomendados"></div>
-                <button class="carousel-btn next" onclick="moveCarousel('recomendados', 1)" aria-label="Próximo"><i class="bi bi-chevron-right"></i></button>
+                <button class="carousel-btn next" onclick="moveCarousel('recomendados', 1)" aria-label="Próximo"><i class="icon-chevron-right"></i></button>
                 <div class="carousel-dots" id="dots-recomendados"></div>
             </div>
         </div>
@@ -219,7 +219,7 @@ $busca = '';
                     <span class="section-number">01</span>
                     <h2>Novidades</h2>
                 </div>
-                <a href="/categoria" class="section-link">Ver todas <i class="bi bi-arrow-right"></i></a>
+                <a href="/categoria" class="section-link">Ver todas <i class="icon-arrow-right"></i></a>
             </div>
 
             <?php if ($data['novidades'] === []): ?>
@@ -229,7 +229,7 @@ $busca = '';
                 </div>
             <?php else: ?>
                 <div class="carousel-container">
-                    <button class="carousel-btn prev" onclick="moveCarousel('novidades', -1)" aria-label="Anterior"><i class="bi bi-chevron-left"></i></button>
+                    <button class="carousel-btn prev" onclick="moveCarousel('novidades', -1)" aria-label="Anterior"><i class="icon-chevron-left"></i></button>
                     <div class="carousel-track" id="carousel-novidades">
                         <?php foreach ($data['novidades'] as $produto): ?>
                             <?php
@@ -238,7 +238,7 @@ $busca = '';
                             ?>
                         <?php endforeach; ?>
                     </div>
-                    <button class="carousel-btn next" onclick="moveCarousel('novidades', 1)" aria-label="Próximo"><i class="bi bi-chevron-right"></i></button>
+                    <button class="carousel-btn next" onclick="moveCarousel('novidades', 1)" aria-label="Próximo"><i class="icon-chevron-right"></i></button>
                     <div class="carousel-dots" id="dots-novidades"></div>
                 </div>
             <?php endif; ?>
@@ -264,7 +264,7 @@ $busca = '';
                     <span class="section-number">02</span>
                     <h2>Promoções</h2>
                 </div>
-                <a href="/categoria?promocoes=1" class="section-link">Ver tudo em oferta <i class="bi bi-arrow-right"></i></a>
+                <a href="/categoria?promocoes=1" class="section-link">Ver tudo em oferta <i class="icon-arrow-right"></i></a>
             </div>
 
             <?php if ($data['promocoes'] === []): ?>
@@ -274,13 +274,13 @@ $busca = '';
                 </div>
             <?php else: ?>
                 <div class="carousel-container">
-                    <button class="carousel-btn prev" onclick="moveCarousel('promocoes', -1)" aria-label="Anterior"><i class="bi bi-chevron-left"></i></button>
+                    <button class="carousel-btn prev" onclick="moveCarousel('promocoes', -1)" aria-label="Anterior"><i class="icon-chevron-left"></i></button>
                     <div class="carousel-track" id="carousel-promocoes">
                         <?php foreach ($data['promocoes'] as $produto): ?>
                             <?php require __DIR__ . '/partials/product_card.php'; ?>
                         <?php endforeach; ?>
                     </div>
-                    <button class="carousel-btn next" onclick="moveCarousel('promocoes', 1)" aria-label="Próximo"><i class="bi bi-chevron-right"></i></button>
+                    <button class="carousel-btn next" onclick="moveCarousel('promocoes', 1)" aria-label="Próximo"><i class="icon-chevron-right"></i></button>
                     <div class="carousel-dots" id="dots-promocoes"></div>
                 </div>
             <?php endif; ?>
@@ -299,9 +299,9 @@ $busca = '';
             </div>
 
             <div class="carousel-container">
-                <button class="carousel-btn prev" onclick="moveCarousel('recentes', -1)" aria-label="Anterior"><i class="bi bi-chevron-left"></i></button>
+                <button class="carousel-btn prev" onclick="moveCarousel('recentes', -1)" aria-label="Anterior"><i class="icon-chevron-left"></i></button>
                 <div class="carousel-track" id="carousel-recentes"></div>
-                <button class="carousel-btn next" onclick="moveCarousel('recentes', 1)" aria-label="Próximo"><i class="bi bi-chevron-right"></i></button>
+                <button class="carousel-btn next" onclick="moveCarousel('recentes', 1)" aria-label="Próximo"><i class="icon-chevron-right"></i></button>
                 <div class="carousel-dots" id="dots-recentes"></div>
             </div>
         </div>

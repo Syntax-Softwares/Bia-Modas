@@ -13,11 +13,11 @@ $ocultarTopBar = (bool) ($ocultarTopBar ?? false);
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-6 text-center text-md-start">
-                <span><i class="bi bi-truck me-2"></i>Frete grátis para Jaú em compras acima de R$ 199</span>
+                <span><i class="icon-truck me-2"></i>Frete grátis para Jaú em compras acima de R$ 199</span>
             </div>
             <div class="col-md-6 text-center text-md-end mt-2 mt-md-0">
-                <a href="tel:+5514999999999" class="me-3"><i class="bi bi-telephone me-1"></i>(14) 99999-9999</a>
-                <a href="https://www.instagram.com/lojabiamodass/" target="_blank" rel="noopener noreferrer"><i class="bi bi-instagram me-1"></i>@lojabiamodass</a>
+                <a href="tel:+5514999999999" class="me-3"><i class="icon-phone me-1"></i>(14) 99999-9999</a>
+                <a href="https://www.instagram.com/lojabiamodass/" target="_blank" rel="noopener noreferrer"><i class="icon-camera me-1"></i>@lojabiamodass</a>
             </div>
         </div>
     </div>
@@ -53,7 +53,7 @@ $ocultarTopBar = (bool) ($ocultarTopBar ?? false);
                         </datalist>
                     <?php endif; ?>
                     <button type="submit" aria-label="Buscar">
-                        <i class="bi bi-search"></i>
+                        <i class="icon-search"></i>
                     </button>
                 </form>
             </div>
@@ -61,25 +61,25 @@ $ocultarTopBar = (bool) ($ocultarTopBar ?? false);
                 <div class="header-actions justify-content-end">
                     <?php if ($estaLogado && !empty($usuarioHeader['is_admin'])): ?>
                         <a href="/admin" class="auth-header-link" aria-label="Painel administrativo" title="Painel administrativo">
-                            <i class="bi bi-speedometer2"></i>
+                            <i class="icon-gauge"></i>
                         </a>
                     <?php endif; ?>
                     <a href="<?= e($contaHref) ?>" class="auth-header-link" aria-label="Minha conta">
                         <?php if ($estaLogado): ?>
                             <span class="auth-avatar-logged" title="<?= e($usuarioHeader['nome'] ?? '') ?>"><?= e(inicial((string) ($usuarioHeader['nome'] ?? ''))) ?></span>
                         <?php else: ?>
-                            <i class="bi bi-person"></i>
+                            <i class="icon-user"></i>
                         <?php endif; ?>
                     </a>
                     <a href="/pedidos" aria-label="Meus pedidos">
-                        <i class="bi bi-receipt"></i>
+                        <i class="icon-receipt"></i>
                     </a>
                     <a href="/favoritos" aria-label="Favoritos">
-                        <i class="bi bi-heart"></i>
+                        <i class="icon-heart"></i>
                         <span class="badge-count" id="favoritos-count"><?= $favoritosTotal ?></span>
                     </a>
                     <a href="/carrinho" aria-label="Carrinho" data-cart-open>
-                        <i class="bi bi-bag"></i>
+                        <i class="icon-shopping-bag"></i>
                         <span class="badge-count" id="cart-count"><?= $quantidadeCarrinho ?></span>
                     </a>
                 </div>

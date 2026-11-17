@@ -11,7 +11,7 @@ $receita = (float) ($resumo['receita'] ?? 0);
 ?>
 <section class="admin-cards">
     <article class="admin-stat-card">
-        <span class="admin-stat-icon"><i class="bi bi-bag"></i></span>
+        <span class="admin-stat-icon"><i class="icon-shopping-bag"></i></span>
         <div>
             <span class="admin-stat-label">Produtos</span>
             <strong><?= $totalProdutos ?></strong>
@@ -20,7 +20,7 @@ $receita = (float) ($resumo['receita'] ?? 0);
     </article>
 
     <article class="admin-stat-card">
-        <span class="admin-stat-icon"><i class="bi bi-people"></i></span>
+        <span class="admin-stat-icon"><i class="icon-users"></i></span>
         <div>
             <span class="admin-stat-label">Usuários</span>
             <strong><?= $totalUsuarios ?></strong>
@@ -29,7 +29,7 @@ $receita = (float) ($resumo['receita'] ?? 0);
     </article>
 
     <article class="admin-stat-card">
-        <span class="admin-stat-icon"><i class="bi bi-receipt"></i></span>
+        <span class="admin-stat-icon"><i class="icon-receipt"></i></span>
         <div>
             <span class="admin-stat-label">Pedidos</span>
             <strong><?= $totalPedidos ?></strong>
@@ -38,7 +38,7 @@ $receita = (float) ($resumo['receita'] ?? 0);
     </article>
 
     <article class="admin-stat-card">
-        <span class="admin-stat-icon"><i class="bi bi-cash-stack"></i></span>
+        <span class="admin-stat-icon"><i class="icon-banknote"></i></span>
         <div>
             <span class="admin-stat-label">Receita paga</span>
             <strong class="admin-stat-money"><?= money($receita) ?></strong>
@@ -51,7 +51,7 @@ $receita = (float) ($resumo['receita'] ?? 0);
     <div class="admin-panel">
         <div class="admin-panel-header">
             <h2>Últimos pedidos</h2>
-            <a href="/admin/pedidos" class="admin-link">Ver todos <i class="bi bi-arrow-right"></i></a>
+            <a href="/admin/pedidos" class="admin-link">Ver todos <i class="icon-arrow-right"></i></a>
         </div>
 
         <?php if ($ultimosPedidos === []): ?>
@@ -95,7 +95,7 @@ $receita = (float) ($resumo['receita'] ?? 0);
     <div class="admin-panel">
         <div class="admin-panel-header">
             <h2>Estoque baixo</h2>
-            <a href="/admin/produtos" class="admin-link">Gerenciar <i class="bi bi-arrow-right"></i></a>
+            <a href="/admin/produtos" class="admin-link">Gerenciar <i class="icon-arrow-right"></i></a>
         </div>
 
         <?php if ($estoqueBaixo === []): ?>
@@ -122,16 +122,16 @@ $receita = (float) ($resumo['receita'] ?? 0);
     </div>
     <div class="admin-quick-actions">
         <a class="admin-btn admin-btn-primary" href="/admin/produtos/novo">
-            <i class="bi bi-plus-lg"></i> Novo produto
+            <i class="icon-plus"></i> Novo produto
         </a>
         <a class="admin-btn admin-btn-ghost" href="/admin/categorias">
-            <i class="bi bi-tag"></i> Nova categoria
+            <i class="icon-tag"></i> Nova categoria
         </a>
         <a class="admin-btn admin-btn-ghost" href="/admin/pedidos">
-            <i class="bi bi-receipt"></i> Ver pedidos
+            <i class="icon-receipt"></i> Ver pedidos
         </a>
         <a class="admin-btn admin-btn-ghost" href="/admin/usuarios">
-            <i class="bi bi-people"></i> Ver usuários
+            <i class="icon-users"></i> Ver usuários
         </a>
     </div>
 </section>
