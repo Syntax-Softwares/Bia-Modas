@@ -153,9 +153,23 @@
 
 .carrinho-continuar {
     display: block;
+    width: 100%;
     text-align: center;
     margin-top: 12px;
     text-decoration: none;
+}
+
+.carrinho-link-pedidos {
+    display: block;
+    margin-top: 16px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--color-gray);
+    text-decoration: none;
+}
+
+.carrinho-link-pedidos:hover {
+    color: var(--color-primary);
 }
 
 .empty-state h1 {

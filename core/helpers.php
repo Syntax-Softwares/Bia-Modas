@@ -37,3 +37,59 @@ function post_int(string $campo): ?int
 
     return $valor === false ? null : $valor;
 }
+
+function redirecionar(string $url): never
+{
+    header('Location: ' . $url);
+    exit;
+}
+
+function data_hora(?string $valor): string
+{
+    if ($valor === null || $valor === '') {
+        return '';
+    }
+
+    $timestamp = strtotime($valor);
+
+    return $timestamp === false ? '' : date('d/m/Y H:i', $timestamp);
+}
+
+function status_pagamento(?string $status): array
+{
+    return match ($status) {
+        'pago' => ['rotulo' => 'Pagamento aprovado', 'classe' => 'pago'],
+        'cancelado' => ['rotulo' => 'Pagamento cancelado', 'classe' => 'cancelado'],
+        default => ['rotulo' => 'Aguardando pagamento', 'classe' => 'pendente'],
+    };
+}
+
+function rotulo_pagamento(?string $metodo): string
+{
+    return match ($metodo) {
+        'pix' => 'PIX',
+        'cartao' => 'Cartão de crédito',
+        'boleto' => 'Boleto',
+        default => 'Não informado',
+    };
+}
+
+function formatar_telefone(?string $telefone): string
+{
+    $digitos = preg_replace('/\D+/', '', (string) $telefone);
+
+    if (strlen($digitos) === 11) {
+        return '(' . substr($digitos, 0, 2) . ') ' . substr($digitos, 2, 5) . '-' . substr($digitos, 7);
+    }
+
+    if (strlen($digitos) === 10) {
+        return '(' . substr($digitos, 0, 2) . ') ' . substr($digitos, 2, 4) . '-' . substr($digitos, 6);
+    }
+
+    return (string) $telefone;
+}
+
+function tamanho_texto(string $valor): int
+{
+    return function_exists('mb_strlen') ? mb_strlen($valor, 'UTF-8') : strlen($valor);
+}

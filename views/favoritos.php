@@ -20,11 +20,11 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="/css/base.css">
-    <link rel="stylesheet" href="/css/layout.css">
-    <link rel="stylesheet" href="/css/components.css">
-    <link rel="stylesheet" href="/css/responsive.css">
-    <link rel="stylesheet" href="/css/categoria.css">
+    <link rel="stylesheet" href="<?= asset('/css/base.css') ?>">
+    <link rel="stylesheet" href="<?= asset('/css/layout.css') ?>">
+    <link rel="stylesheet" href="<?= asset('/css/components.css') ?>">
+    <link rel="stylesheet" href="<?= asset('/css/responsive.css') ?>">
+    <link rel="stylesheet" href="<?= asset('/css/categoria.css') ?>">
     <link rel="stylesheet" href="<?= asset('/css/carrinho.css') ?>">
 </head>
 <body data-page="favoritos">
@@ -56,7 +56,7 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
                 <i class="bi bi-heart"></i>
                 <h2>Você ainda não tem favoritos</h2>
                 <p>Toque no coração de um produto para salvá-lo aqui.</p>
-                <a href="/" class="btn-outline-custom mt-3">Explorar produtos</a>
+                <a href="/" class="btn-outline-custom btn-outline-dark mt-3">Explorar produtos</a>
             </div>
         </div>
     </section>

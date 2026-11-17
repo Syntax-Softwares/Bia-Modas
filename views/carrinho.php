@@ -20,11 +20,11 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="/css/base.css">
-    <link rel="stylesheet" href="/css/layout.css">
-    <link rel="stylesheet" href="/css/components.css">
-    <link rel="stylesheet" href="/css/responsive.css">
-    <link rel="stylesheet" href="/css/categoria.css">
+    <link rel="stylesheet" href="<?= asset('/css/base.css') ?>">
+    <link rel="stylesheet" href="<?= asset('/css/layout.css') ?>">
+    <link rel="stylesheet" href="<?= asset('/css/components.css') ?>">
+    <link rel="stylesheet" href="<?= asset('/css/responsive.css') ?>">
+    <link rel="stylesheet" href="<?= asset('/css/categoria.css') ?>">
     <link rel="stylesheet" href="<?= asset('/css/carrinho.css') ?>">
 </head>
 <body data-page="carrinho">
@@ -45,11 +45,13 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
 
     <section class="products-section">
         <div class="container">
+            <?php require __DIR__ . '/partials/alerts.php'; ?>
+
             <div class="empty-state" id="carrinho-vazio" <?= $itens === [] ? '' : 'hidden' ?>>
                 <i class="bi bi-bag"></i>
                 <h2>Seu carrinho está vazio</h2>
                 <p>Explore a coleção e adicione as peças que você gostou.</p>
-                <a href="/" class="btn-outline-custom mt-3">Ver produtos</a>
+                <a href="/" class="btn-outline-custom btn-outline-dark mt-3">Ver produtos</a>
             </div>
 
             <div class="carrinho-layout" id="carrinho-conteudo" <?= $itens === [] ? 'hidden' : '' ?>>
@@ -93,11 +95,12 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
                         <span>Total</span>
                         <span id="carrinho-total"><?= money($resumo['subtotal']) ?></span>
                     </div>
-                    <button type="button" class="btn-checkout" data-finalizar data-whatsapp="5514997912841">
-                        <i class="bi bi-whatsapp"></i>
-                        Finalizar no WhatsApp
-                    </button>
-                    <a href="/" class="btn-outline-custom carrinho-continuar">Continuar comprando</a>
+                    <a class="btn-checkout" href="/checkout">
+                        <i class="bi bi-credit-card"></i>
+                        Finalizar compra
+                    </a>
+                    <a href="/" class="btn-outline-custom btn-outline-dark carrinho-continuar">Continuar comprando</a>
+                    <a href="/pedidos" class="carrinho-link-pedidos"><i class="bi bi-receipt me-1"></i>Ver meus pedidos</a>
                 </aside>
             </div>
         </div>

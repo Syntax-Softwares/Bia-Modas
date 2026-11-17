@@ -38,6 +38,9 @@ $contaHref = $contaHref ?? '/login';
                     <a href="<?= e($contaHref) ?>" class="auth-header-link" aria-label="Minha conta">
                         <i class="bi bi-person"></i>
                     </a>
+                    <a href="/pedidos" aria-label="Meus pedidos">
+                        <i class="bi bi-receipt"></i>
+                    </a>
                     <a href="/favoritos" aria-label="Favoritos">
                         <i class="bi bi-heart"></i>
                         <span class="badge-count" id="favoritos-count"><?= $favoritosTotal ?></span>

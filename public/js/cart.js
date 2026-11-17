@@ -185,30 +185,6 @@
         }
     }
 
-    function finalizar() {
-        if (ocupado) {
-            toast('Aguarde a atualização do carrinho para finalizar.', true);
-            return;
-        }
-
-        if (estado.itens.length === 0) {
-            toast('Adicione produtos antes de finalizar.', true);
-            return;
-        }
-
-        const botao = document.querySelector('[data-finalizar]');
-        const numero = botao ? botao.dataset.whatsapp : '';
-
-        let mensagem = 'Olá! Quero finalizar meu pedido na Bia Modas:\n\n';
-        estado.itens.forEach((item) => {
-            mensagem += `${item.quantidade}x ${item.nome} — ${moeda(item.subtotal)}\n`;
-        });
-        mensagem += `\nTotal: ${moeda(estado.subtotal)}`;
-
-        const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
-        window.open(url, '_blank', 'noopener');
-    }
-
     document.addEventListener('click', (evento) => {
         const abrir = evento.target.closest('[data-cart-open]');
         if (abrir && offcanvas) {
@@ -247,10 +223,6 @@
         if (remover) {
             mutar('/carrinho/remover', { produto_id: remover.dataset.produtoId });
             return;
-        }
-
-        if (evento.target.closest('[data-finalizar]')) {
-            finalizar();
         }
     });
 
