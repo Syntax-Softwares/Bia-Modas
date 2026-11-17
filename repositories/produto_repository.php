@@ -143,7 +143,7 @@ class ProdutoRepository
                     WHERE cp.produto_id = p.id_produto
                       AND cp.deletado_em IS NULL
                       AND c.deletado_em IS NULL
-                    ORDER BY c.id_categoria ASC
+                    ORDER BY cp.principal DESC, c.id_categoria ASC
                     LIMIT 1
                 ), 'Bia Modas') AS categoria,
                 COALESCE((

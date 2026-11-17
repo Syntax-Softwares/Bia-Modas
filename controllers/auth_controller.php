@@ -16,7 +16,7 @@ class AuthController
     public function showLogin(): void
     {
         if (Auth::check()) {
-            redirect('/conta');
+            redirect(Auth::isAdmin() ? '/admin' : '/conta');
         }
 
         $old = Auth::takeOld();
@@ -70,13 +70,13 @@ class AuthController
         Auth::login($usuario);
         Auth::flash('success', 'Bem-vinda de volta, ' . $this->primeiroNome($usuario['nome']) . '!');
 
-        redirect('/conta');
+        redirect(Auth::isAdmin() ? '/admin' : '/conta');
     }
 
     public function showRegister(): void
     {
         if (Auth::check()) {
-            redirect('/conta');
+            redirect(Auth::isAdmin() ? '/admin' : '/conta');
         }
 
         $old = Auth::takeOld();

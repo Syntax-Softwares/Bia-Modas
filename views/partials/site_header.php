@@ -42,6 +42,11 @@ $busca = $busca ?? '';
             </div>
             <div class="col-lg-3 col-md-3 col-6 text-end">
                 <div class="header-actions justify-content-end">
+                    <?php if ($estaLogado && $usuario !== null && filter_var($usuario['is_admin'] ?? false, FILTER_VALIDATE_BOOLEAN)): ?>
+                        <a href="/admin" class="auth-header-link" aria-label="Painel administrativo" title="Painel administrativo">
+                            <i class="bi bi-speedometer2"></i>
+                        </a>
+                    <?php endif; ?>
                     <a href="<?= e($contaHref) ?>" class="auth-header-link" aria-label="Minha conta">
                         <?php if ($estaLogado && $usuario !== null): ?>
                             <span class="auth-avatar-logged" title="<?= e($usuario['nome']) ?>"><?= e(inicial($usuario['nome'])) ?></span>

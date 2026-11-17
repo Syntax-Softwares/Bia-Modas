@@ -43,10 +43,26 @@ class Auth
         return self::user() !== null;
     }
 
+    public static function isAdmin(): bool
+    {
+        $usuario = self::user();
+
+        return $usuario !== null && ($usuario['is_admin'] ?? false) === true;
+    }
+
     public static function login(array $usuario): void
     {
         session_regenerate_id(true);
 
+        self::sync($usuario);
+    }
+
+    /**
+     * Atualiza os dados da sessão sem renovar o ID (usado para refletir
+     * promoções/rebaixamentos de administrador sem forçar novo login).
+     */
+    public static function sync(array $usuario): void
+    {
         $_SESSION['usuario'] = [
             'id_usuario' => (int) $usuario['id_usuario'],
             'nome' => (string) $usuario['nome'],
@@ -75,7 +91,7 @@ class Auth
         return '<input type="hidden" name="_csrf" value="' . e(self::csrfToken()) . '">';
     }
 
-    public static function validCsrf(?string $token): bool
+    public static function validCsrf(mixed $token): bool
     {
         $sessionToken = $_SESSION['csrf_token'] ?? null;
 

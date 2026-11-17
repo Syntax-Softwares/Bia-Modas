@@ -79,6 +79,32 @@ class UsuarioRepository
     }
 
     /**
+     * Dados mínimos para o guard da área administrativa.
+     */
+    public function buscarAdminAtivo(int $id): ?array
+    {
+        $stmt = $this->pdo->prepare(
+            'SELECT id_usuario, nome, email, is_admin
+             FROM usuarios
+             WHERE id_usuario = :id
+               AND deletado_em IS NULL
+             LIMIT 1'
+        );
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $usuario = $stmt->fetch();
+
+        if ($usuario === false) {
+            return null;
+        }
+
+        $usuario['is_admin'] = filter_var($usuario['is_admin'], FILTER_VALIDATE_BOOLEAN);
+
+        return $usuario;
+    }
+
+    /**
      * Cria o usuário e, opcionalmente, suas medidas e endereço principal.
      *
      * @return int ID do usuário criado.

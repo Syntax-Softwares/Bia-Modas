@@ -2,13 +2,17 @@ USE biamodas;
 
 -- =========================================================
 -- Dados iniciais (catálogo real). Execute após db.sql.
--- Script de desenvolvimento: recrie o volume para reaplicar.
+--
+-- Script IDEMPOTENTE: usa INSERT IGNORE apoiado nas chaves únicas
+-- (ids fixos, sku, e-mail, pares produto+categoria/imagem). Rodar de
+-- novo não duplica linhas.
+--   docker compose exec -T db mariadb -uroot -proot < seed_db.sql
 -- =========================================================
 
 SET NAMES utf8mb4;
 
 -- Categorias
-INSERT INTO categorias (id_categoria, nome) VALUES
+INSERT IGNORE INTO categorias (id_categoria, nome) VALUES
 (1, 'Plus Size'),
 (2, 'Blusas'),
 (3, 'Calças'),
@@ -17,7 +21,7 @@ INSERT INTO categorias (id_categoria, nome) VALUES
 (6, 'Vestidos');
 
 -- Tamanhos / medidas base dos produtos
-INSERT INTO medidas_produtos (id_medida_produto, tamanho) VALUES
+INSERT IGNORE INTO medidas_produtos (id_medida_produto, tamanho) VALUES
 (1, 'P'),
 (2, 'M'),
 (3, 'G'),
@@ -32,7 +36,7 @@ INSERT INTO medidas_produtos (id_medida_produto, tamanho) VALUES
 (12, '46');
 
 -- Ofertas
-INSERT INTO ofertas (id_oferta, percentual, inicio_em, ativo) VALUES
+INSERT IGNORE INTO ofertas (id_oferta, percentual, inicio_em, ativo) VALUES
 (1, 0.22, DATE_SUB(NOW(), INTERVAL 7 DAY), TRUE),
 (2, 0.24, DATE_SUB(NOW(), INTERVAL 7 DAY), TRUE),
 (3, 0.20, DATE_SUB(NOW(), INTERVAL 7 DAY), TRUE),
@@ -50,7 +54,7 @@ INSERT INTO ofertas (id_oferta, percentual, inicio_em, ativo) VALUES
 (15, 0.15, DATE_SUB(NOW(), INTERVAL 7 DAY), TRUE);
 
 -- Produtos
-INSERT INTO produtos
+INSERT IGNORE INTO produtos
     (id_produto, medida_produto_id, oferta_id, nome, sku, descricao, estoque, valor, ativo, criado_em)
 VALUES
 (1, 1, NULL, 'Conjunto Social Marrom', 'BM-0001', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Marrom.', 5, 249.90, TRUE, DATE_SUB(NOW(), INTERVAL 0 DAY)),
@@ -115,7 +119,7 @@ VALUES
 (60, 1, NULL, 'Blusa Marsala', 'BM-0060', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Vermelho.', 24, 99.90, TRUE, DATE_SUB(NOW(), INTERVAL 118 DAY));
 
 -- Fotos dos produtos
-INSERT INTO imagens (produto_id, caminho_imagem) VALUES
+INSERT IGNORE INTO imagens (produto_id, caminho_imagem) VALUES
 (1, '/img/produtos/655763783_18587522434040712_5117797556536014863_n.jpg'),
 (2, '/img/produtos/656166026_18573763729040712_759498418098033265_n.jpg'),
 (3, '/img/produtos/656202496_18587522443040712_9008272828061942804_n.jpg'),
@@ -178,7 +182,7 @@ INSERT INTO imagens (produto_id, caminho_imagem) VALUES
 (60, '/img/produtos/702611507_18587522398040712_7839140292566599040_n.jpg');
 
 -- Relação N:N entre produtos e categorias
-INSERT INTO categorias_produtos (produto_id, categoria_id) VALUES
+INSERT IGNORE INTO categorias_produtos (produto_id, categoria_id) VALUES
 (1, 4),
 (2, 6),
 (3, 1),
@@ -247,3 +251,21 @@ INSERT INTO categorias_produtos (produto_id, categoria_id) VALUES
 (58, 2),
 (59, 4),
 (60, 2);
+
+-- Define como principal a primeira categoria cadastrada de cada produto.
+UPDATE categorias_produtos cp
+INNER JOIN (
+    SELECT produto_id, MIN(id_categoria_produto) AS id_categoria_produto
+    FROM categorias_produtos
+    GROUP BY produto_id
+) primeira ON primeira.id_categoria_produto = cp.id_categoria_produto
+SET cp.principal = TRUE;
+
+-- ---------------------------------------------------------------------
+-- Usuário administrador de desenvolvimento
+-- E-mail: admin@biamodas.local
+-- Senha: Admin@123
+-- Hash bcrypt gerado com password_hash('Admin@123', PASSWORD_DEFAULT).
+-- ---------------------------------------------------------------------
+INSERT IGNORE INTO usuarios (nome, email, senha_hash, telefone, is_admin) VALUES
+('Administradora Bia Modas', 'admin@biamodas.local', '$2b$10$4LRBxh0IyEIZqBf0PnOeqOvi0OKOiXEnt5LbxbYjvILpuy8lKcQZ6', '(14) 99999-9999', TRUE);

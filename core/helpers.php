@@ -77,3 +77,16 @@ function algum_preenchido(array $values): bool
 
     return false;
 }
+
+/**
+ * Monta uma URL preservando apenas os parâmetros de query informados.
+ */
+function url_com_query(string $base, array $query): string
+{
+    $query = array_filter(
+        $query,
+        static fn (mixed $valor): bool => $valor !== null && $valor !== ''
+    );
+
+    return $query === [] ? $base : $base . '?' . http_build_query($query);
+}

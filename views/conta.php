@@ -97,6 +97,11 @@ $busca = '';
                 <?php endif; ?>
 
                 <div class="account-actions">
+                    <?php if (filter_var($usuario['is_admin'] ?? false, FILTER_VALIDATE_BOOLEAN)): ?>
+                        <a href="/admin" class="btn-primary-solid">
+                            <i class="bi bi-speedometer2 me-2"></i>Painel administrativo
+                        </a>
+                    <?php endif; ?>
                     <a href="/" class="btn-outline-account">Continuar comprando</a>
                     <form method="post" action="/logout">
                         <?= Auth::csrfField() ?>
