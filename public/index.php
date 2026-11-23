@@ -33,6 +33,7 @@ require_once __DIR__ . '/../controllers/pedidos_controller.php';
 require_once __DIR__ . '/../controllers/admin_controller.php';
 require_once __DIR__ . '/../controllers/admin_produtos_controller.php';
 require_once __DIR__ . '/../controllers/admin_categorias_controller.php';
+require_once __DIR__ . '/../controllers/admin_tamanhos_controller.php';
 require_once __DIR__ . '/../controllers/admin_pedidos_controller.php';
 require_once __DIR__ . '/../controllers/admin_usuarios_controller.php';
 
@@ -138,6 +139,16 @@ $router->post('/admin/categorias/salvar', static function () use ($pdo): void {
 });
 $router->post('/admin/categorias/excluir', static function () use ($pdo): void {
     (new AdminCategoriasController($pdo))->excluir();
+});
+
+$router->get('/admin/tamanhos', static function () use ($pdo): void {
+    (new AdminTamanhosController($pdo))->index();
+});
+$router->post('/admin/tamanhos/salvar', static function () use ($pdo): void {
+    (new AdminTamanhosController($pdo))->salvar();
+});
+$router->post('/admin/tamanhos/excluir', static function () use ($pdo): void {
+    (new AdminTamanhosController($pdo))->excluir();
 });
 
 $router->get('/admin/pedidos', static function () use ($pdo): void {

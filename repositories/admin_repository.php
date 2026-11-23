@@ -187,6 +187,73 @@ final class AdminRepository
         $stmt->execute();
     }
 
+    public function listarTamanhosAdmin(): array
+    {
+        return $this->pdo->query(
+            "SELECT t.id_tamanho,
+                    t.nome,
+                    t.ordem,
+                    t.criado_em,
+                    (
+                        SELECT COUNT(*)
+                        FROM produto_tamanhos pt
+                        WHERE pt.tamanho_id = t.id_tamanho
+                    ) AS total_produtos
+             FROM tamanhos t
+             WHERE t.deletado_em IS NULL
+             ORDER BY t.ordem ASC, t.id_tamanho ASC"
+        )->fetchAll();
+    }
+
+    public function buscarTamanho(int $id): ?array
+    {
+        $stmt = $this->pdo->prepare(
+            'SELECT id_tamanho, nome, ordem FROM tamanhos WHERE id_tamanho = :id AND deletado_em IS NULL LIMIT 1'
+        );
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $tamanho = $stmt->fetch();
+
+        return $tamanho === false ? null : $tamanho;
+    }
+
+    public function criarTamanho(string $nome, int $ordem): int
+    {
+        $stmt = $this->pdo->prepare(
+            'INSERT INTO tamanhos (nome, ordem) VALUES (:nome, :ordem)'
+        );
+        $stmt->execute([':nome' => $nome, ':ordem' => $ordem]);
+
+        return (int) $this->pdo->lastInsertId();
+    }
+
+    public function atualizarTamanho(int $id, string $nome, int $ordem): void
+    {
+        $stmt = $this->pdo->prepare(
+            'UPDATE tamanhos SET nome = :nome, ordem = :ordem WHERE id_tamanho = :id AND deletado_em IS NULL'
+        );
+        $stmt->execute([':nome' => $nome, ':ordem' => $ordem, ':id' => $id]);
+    }
+
+    public function contarProdutosComTamanho(int $id): int
+    {
+        $stmt = $this->pdo->prepare(
+            'SELECT COUNT(*) FROM produto_tamanhos WHERE tamanho_id = :id'
+        );
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    public function excluirTamanho(int $id): void
+    {
+        $stmt = $this->pdo->prepare('DELETE FROM tamanhos WHERE id_tamanho = :id');
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+
     public function criarProduto(array $dados): int
     {
         $this->pdo->beginTransaction();

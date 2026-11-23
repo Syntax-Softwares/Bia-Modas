@@ -44,6 +44,10 @@ $navAtivo = static fn (string $aba): string => $abaAdmin === $aba ? ' active' : 
                     <i class="icon-tags"></i>
                     <span>Categorias</span>
                 </a>
+                <a class="admin-nav-link<?= $navAtivo('tamanhos') ?>" href="/admin/tamanhos">
+                    <i class="icon-ruler"></i>
+                    <span>Tamanhos</span>
+                </a>
                 <a class="admin-nav-link<?= $navAtivo('pedidos') ?>" href="/admin/pedidos">
                     <i class="icon-receipt"></i>
                     <span>Pedidos</span>

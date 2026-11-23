@@ -108,7 +108,7 @@ $imagemPreview = $valorCampo('imagem') !== '' ? $valorCampo('imagem') : '/img/lo
                     <?php endforeach; ?>
                 </div>
                 <p class="admin-size-empty" data-size-empty <?= $selecionados !== [] ? 'hidden' : '' ?>>Nenhum tamanho selecionado.</p>
-                <small>Selecione os tamanhos disponíveis e informe o estoque de cada um.</small>
+                <small>Selecione os tamanhos disponíveis e informe o estoque de cada um. Precisa de outro? <a href="/admin/tamanhos" target="_blank" rel="noopener">Cadastre em Tamanhos</a>.</small>
                 <?= $erroCampo('tamanhos') ?>
             </div>
 
