@@ -110,7 +110,8 @@ if (isset($errors['medidas'])) {
                                     value="<?= e($old['telefone'] ?? '') ?>"
                                     placeholder="(14) 99999-9999"
                                     autocomplete="tel"
-                                    maxlength="20"
+                                    maxlength="15"
+                                    data-mask="telefone"
                                     required
                                 >
                                 <?php if (isset($errors['telefone'])): ?>

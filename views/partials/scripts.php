@@ -8,6 +8,7 @@
 
 <script src="<?= asset('/js/carousel.js') ?>"></script>
 <script src="<?= asset('/js/api.js') ?>"></script>
+<script src="<?= asset('/js/mascaras.js') ?>"></script>
 <script src="<?= asset('/js/cart.js') ?>"></script>
 <script src="<?= asset('/js/produto.js') ?>"></script>
 <script src="<?= asset('/js/endereco.js') ?>"></script>

@@ -222,7 +222,7 @@ class AuthController
                 'nome' => $nome,
                 'email' => $email,
                 'senha_hash' => password_hash($senha, PASSWORD_DEFAULT),
-                'telefone' => $telefone,
+                'telefone' => $telefoneDigitos,
                 'medidas' => algum_preenchido($medidas) ? $medidas : [],
                 'endereco' => $enderecoPreenchido ? $endereco : [],
             ]);

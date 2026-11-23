@@ -78,7 +78,8 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
                                 <label for="telefone">Telefone / WhatsApp</label>
                                 <input type="tel" id="telefone" name="telefone" inputmode="numeric"
                                        value="<?= e($dados['telefone'] ?? '') ?>"
-                                       placeholder="(14) 99999-9999" autocomplete="tel" maxlength="20"
+                                       placeholder="(14) 99999-9999" autocomplete="tel" maxlength="15"
+                                       data-mask="telefone"
                                        class="<?= isset($erros['telefone']) ? 'tem-erro' : '' ?>">
                                 <?php if (isset($erros['telefone'])): ?>
                                     <span class="campo-erro"><?= e($erros['telefone']) ?></span>

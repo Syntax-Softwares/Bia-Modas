@@ -134,7 +134,7 @@ $formAction = $editando !== null ? '/perfil/enderecos/atualizar' : '/perfil/ende
                                             <label for="pf-telefone">Telefone</label>
                                             <input type="tel" class="form-control" id="pf-telefone" name="telefone"
                                                    value="<?= Html::e(Html::telefone($valorDados('telefone'))) ?>"
-                                                   required maxlength="15" autocomplete="tel">
+                                                   required maxlength="15" autocomplete="tel" data-mask="telefone">
                                             <?= $campoErro('telefone') ?>
                                         </div>
 
@@ -143,7 +143,7 @@ $formAction = $editando !== null ? '/perfil/enderecos/atualizar' : '/perfil/ende
                                             <input type="text" class="form-control" id="pf-cpf" name="cpf"
                                                    value="<?= Html::e(Html::cpf($valorDados('cpf'))) ?>"
                                                    maxlength="14" inputmode="numeric" autocomplete="off"
-                                                   placeholder="Opcional">
+                                                   placeholder="Opcional" data-mask="cpf">
                                             <?= $campoErro('cpf') ?>
                                         </div>
 
