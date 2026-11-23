@@ -34,7 +34,7 @@ foreach ($itens as $item) {
                                     <img src="<?= e($item['imagem'] ?: '/img/logoBiaModas.png') ?>" alt="" loading="lazy">
                                     <div>
                                         <strong><?= e($item['nome']) ?></strong>
-                                        <small class="admin-muted d-block"><?= e($item['sku']) ?></small>
+                                        <small class="admin-muted d-block"><?= e($item['sku']) ?><?= !empty($item['tamanho']) ? ' · Tamanho ' . e($item['tamanho']) : '' ?></small>
                                     </div>
                                 </div>
                             </td>

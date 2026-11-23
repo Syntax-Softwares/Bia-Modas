@@ -28,12 +28,6 @@ $imagemPreview = $valorCampo('imagem') !== '' ? $valorCampo('imagem') : '/img/lo
             </div>
 
             <div class="admin-field">
-                <label for="produto-tamanho">Tamanho <span>*</span></label>
-                <input type="text" id="produto-tamanho" name="tamanho" value="<?= e($valorCampo('tamanho')) ?>" maxlength="5" placeholder="P, M, G, 38..." required>
-                <?= $erroCampo('tamanho') ?>
-            </div>
-
-            <div class="admin-field">
                 <label for="produto-categoria">Categoria <span>*</span></label>
                 <select id="produto-categoria" name="categoria_id" required>
                     <option value="">Selecione</option>
@@ -53,12 +47,6 @@ $imagemPreview = $valorCampo('imagem') !== '' ? $valorCampo('imagem') : '/img/lo
             </div>
 
             <div class="admin-field">
-                <label for="produto-estoque">Estoque <span>*</span></label>
-                <input type="number" id="produto-estoque" name="estoque" value="<?= e($valorCampo('estoque')) ?>" min="0" step="1" required>
-                <?= $erroCampo('estoque') ?>
-            </div>
-
-            <div class="admin-field">
                 <label for="produto-oferta">Desconto (%)</label>
                 <input type="number" id="produto-oferta" name="oferta_percentual" value="<?= e($valorCampo('oferta_percentual')) ?>" min="1" max="99" step="1" placeholder="0">
                 <small>Deixe vazio para não colocar em promoção.</small>
@@ -75,6 +63,28 @@ $imagemPreview = $valorCampo('imagem') !== '' ? $valorCampo('imagem') : '/img/lo
                 <label for="produto-estilo">Estilo</label>
                 <input type="text" id="produto-estilo" name="estilo" value="<?= e($valorCampo('estilo')) ?>" maxlength="30" placeholder="Casual, Elegante...">
                 <?= $erroCampo('estilo') ?>
+            </div>
+
+            <div class="admin-field admin-field-span-2">
+                <label>Tamanhos e estoque <span>*</span></label>
+                <div class="admin-size-grid">
+                    <?php foreach (($tamanhos ?? []) as $tamanho): ?>
+                        <?php
+                        $idTamanho = (int) $tamanho['id_tamanho'];
+                        $selecionado = array_key_exists($idTamanho, $form['tamanhos'] ?? []);
+                        $estoqueTamanho = $selecionado ? (int) $form['tamanhos'][$idTamanho] : 0;
+                        ?>
+                        <div class="admin-size-item">
+                            <label class="admin-size-check">
+                                <input type="checkbox" name="tamanhos[<?= $idTamanho ?>][selecionado]" value="1" <?= $selecionado ? 'checked' : '' ?> data-size-check>
+                                <strong><?= e($tamanho['nome']) ?></strong>
+                            </label>
+                            <input type="number" name="tamanhos[<?= $idTamanho ?>][estoque]" value="<?= $estoqueTamanho ?>" min="0" step="1" aria-label="Estoque do tamanho <?= e($tamanho['nome']) ?>" data-size-stock <?= $selecionado ? '' : 'disabled' ?>>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+                <small>Marque os tamanhos disponíveis e informe o estoque de cada um.</small>
+                <?= $erroCampo('tamanhos') ?>
             </div>
 
             <div class="admin-field admin-field-span-2">

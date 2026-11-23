@@ -41,8 +41,6 @@ $campoErro = static function (string $campo) use ($erros): string {
 $abas = [
     ['id' => 'dados', 'rotulo' => 'Dados Pessoais', 'href' => '/perfil'],
     ['id' => 'enderecos', 'rotulo' => 'Endereços', 'href' => '/perfil/enderecos'],
-    ['id' => 'medidas', 'rotulo' => 'Medidas', 'desabilitada' => true],
-    ['id' => 'preferencias', 'rotulo' => 'Preferências', 'desabilitada' => true],
     ['id' => 'seguranca', 'rotulo' => 'Segurança', 'href' => '/perfil/seguranca'],
 ];
 

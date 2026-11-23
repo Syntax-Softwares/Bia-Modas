@@ -223,3 +223,11 @@
         text-align: left;
     }
 }
+
+/* Tamanho e SKU da variacao no carrinho */
+.cart-item-size {
+    display: block;
+    font-size: 0.78rem;
+    color: #777;
+    margin: -2px 0 4px;
+}

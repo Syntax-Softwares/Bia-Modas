@@ -21,4 +21,19 @@
             preview.src = caminho !== '' ? caminho : '/img/logoBiaModas.png';
         });
     }
+
+    document.querySelectorAll('[data-size-check]').forEach(function (check) {
+        const item = check.closest('.admin-size-item');
+        const stock = item ? item.querySelector('[data-size-stock]') : null;
+
+        if (!stock) return;
+
+        function sincronizar() {
+            stock.disabled = !check.checked;
+            if (!check.checked) stock.value = 0;
+        }
+
+        check.addEventListener('change', sincronizar);
+        sincronizar();
+    });
 })();

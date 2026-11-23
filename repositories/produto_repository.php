@@ -119,7 +119,37 @@ class ProdutoRepository
 
         $produto = $stmt->fetch();
 
-        return $produto === false ? null : $this->map($produto);
+        if ($produto === false) {
+            return null;
+        }
+
+        $produto = $this->map($produto);
+        $produto['variacoes'] = $this->variacoes($id);
+
+        return $produto;
+    }
+
+    public function variacoes(int $idProduto): array
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT pt.id_produto_tamanho, pt.estoque, t.nome AS tamanho
+             FROM produto_tamanhos pt
+             INNER JOIN tamanhos t ON t.id_tamanho = pt.tamanho_id
+             WHERE pt.produto_id = :id
+               AND pt.deletado_em IS NULL
+               AND t.deletado_em IS NULL
+             ORDER BY t.ordem ASC, t.id_tamanho ASC"
+        );
+        $stmt->execute([':id' => $idProduto]);
+
+        return array_map(
+            static fn (array $linha): array => [
+                'id_produto_tamanho' => (int) $linha['id_produto_tamanho'],
+                'tamanho' => (string) $linha['tamanho'],
+                'estoque' => (int) $linha['estoque'],
+            ],
+            $stmt->fetchAll()
+        );
     }
 
     public function buscarPorId(int $idProduto): ?array
@@ -171,6 +201,7 @@ class ProdutoRepository
                 p.id_produto,
                 p.nome,
                 p.descricao,
+                p.sku,
                 p.valor,
                 p.estoque,
                 p.cor,
@@ -196,12 +227,16 @@ class ProdutoRepository
                     LIMIT 1
                 ), 'Bia Modas') AS categoria,
                 COALESCE((
-                    SELECT mp.tamanho
-                    FROM medidas_produtos mp
-                    WHERE mp.id_medida_produto = p.medida_produto_id
-                      AND mp.deletado_em IS NULL
-                    LIMIT 1
-                ), '') AS tamanho
+                    SELECT GROUP_CONCAT(t.nome ORDER BY t.ordem SEPARATOR ', ')
+                    FROM produto_tamanhos pt
+                    INNER JOIN tamanhos t ON t.id_tamanho = pt.tamanho_id
+                    WHERE pt.produto_id = p.id_produto
+                      AND pt.deletado_em IS NULL
+                      AND t.deletado_em IS NULL
+                ), '') AS tamanho,
+                NULL AS medida_busto,
+                NULL AS medida_cintura,
+                NULL AS medida_quadril
             FROM produtos p
             LEFT JOIN ofertas o
                 ON o.id_oferta = p.oferta_id

@@ -27,7 +27,7 @@ require __DIR__ . '/partials/header.php';
                     <tr>
                         <th>Produto</th>
                         <th>Categoria</th>
-                        <th>Tamanho</th>
+                        <th>Tamanhos</th>
                         <th>Estoque</th>
                         <th>Preço</th>
                         <th>Status</th>
@@ -53,7 +53,7 @@ require __DIR__ . '/partials/header.php';
                                 </div>
                             </td>
                             <td><?= e($produto['categorias'] ?? '—') ?></td>
-                            <td><?= e($produto['tamanho'] ?? '—') ?></td>
+                            <td><?= e($produto['tamanhos'] ?? '—') ?></td>
                             <td>
                                 <span class="<?= (int) $produto['estoque'] <= 5 ? 'admin-text-danger' : '' ?>">
                                     <?= (int) $produto['estoque'] ?>

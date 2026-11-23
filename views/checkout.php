@@ -226,6 +226,7 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
                                 <img src="<?= e($item['imagem'] ?: '/img/logoBiaModas.png') ?>" alt="<?= e($item['nome']) ?>">
                                 <div class="checkout-item-info">
                                     <span><?= e($item['nome']) ?></span>
+                                    <small>Tamanho: <?= e($item['tamanho']) ?> · <?= e($item['sku']) ?></small>
                                     <small><?= (int) $item['quantidade'] ?> x <?= money($item['valor_unitario']) ?></small>
                                 </div>
                                 <strong><?= money($item['subtotal']) ?></strong>

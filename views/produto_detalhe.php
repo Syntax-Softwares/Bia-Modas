@@ -128,15 +128,26 @@ $temMedidas = $produto['medida_busto'] !== null
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($produto['tamanho'] !== ''): ?>
+                    <?php if (!empty($produto['variacoes'])): ?>
                         <div class="product-options">
                             <div class="option-label">
                                 <span class="option-label-text">Tamanho:</span>
-                                <strong><?= Html::e($produto['tamanho']) ?></strong>
+                                <strong data-size-selected-label>Selecione</strong>
                             </div>
-                            <div class="size-options">
-                                <span class="size-option active"><?= Html::e($produto['tamanho']) ?></span>
+                            <div class="size-options" data-size-options>
+                                <?php foreach ($produto['variacoes'] as $variacao): ?>
+                                    <?php $semEstoque = (int) $variacao['estoque'] <= 0; ?>
+                                    <button
+                                        type="button"
+                                        class="size-option<?= $semEstoque ? ' is-out' : '' ?>"
+                                        data-size-id="<?= (int) $variacao['id_produto_tamanho'] ?>"
+                                        data-size-nome="<?= Html::e($variacao['tamanho']) ?>"
+                                        data-size-estoque="<?= (int) $variacao['estoque'] ?>"
+                                        <?= $semEstoque ? 'disabled' : '' ?>
+                                    ><?= Html::e($variacao['tamanho']) ?></button>
+                                <?php endforeach; ?>
                             </div>
+                            <p class="product-stock" data-size-stock></p>
                         </div>
                     <?php endif; ?>
 
@@ -157,14 +168,6 @@ $temMedidas = $produto['medida_busto'] !== null
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($esgotado): ?>
-                        <p class="product-stock out"><i class="icon-circle-x me-1"></i>Produto esgotado</p>
-                    <?php elseif ((int) $produto['estoque'] <= 5): ?>
-                        <p class="product-stock low"><i class="icon-circle-alert me-1"></i>Últimas <?= (int) $produto['estoque'] ?> unidades</p>
-                    <?php else: ?>
-                        <p class="product-stock"><i class="icon-circle-check me-1"></i>Disponível em estoque</p>
-                    <?php endif; ?>
-
                     <div class="product-buttons">
                         <?php if ($esgotado): ?>
                             <button type="button" class="btn-primary-solid" disabled>
@@ -174,14 +177,15 @@ $temMedidas = $produto['medida_busto'] !== null
                         <?php else: ?>
                             <button
                                 type="button"
-                                class="btn-primary-solid cart-toggle<?= $noCarrinho ? ' active' : '' ?>"
+                                class="btn-primary-solid"
                                 data-adicionar
                                 data-produto-id="<?= $idProduto ?>"
+                                data-produto-tamanho-id=""
                                 data-produto-nome="<?= Html::e($produto['nome']) ?>"
-                                aria-pressed="<?= $noCarrinho ? 'true' : 'false' ?>"
+                                data-requer-tamanho="1"
                             >
                                 <i class="icon-shopping-bag"></i>
-                                <span data-cart-label><?= $noCarrinho ? 'Remover do carrinho' : 'Adicionar ao carrinho' ?></span>
+                                <span data-cart-label>Adicionar ao carrinho</span>
                             </button>
                         <?php endif; ?>
 

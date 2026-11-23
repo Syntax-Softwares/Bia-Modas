@@ -29,6 +29,7 @@ class AdminProdutosController
     public function novo(): void
     {
         $categorias = $this->repository->categoriasAtivas();
+        $tamanhos = $this->repository->listarTamanhos();
         $isEdicao = false;
         $errors = [];
         $form = $this->formularioVazio();
@@ -57,9 +58,10 @@ class AdminProdutosController
         }
 
         $categorias = $this->repository->categoriasAtivas();
+        $tamanhos = $this->repository->listarTamanhos();
         $isEdicao = true;
         $errors = [];
-        $form = $this->formularioDoBanco($produto);
+        $form = $this->formularioDoBanco($produto, $this->repository->tamanhosDoProduto($id));
         $flashes = Sessao::mensagensFlash();
 
         $tituloAdmin = 'Editar produto';
@@ -80,8 +82,7 @@ class AdminProdutosController
             'sku' => trim((string) ($_POST['sku'] ?? '')),
             'descricao' => trim((string) ($_POST['descricao'] ?? '')),
             'valor' => str_replace(',', '.', trim((string) ($_POST['valor'] ?? ''))),
-            'estoque' => trim((string) ($_POST['estoque'] ?? '')),
-            'tamanho' => strtoupper(trim((string) ($_POST['tamanho'] ?? ''))),
+            'tamanhos' => $this->normalizarTamanhos($_POST['tamanhos'] ?? []),
             'categoria_id' => trim((string) ($_POST['categoria_id'] ?? '')),
             'cor' => trim((string) ($_POST['cor'] ?? '')),
             'estilo' => trim((string) ($_POST['estilo'] ?? '')),
@@ -94,6 +95,7 @@ class AdminProdutosController
 
         if ($errors !== []) {
             $categorias = $this->repository->categoriasAtivas();
+            $tamanhos = $this->repository->listarTamanhos();
             $isEdicao = $id !== null;
             $flashes = Sessao::mensagensFlash();
 
@@ -109,8 +111,7 @@ class AdminProdutosController
             'sku' => $form['sku'],
             'descricao' => $form['descricao'],
             'valor' => (float) $form['valor'],
-            'estoque' => (int) $form['estoque'],
-            'tamanho' => $form['tamanho'],
+            'tamanhos' => $form['tamanhos'],
             'categoria_id' => (int) $form['categoria_id'],
             'cor' => $form['cor'],
             'estilo' => $form['estilo'],
@@ -135,6 +136,7 @@ class AdminProdutosController
                 : 'Não foi possível salvar o produto.';
 
             $categorias = $this->repository->categoriasAtivas();
+            $tamanhos = $this->repository->listarTamanhos();
             $isEdicao = $id !== null;
             $flashes = [];
 
@@ -186,14 +188,26 @@ class AdminProdutosController
             $errors['valor'] = 'Informe um valor maior que zero.';
         }
 
-        $estoque = filter_var($form['estoque'], FILTER_VALIDATE_INT);
+        if ($form['tamanhos'] === []) {
+            $errors['tamanhos'] = 'Selecione pelo menos um tamanho e informe o estoque.';
+        } else {
+            $catalogo = [];
 
-        if (!is_int($estoque) || $estoque < 0) {
-            $errors['estoque'] = 'Informe um estoque válido.';
-        }
+            foreach ($this->repository->listarTamanhos() as $tamanho) {
+                $catalogo[(int) $tamanho['id_tamanho']] = true;
+            }
 
-        if ($form['tamanho'] === '' || strlen($form['tamanho']) > 5) {
-            $errors['tamanho'] = 'Informe o tamanho (até 5 caracteres).';
+            foreach ($form['tamanhos'] as $idTamanho => $estoque) {
+                if (!isset($catalogo[(int) $idTamanho])) {
+                    $errors['tamanhos'] = 'Um dos tamanhos selecionados é inválido.';
+                    break;
+                }
+
+                if (!is_int($estoque) || $estoque < 0) {
+                    $errors['tamanhos'] = 'Informe um estoque válido para cada tamanho.';
+                    break;
+                }
+            }
         }
 
         $categoriaId = filter_var($form['categoria_id'], FILTER_VALIDATE_INT);
@@ -225,6 +239,28 @@ class AdminProdutosController
         return $errors;
     }
 
+    private function normalizarTamanhos(mixed $entrada): array
+    {
+        if (!is_array($entrada)) {
+            return [];
+        }
+
+        $tamanhos = [];
+
+        foreach ($entrada as $id => $dados) {
+            $id = filter_var($id, FILTER_VALIDATE_INT);
+
+            if (!is_int($id) || $id <= 0 || !is_array($dados) || empty($dados['selecionado'])) {
+                continue;
+            }
+
+            $estoque = filter_var($dados['estoque'] ?? 0, FILTER_VALIDATE_INT);
+            $tamanhos[$id] = $estoque === false ? -1 : $estoque;
+        }
+
+        return $tamanhos;
+    }
+
     private function formularioVazio(): array
     {
         return [
@@ -233,8 +269,7 @@ class AdminProdutosController
             'sku' => '',
             'descricao' => '',
             'valor' => '',
-            'estoque' => '0',
-            'tamanho' => '',
+            'tamanhos' => [],
             'categoria_id' => '',
             'cor' => '',
             'estilo' => '',
@@ -244,7 +279,7 @@ class AdminProdutosController
         ];
     }
 
-    private function formularioDoBanco(array $produto): array
+    private function formularioDoBanco(array $produto, array $tamanhos): array
     {
         return [
             'id_produto' => (int) $produto['id_produto'],
@@ -252,8 +287,7 @@ class AdminProdutosController
             'sku' => (string) $produto['sku'],
             'descricao' => (string) ($produto['descricao'] ?? ''),
             'valor' => number_format((float) $produto['valor'], 2, ',', ''),
-            'estoque' => (string) (int) $produto['estoque'],
-            'tamanho' => (string) ($produto['tamanho'] ?? ''),
+            'tamanhos' => $tamanhos,
             'categoria_id' => (string) ((int) ($produto['categoria_id'] ?? 0)),
             'cor' => (string) ($produto['cor'] ?? ''),
             'estilo' => (string) ($produto['estilo'] ?? ''),

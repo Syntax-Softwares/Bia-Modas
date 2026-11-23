@@ -41,12 +41,12 @@ class CarrinhoController
     {
         $this->exigirCsrf();
 
-        $idProduto = post_int('produto_id');
-        if ($idProduto === null || $idProduto <= 0) {
-            json_erro('Produto inválido.');
+        $idProdutoTamanho = post_int('produto_tamanho_id');
+        if ($idProdutoTamanho === null || $idProdutoTamanho <= 0) {
+            json_erro('Tamanho do produto inválido.');
         }
 
-        $resultado = $this->carrinho->alternar($this->carrinhoId(), $idProduto);
+        $resultado = $this->carrinho->alternar($this->carrinhoId(), $idProdutoTamanho);
 
         if (!$resultado['ok']) {
             json_erro($resultado['mensagem'] ?? 'Não foi possível atualizar o carrinho.');
@@ -57,7 +57,7 @@ class CarrinhoController
         json_response([
             'ok' => true,
             'acao' => $resultado['acao'],
-            'produto_id' => $idProduto,
+            'produto_tamanho_id' => $idProdutoTamanho,
             'noCarrinho' => $adicionado,
             'mensagem' => $adicionado
                 ? 'Produto adicionado ao carrinho'
@@ -69,17 +69,17 @@ class CarrinhoController
     {
         $this->exigirCsrf();
 
-        $idProduto = post_int('produto_id');
+        $idProdutoTamanho = post_int('produto_tamanho_id');
         $quantidade = post_int('quantidade') ?? 1;
 
-        if ($idProduto === null || $idProduto <= 0) {
-            json_erro('Produto inválido.');
+        if ($idProdutoTamanho === null || $idProdutoTamanho <= 0) {
+            json_erro('Selecione um tamanho antes de adicionar ao carrinho.');
         }
         if ($quantidade <= 0) {
             json_erro('Quantidade inválida.');
         }
 
-        $resultado = $this->carrinho->adicionar($this->carrinhoId(), $idProduto, $quantidade);
+        $resultado = $this->carrinho->adicionar($this->carrinhoId(), $idProdutoTamanho, $quantidade);
 
         if (!$resultado['ok']) {
             json_erro($resultado['mensagem'] ?? 'Não foi possível adicionar ao carrinho.');
@@ -95,17 +95,17 @@ class CarrinhoController
     {
         $this->exigirCsrf();
 
-        $idProduto = post_int('produto_id');
+        $idProdutoTamanho = post_int('produto_tamanho_id');
         $quantidade = post_int('quantidade');
 
-        if ($idProduto === null || $idProduto <= 0) {
-            json_erro('Produto inválido.');
+        if ($idProdutoTamanho === null || $idProdutoTamanho <= 0) {
+            json_erro('Tamanho do produto inválido.');
         }
         if ($quantidade === null) {
             json_erro('Quantidade inválida.');
         }
 
-        $resultado = $this->carrinho->definirQuantidade($this->carrinhoId(), $idProduto, $quantidade);
+        $resultado = $this->carrinho->definirQuantidade($this->carrinhoId(), $idProdutoTamanho, $quantidade);
 
         if (!$resultado['ok']) {
             json_erro($resultado['mensagem'] ?? 'Não foi possível atualizar a quantidade.');
@@ -118,12 +118,12 @@ class CarrinhoController
     {
         $this->exigirCsrf();
 
-        $idProduto = post_int('produto_id');
-        if ($idProduto === null || $idProduto <= 0) {
-            json_erro('Produto inválido.');
+        $idProdutoTamanho = post_int('produto_tamanho_id');
+        if ($idProdutoTamanho === null || $idProdutoTamanho <= 0) {
+            json_erro('Tamanho do produto inválido.');
         }
 
-        $this->carrinho->remover($this->carrinhoId(), $idProduto);
+        $this->carrinho->remover($this->carrinhoId(), $idProdutoTamanho);
 
         json_response(['ok' => true, 'mensagem' => 'Produto removido do carrinho'] + $this->resumoAtual());
     }

@@ -16,20 +16,23 @@ INSERT INTO categorias (id_categoria, nome) VALUES
 (5, 'Saias'),
 (6, 'Vestidos');
 
--- Tamanhos / medidas base dos produtos
-INSERT INTO medidas_produtos (id_medida_produto, tamanho) VALUES
-(1, 'P'),
-(2, 'M'),
-(3, 'G'),
-(4, 'GG'),
-(5, 'XG'),
-(6, 'XXG'),
-(7, '36'),
-(8, '38'),
-(9, '40'),
-(10, '42'),
-(11, '44'),
-(12, '46');
+-- Catalogo de tamanhos
+INSERT INTO tamanhos (id_tamanho, nome, ordem) VALUES
+(1, 'PP', 1),
+(2, 'P', 2),
+(3, 'M', 3),
+(4, 'G', 4),
+(5, 'GG', 5),
+(6, 'XG', 6),
+(7, 'XXG', 7),
+(8, '36', 8),
+(9, '38', 9),
+(10, '40', 10),
+(11, '42', 11),
+(12, '44', 12),
+(13, '46', 13),
+(14, '48', 14),
+(15, '50', 15);
 
 -- Ofertas
 INSERT INTO ofertas (id_oferta, percentual, inicio_em, ativo) VALUES
@@ -51,68 +54,68 @@ INSERT INTO ofertas (id_oferta, percentual, inicio_em, ativo) VALUES
 
 -- Produtos
 INSERT INTO produtos
-    (id_produto, medida_produto_id, oferta_id, nome, sku, descricao, estoque, valor, ativo, criado_em)
+    (id_produto, oferta_id, nome, sku, descricao, estoque, valor, ativo, criado_em)
 VALUES
-(1, 1, NULL, 'Conjunto Social Marrom', 'BM-0001', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Marrom.', 5, 249.90, TRUE, DATE_SUB(NOW(), INTERVAL 0 DAY)),
-(2, 1, 1, 'Vestido Longo Onça', 'BM-0002', 'Peça da coleção Bia Modas. Categoria: Vestidos. Estilo: Elegante. Cor: Estampado.', 6, 179.90, TRUE, DATE_SUB(NOW(), INTERVAL 2 DAY)),
-(3, 1, NULL, 'Body Preto Manga Longa', 'BM-0003', 'Peça da coleção Bia Modas. Categoria: Plus Size. Estilo: Casual. Cor: Preto.', 7, 89.90, TRUE, DATE_SUB(NOW(), INTERVAL 4 DAY)),
-(4, 1, NULL, 'Camisa Poá Bordô', 'BM-0004', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Romântico. Cor: Vermelho.', 8, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 6 DAY)),
-(5, 1, 2, 'Vestido Jeans Curto', 'BM-0005', 'Peça da coleção Bia Modas. Categoria: Vestidos. Estilo: Casual. Cor: Jeans.', 9, 129.90, TRUE, DATE_SUB(NOW(), INTERVAL 8 DAY)),
-(6, 3, NULL, 'Camisa Social Marrom', 'BM-0006', 'Peça da coleção Bia Modas. Categoria: Plus Size. Estilo: Casual. Cor: Marrom.', 10, 109.90, TRUE, DATE_SUB(NOW(), INTERVAL 10 DAY)),
-(7, 1, 3, 'Blusa Canelada Marrom', 'BM-0007', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Marrom.', 11, 79.90, TRUE, DATE_SUB(NOW(), INTERVAL 12 DAY)),
-(8, 1, NULL, 'Blusa Animal Print', 'BM-0008', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Estampado.', 12, 99.90, TRUE, DATE_SUB(NOW(), INTERVAL 14 DAY)),
-(9, 1, NULL, 'Camisa Poá Vermelha', 'BM-0009', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Romântico. Cor: Vermelho.', 13, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 16 DAY)),
-(10, 3, 4, 'Conjunto Saia Marrom', 'BM-0010', 'Peça da coleção Bia Modas. Categoria: Plus Size. Estilo: Casual. Cor: Marrom.', 14, 159.90, TRUE, DATE_SUB(NOW(), INTERVAL 18 DAY)),
-(11, 1, NULL, 'Conjunto Moletom Rosê', 'BM-0011', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Esportivo. Cor: Rosa.', 15, 139.90, TRUE, DATE_SUB(NOW(), INTERVAL 20 DAY)),
-(12, 1, NULL, 'Blusa Gola Alta Branca', 'BM-0012', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Branco.', 16, 89.90, TRUE, DATE_SUB(NOW(), INTERVAL 22 DAY)),
-(13, 1, 5, 'Vestido Jeans Curto', 'BM-0013', 'Peça da coleção Bia Modas. Categoria: Vestidos. Estilo: Casual. Cor: Jeans.', 17, 129.90, TRUE, DATE_SUB(NOW(), INTERVAL 24 DAY)),
-(14, 3, NULL, 'Blusa Marrom Gola Redonda', 'BM-0014', 'Peça da coleção Bia Modas. Categoria: Plus Size. Estilo: Casual. Cor: Marrom.', 18, 79.90, TRUE, DATE_SUB(NOW(), INTERVAL 26 DAY)),
-(15, 1, NULL, 'Jaqueta Couro Preta', 'BM-0015', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Vintage. Cor: Preto.', 19, 199.90, TRUE, DATE_SUB(NOW(), INTERVAL 28 DAY)),
-(16, 3, NULL, 'Blusa Canelada Marrom', 'BM-0016', 'Peça da coleção Bia Modas. Categoria: Plus Size. Estilo: Casual. Cor: Marrom.', 20, 89.90, TRUE, DATE_SUB(NOW(), INTERVAL 30 DAY)),
-(17, 1, NULL, 'Blusa Gola Alta Bege', 'BM-0017', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Minimalista. Cor: Bege.', 21, 79.90, TRUE, DATE_SUB(NOW(), INTERVAL 32 DAY)),
-(18, 1, NULL, 'Conjunto Moletom Rosê', 'BM-0018', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Esportivo. Cor: Rosa.', 22, 139.90, TRUE, DATE_SUB(NOW(), INTERVAL 34 DAY)),
-(19, 1, NULL, 'Blusa Gola Alta Bege', 'BM-0019', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Minimalista. Cor: Bege.', 23, 79.90, TRUE, DATE_SUB(NOW(), INTERVAL 36 DAY)),
-(20, 1, NULL, 'Camisa Xadrez Preta', 'BM-0020', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Preto.', 24, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 38 DAY)),
-(21, 7, 6, 'Calça Cargo Bege', 'BM-0021', 'Peça da coleção Bia Modas. Categoria: Calças. Estilo: Casual. Cor: Bege.', 5, 159.90, TRUE, DATE_SUB(NOW(), INTERVAL 40 DAY)),
-(22, 7, NULL, 'Calça Jeans Wide Leg', 'BM-0022', 'Peça da coleção Bia Modas. Categoria: Calças. Estilo: Casual. Cor: Jeans.', 6, 149.90, TRUE, DATE_SUB(NOW(), INTERVAL 42 DAY)),
-(23, 1, 7, 'Conjunto Social Marrom', 'BM-0023', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Marrom.', 7, 279.90, TRUE, DATE_SUB(NOW(), INTERVAL 44 DAY)),
-(24, 1, NULL, 'Blusa Canelada Marrom', 'BM-0024', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Marrom.', 8, 79.90, TRUE, DATE_SUB(NOW(), INTERVAL 46 DAY)),
-(25, 1, 8, 'Saia Couro Preta', 'BM-0025', 'Peça da coleção Bia Modas. Categoria: Saias. Estilo: Elegante. Cor: Preto.', 9, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 48 DAY)),
-(26, 1, NULL, 'Conjunto Social Preto', 'BM-0026', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Preto.', 10, 299.90, TRUE, DATE_SUB(NOW(), INTERVAL 50 DAY)),
-(27, 1, NULL, 'Camisa Social Rosa', 'BM-0027', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Rosa.', 11, 99.90, TRUE, DATE_SUB(NOW(), INTERVAL 52 DAY)),
-(28, 1, NULL, 'Conjunto Plus Size Bege', 'BM-0028', 'Peça da coleção Bia Modas. Categoria: Plus Size. Estilo: Casual. Cor: Bege.', 12, 189.90, TRUE, DATE_SUB(NOW(), INTERVAL 54 DAY)),
-(29, 1, NULL, 'Conjunto Esportivo Verde', 'BM-0029', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Esportivo. Cor: Verde.', 13, 159.90, TRUE, DATE_SUB(NOW(), INTERVAL 56 DAY)),
-(30, 1, 9, 'Blusa Texturizada Preta', 'BM-0030', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Preto.', 14, 89.90, TRUE, DATE_SUB(NOW(), INTERVAL 58 DAY)),
-(31, 1, NULL, 'Blusa Tricô Gola Alta Bege', 'BM-0031', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Bege.', 15, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 60 DAY)),
-(32, 1, NULL, 'Saia Couro Preta', 'BM-0032', 'Peça da coleção Bia Modas. Categoria: Saias. Estilo: Elegante. Cor: Preto.', 16, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 62 DAY)),
-(33, 1, NULL, 'Conjunto Plus Size Bege', 'BM-0033', 'Peça da coleção Bia Modas. Categoria: Plus Size. Estilo: Casual. Cor: Bege.', 17, 189.90, TRUE, DATE_SUB(NOW(), INTERVAL 64 DAY)),
-(34, 1, NULL, 'Conjunto Esportivo Verde', 'BM-0034', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Esportivo. Cor: Verde.', 18, 159.90, TRUE, DATE_SUB(NOW(), INTERVAL 66 DAY)),
-(35, 1, NULL, 'Conjunto Plus Size Bicolor', 'BM-0035', 'Peça da coleção Bia Modas. Categoria: Plus Size. Estilo: Elegante. Cor: Preto.', 19, 219.90, TRUE, DATE_SUB(NOW(), INTERVAL 68 DAY)),
-(36, 1, NULL, 'Blusa Gola Alta Branca', 'BM-0036', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Branco.', 20, 89.90, TRUE, DATE_SUB(NOW(), INTERVAL 70 DAY)),
-(37, 1, NULL, 'Blusa Tricô Gola Alta Bege', 'BM-0037', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Bege.', 21, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 72 DAY)),
-(38, 1, 10, 'Conjunto Social Marrom', 'BM-0038', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Marrom.', 22, 289.90, TRUE, DATE_SUB(NOW(), INTERVAL 74 DAY)),
-(39, 1, NULL, 'Blusa Gola Alta Branca', 'BM-0039', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Branco.', 23, 89.90, TRUE, DATE_SUB(NOW(), INTERVAL 76 DAY)),
-(40, 1, NULL, 'Vestido Tule Degradê', 'BM-0040', 'Peça da coleção Bia Modas. Categoria: Vestidos. Estilo: Elegante. Cor: Marrom.', 24, 149.90, TRUE, DATE_SUB(NOW(), INTERVAL 78 DAY)),
-(41, 1, 11, 'Conjunto Couro Preto Bege', 'BM-0041', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Preto.', 5, 259.90, TRUE, DATE_SUB(NOW(), INTERVAL 80 DAY)),
-(42, 7, 12, 'Calça Flare Vinho', 'BM-0042', 'Peça da coleção Bia Modas. Categoria: Calças. Estilo: Elegante. Cor: Vermelho.', 6, 129.90, TRUE, DATE_SUB(NOW(), INTERVAL 82 DAY)),
-(43, 1, NULL, 'Conjunto Couro Marrom', 'BM-0043', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Casual. Cor: Marrom.', 7, 249.90, TRUE, DATE_SUB(NOW(), INTERVAL 84 DAY)),
-(44, 1, NULL, 'Blusa Tule Preta', 'BM-0044', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Preto.', 8, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 86 DAY)),
-(45, 1, NULL, 'Blusa Laço Preta', 'BM-0045', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Preto.', 9, 109.90, TRUE, DATE_SUB(NOW(), INTERVAL 88 DAY)),
-(46, 1, NULL, 'Camisa Alongada Preta', 'BM-0046', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Preto.', 10, 129.90, TRUE, DATE_SUB(NOW(), INTERVAL 90 DAY)),
-(47, 1, NULL, 'Camisa Alongada Preta', 'BM-0047', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Preto.', 11, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 92 DAY)),
-(48, 1, 13, 'Vestido Tule Marrom', 'BM-0048', 'Peça da coleção Bia Modas. Categoria: Vestidos. Estilo: Elegante. Cor: Marrom.', 12, 149.90, TRUE, DATE_SUB(NOW(), INTERVAL 94 DAY)),
-(49, 1, NULL, 'Conjunto Couro Marrom', 'BM-0049', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Casual. Cor: Marrom.', 13, 249.90, TRUE, DATE_SUB(NOW(), INTERVAL 96 DAY)),
-(50, 1, 14, 'Blazer Social Preto', 'BM-0050', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Preto.', 14, 189.90, TRUE, DATE_SUB(NOW(), INTERVAL 98 DAY)),
-(51, 1, 15, 'Conjunto Social Bege', 'BM-0051', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Bege.', 15, 299.90, TRUE, DATE_SUB(NOW(), INTERVAL 100 DAY)),
-(52, 1, NULL, 'Blazer Marrom', 'BM-0052', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Marrom.', 16, 199.90, TRUE, DATE_SUB(NOW(), INTERVAL 102 DAY)),
-(53, 1, NULL, 'Conjunto Social Bege', 'BM-0053', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Bege.', 17, 289.90, TRUE, DATE_SUB(NOW(), INTERVAL 104 DAY)),
-(54, 1, NULL, 'Camisa Xadrez Preta', 'BM-0054', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Preto.', 18, 139.90, TRUE, DATE_SUB(NOW(), INTERVAL 106 DAY)),
-(55, 1, NULL, 'Camisa Xadrez Preta', 'BM-0055', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Preto.', 19, 149.90, TRUE, DATE_SUB(NOW(), INTERVAL 108 DAY)),
-(56, 1, NULL, 'Conjunto Social Marrom', 'BM-0056', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Marrom.', 20, 279.90, TRUE, DATE_SUB(NOW(), INTERVAL 110 DAY)),
-(57, 1, NULL, 'Camisa Xadrez Preta', 'BM-0057', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Preto.', 21, 129.90, TRUE, DATE_SUB(NOW(), INTERVAL 112 DAY)),
-(58, 1, NULL, 'Camisa Xadrez Preta', 'BM-0058', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Preto.', 22, 139.90, TRUE, DATE_SUB(NOW(), INTERVAL 114 DAY)),
-(59, 1, NULL, 'Blazer Marrom', 'BM-0059', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Marrom.', 23, 189.90, TRUE, DATE_SUB(NOW(), INTERVAL 116 DAY)),
-(60, 1, NULL, 'Blusa Marsala', 'BM-0060', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Vermelho.', 24, 99.90, TRUE, DATE_SUB(NOW(), INTERVAL 118 DAY));
+(1,  NULL, 'Conjunto Social Marrom', 'BM-0001', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Marrom.', 5, 249.90, TRUE, DATE_SUB(NOW(), INTERVAL 0 DAY)),
+(2,  1, 'Vestido Longo Onça', 'BM-0002', 'Peça da coleção Bia Modas. Categoria: Vestidos. Estilo: Elegante. Cor: Estampado.', 6, 179.90, TRUE, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(3,  NULL, 'Body Preto Manga Longa', 'BM-0003', 'Peça da coleção Bia Modas. Categoria: Plus Size. Estilo: Casual. Cor: Preto.', 7, 89.90, TRUE, DATE_SUB(NOW(), INTERVAL 4 DAY)),
+(4,  NULL, 'Camisa Poá Bordô', 'BM-0004', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Romântico. Cor: Vermelho.', 8, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 6 DAY)),
+(5,  2, 'Vestido Jeans Curto', 'BM-0005', 'Peça da coleção Bia Modas. Categoria: Vestidos. Estilo: Casual. Cor: Jeans.', 9, 129.90, TRUE, DATE_SUB(NOW(), INTERVAL 8 DAY)),
+(6,  NULL, 'Camisa Social Marrom', 'BM-0006', 'Peça da coleção Bia Modas. Categoria: Plus Size. Estilo: Casual. Cor: Marrom.', 10, 109.90, TRUE, DATE_SUB(NOW(), INTERVAL 10 DAY)),
+(7,  3, 'Blusa Canelada Marrom', 'BM-0007', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Marrom.', 11, 79.90, TRUE, DATE_SUB(NOW(), INTERVAL 12 DAY)),
+(8,  NULL, 'Blusa Animal Print', 'BM-0008', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Estampado.', 12, 99.90, TRUE, DATE_SUB(NOW(), INTERVAL 14 DAY)),
+(9,  NULL, 'Camisa Poá Vermelha', 'BM-0009', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Romântico. Cor: Vermelho.', 13, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 16 DAY)),
+(10,  4, 'Conjunto Saia Marrom', 'BM-0010', 'Peça da coleção Bia Modas. Categoria: Plus Size. Estilo: Casual. Cor: Marrom.', 14, 159.90, TRUE, DATE_SUB(NOW(), INTERVAL 18 DAY)),
+(11,  NULL, 'Conjunto Moletom Rosê', 'BM-0011', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Esportivo. Cor: Rosa.', 15, 139.90, TRUE, DATE_SUB(NOW(), INTERVAL 20 DAY)),
+(12,  NULL, 'Blusa Gola Alta Branca', 'BM-0012', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Branco.', 16, 89.90, TRUE, DATE_SUB(NOW(), INTERVAL 22 DAY)),
+(13,  5, 'Vestido Jeans Curto', 'BM-0013', 'Peça da coleção Bia Modas. Categoria: Vestidos. Estilo: Casual. Cor: Jeans.', 17, 129.90, TRUE, DATE_SUB(NOW(), INTERVAL 24 DAY)),
+(14,  NULL, 'Blusa Marrom Gola Redonda', 'BM-0014', 'Peça da coleção Bia Modas. Categoria: Plus Size. Estilo: Casual. Cor: Marrom.', 18, 79.90, TRUE, DATE_SUB(NOW(), INTERVAL 26 DAY)),
+(15,  NULL, 'Jaqueta Couro Preta', 'BM-0015', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Vintage. Cor: Preto.', 19, 199.90, TRUE, DATE_SUB(NOW(), INTERVAL 28 DAY)),
+(16,  NULL, 'Blusa Canelada Marrom', 'BM-0016', 'Peça da coleção Bia Modas. Categoria: Plus Size. Estilo: Casual. Cor: Marrom.', 20, 89.90, TRUE, DATE_SUB(NOW(), INTERVAL 30 DAY)),
+(17,  NULL, 'Blusa Gola Alta Bege', 'BM-0017', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Minimalista. Cor: Bege.', 21, 79.90, TRUE, DATE_SUB(NOW(), INTERVAL 32 DAY)),
+(18,  NULL, 'Conjunto Moletom Rosê', 'BM-0018', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Esportivo. Cor: Rosa.', 22, 139.90, TRUE, DATE_SUB(NOW(), INTERVAL 34 DAY)),
+(19,  NULL, 'Blusa Gola Alta Bege', 'BM-0019', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Minimalista. Cor: Bege.', 23, 79.90, TRUE, DATE_SUB(NOW(), INTERVAL 36 DAY)),
+(20,  NULL, 'Camisa Xadrez Preta', 'BM-0020', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Preto.', 24, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 38 DAY)),
+(21,  6, 'Calça Cargo Bege', 'BM-0021', 'Peça da coleção Bia Modas. Categoria: Calças. Estilo: Casual. Cor: Bege.', 5, 159.90, TRUE, DATE_SUB(NOW(), INTERVAL 40 DAY)),
+(22,  NULL, 'Calça Jeans Wide Leg', 'BM-0022', 'Peça da coleção Bia Modas. Categoria: Calças. Estilo: Casual. Cor: Jeans.', 6, 149.90, TRUE, DATE_SUB(NOW(), INTERVAL 42 DAY)),
+(23,  7, 'Conjunto Social Marrom', 'BM-0023', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Marrom.', 7, 279.90, TRUE, DATE_SUB(NOW(), INTERVAL 44 DAY)),
+(24,  NULL, 'Blusa Canelada Marrom', 'BM-0024', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Marrom.', 8, 79.90, TRUE, DATE_SUB(NOW(), INTERVAL 46 DAY)),
+(25,  8, 'Saia Couro Preta', 'BM-0025', 'Peça da coleção Bia Modas. Categoria: Saias. Estilo: Elegante. Cor: Preto.', 9, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 48 DAY)),
+(26,  NULL, 'Conjunto Social Preto', 'BM-0026', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Preto.', 10, 299.90, TRUE, DATE_SUB(NOW(), INTERVAL 50 DAY)),
+(27,  NULL, 'Camisa Social Rosa', 'BM-0027', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Rosa.', 11, 99.90, TRUE, DATE_SUB(NOW(), INTERVAL 52 DAY)),
+(28,  NULL, 'Conjunto Plus Size Bege', 'BM-0028', 'Peça da coleção Bia Modas. Categoria: Plus Size. Estilo: Casual. Cor: Bege.', 12, 189.90, TRUE, DATE_SUB(NOW(), INTERVAL 54 DAY)),
+(29,  NULL, 'Conjunto Esportivo Verde', 'BM-0029', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Esportivo. Cor: Verde.', 13, 159.90, TRUE, DATE_SUB(NOW(), INTERVAL 56 DAY)),
+(30,  9, 'Blusa Texturizada Preta', 'BM-0030', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Preto.', 14, 89.90, TRUE, DATE_SUB(NOW(), INTERVAL 58 DAY)),
+(31,  NULL, 'Blusa Tricô Gola Alta Bege', 'BM-0031', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Bege.', 15, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 60 DAY)),
+(32,  NULL, 'Saia Couro Preta', 'BM-0032', 'Peça da coleção Bia Modas. Categoria: Saias. Estilo: Elegante. Cor: Preto.', 16, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 62 DAY)),
+(33,  NULL, 'Conjunto Plus Size Bege', 'BM-0033', 'Peça da coleção Bia Modas. Categoria: Plus Size. Estilo: Casual. Cor: Bege.', 17, 189.90, TRUE, DATE_SUB(NOW(), INTERVAL 64 DAY)),
+(34,  NULL, 'Conjunto Esportivo Verde', 'BM-0034', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Esportivo. Cor: Verde.', 18, 159.90, TRUE, DATE_SUB(NOW(), INTERVAL 66 DAY)),
+(35,  NULL, 'Conjunto Plus Size Bicolor', 'BM-0035', 'Peça da coleção Bia Modas. Categoria: Plus Size. Estilo: Elegante. Cor: Preto.', 19, 219.90, TRUE, DATE_SUB(NOW(), INTERVAL 68 DAY)),
+(36,  NULL, 'Blusa Gola Alta Branca', 'BM-0036', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Branco.', 20, 89.90, TRUE, DATE_SUB(NOW(), INTERVAL 70 DAY)),
+(37,  NULL, 'Blusa Tricô Gola Alta Bege', 'BM-0037', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Bege.', 21, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 72 DAY)),
+(38,  10, 'Conjunto Social Marrom', 'BM-0038', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Marrom.', 22, 289.90, TRUE, DATE_SUB(NOW(), INTERVAL 74 DAY)),
+(39,  NULL, 'Blusa Gola Alta Branca', 'BM-0039', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Branco.', 23, 89.90, TRUE, DATE_SUB(NOW(), INTERVAL 76 DAY)),
+(40,  NULL, 'Vestido Tule Degradê', 'BM-0040', 'Peça da coleção Bia Modas. Categoria: Vestidos. Estilo: Elegante. Cor: Marrom.', 24, 149.90, TRUE, DATE_SUB(NOW(), INTERVAL 78 DAY)),
+(41,  11, 'Conjunto Couro Preto Bege', 'BM-0041', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Preto.', 5, 259.90, TRUE, DATE_SUB(NOW(), INTERVAL 80 DAY)),
+(42,  12, 'Calça Flare Vinho', 'BM-0042', 'Peça da coleção Bia Modas. Categoria: Calças. Estilo: Elegante. Cor: Vermelho.', 6, 129.90, TRUE, DATE_SUB(NOW(), INTERVAL 82 DAY)),
+(43,  NULL, 'Conjunto Couro Marrom', 'BM-0043', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Casual. Cor: Marrom.', 7, 249.90, TRUE, DATE_SUB(NOW(), INTERVAL 84 DAY)),
+(44,  NULL, 'Blusa Tule Preta', 'BM-0044', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Preto.', 8, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 86 DAY)),
+(45,  NULL, 'Blusa Laço Preta', 'BM-0045', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Preto.', 9, 109.90, TRUE, DATE_SUB(NOW(), INTERVAL 88 DAY)),
+(46,  NULL, 'Camisa Alongada Preta', 'BM-0046', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Preto.', 10, 129.90, TRUE, DATE_SUB(NOW(), INTERVAL 90 DAY)),
+(47,  NULL, 'Camisa Alongada Preta', 'BM-0047', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Preto.', 11, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 92 DAY)),
+(48,  13, 'Vestido Tule Marrom', 'BM-0048', 'Peça da coleção Bia Modas. Categoria: Vestidos. Estilo: Elegante. Cor: Marrom.', 12, 149.90, TRUE, DATE_SUB(NOW(), INTERVAL 94 DAY)),
+(49,  NULL, 'Conjunto Couro Marrom', 'BM-0049', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Casual. Cor: Marrom.', 13, 249.90, TRUE, DATE_SUB(NOW(), INTERVAL 96 DAY)),
+(50,  14, 'Blazer Social Preto', 'BM-0050', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Preto.', 14, 189.90, TRUE, DATE_SUB(NOW(), INTERVAL 98 DAY)),
+(51,  15, 'Conjunto Social Bege', 'BM-0051', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Bege.', 15, 299.90, TRUE, DATE_SUB(NOW(), INTERVAL 100 DAY)),
+(52,  NULL, 'Blazer Marrom', 'BM-0052', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Marrom.', 16, 199.90, TRUE, DATE_SUB(NOW(), INTERVAL 102 DAY)),
+(53,  NULL, 'Conjunto Social Bege', 'BM-0053', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Bege.', 17, 289.90, TRUE, DATE_SUB(NOW(), INTERVAL 104 DAY)),
+(54,  NULL, 'Camisa Xadrez Preta', 'BM-0054', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Preto.', 18, 139.90, TRUE, DATE_SUB(NOW(), INTERVAL 106 DAY)),
+(55,  NULL, 'Camisa Xadrez Preta', 'BM-0055', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Preto.', 19, 149.90, TRUE, DATE_SUB(NOW(), INTERVAL 108 DAY)),
+(56,  NULL, 'Conjunto Social Marrom', 'BM-0056', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Marrom.', 20, 279.90, TRUE, DATE_SUB(NOW(), INTERVAL 110 DAY)),
+(57,  NULL, 'Camisa Xadrez Preta', 'BM-0057', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Preto.', 21, 129.90, TRUE, DATE_SUB(NOW(), INTERVAL 112 DAY)),
+(58,  NULL, 'Camisa Xadrez Preta', 'BM-0058', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Preto.', 22, 139.90, TRUE, DATE_SUB(NOW(), INTERVAL 114 DAY)),
+(59,  NULL, 'Blazer Marrom', 'BM-0059', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Marrom.', 23, 189.90, TRUE, DATE_SUB(NOW(), INTERVAL 116 DAY)),
+(60,  NULL, 'Blusa Marsala', 'BM-0060', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Vermelho.', 24, 99.90, TRUE, DATE_SUB(NOW(), INTERVAL 118 DAY));
 
 -- Fotos dos produtos
 INSERT INTO imagens (produto_id, caminho_imagem) VALUES
@@ -247,6 +250,52 @@ INSERT INTO categorias_produtos (produto_id, categoria_id) VALUES
 (58, 2),
 (59, 4),
 (60, 2);
+
+-- Variacoes de tamanho dos produtos (mock)
+-- Roupas: PP, P, M, G, GG. Calcas: 36, 38, 40, 42, 44, 46.
+INSERT INTO produto_tamanhos (produto_id, tamanho_id, estoque)
+SELECT p.id_produto,
+       t.id_tamanho,
+       GREATEST(1, FLOOR(p.estoque / 5))
+FROM produtos p
+INNER JOIN tamanhos t ON (
+    (
+        EXISTS (
+            SELECT 1
+            FROM categorias_produtos cp
+            INNER JOIN categorias c ON c.id_categoria = cp.categoria_id
+            WHERE cp.produto_id = p.id_produto
+              AND cp.deletado_em IS NULL
+              AND c.deletado_em IS NULL
+              AND c.nome = 'Calças'
+        )
+        AND t.nome IN ('36', '38', '40', '42', '44', '46')
+    )
+    OR
+    (
+        NOT EXISTS (
+            SELECT 1
+            FROM categorias_produtos cp
+            INNER JOIN categorias c ON c.id_categoria = cp.categoria_id
+            WHERE cp.produto_id = p.id_produto
+              AND cp.deletado_em IS NULL
+              AND c.deletado_em IS NULL
+              AND c.nome = 'Calças'
+        )
+        AND t.nome IN ('PP', 'P', 'M', 'G', 'GG')
+    )
+)
+WHERE p.deletado_em IS NULL;
+
+-- Estoque do produto = soma do estoque das variacoes
+UPDATE produtos p
+SET p.estoque = (
+    SELECT COALESCE(SUM(pt.estoque), 0)
+    FROM produto_tamanhos pt
+    WHERE pt.produto_id = p.id_produto
+      AND pt.deletado_em IS NULL
+);
+
 
 -- Preenche os filtros de cor/estilo do catalogo a partir da descricao.
 UPDATE produtos

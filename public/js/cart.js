@@ -33,51 +33,29 @@
         document.body.style.overflow = '';
     }
 
-    function itemDoEstado(idProduto) {
-        return estado.itens.find((item) => String(item.produto_id) === String(idProduto));
+    function itemDoEstado(idProdutoTamanho) {
+        return estado.itens.find((item) => String(item.produto_tamanho_id) === String(idProdutoTamanho));
     }
 
-    function atualizarBotaoProduto(idProduto, noCarrinho) {
-        document.querySelectorAll(`[data-adicionar][data-produto-id="${idProduto}"]`).forEach((botao) => {
-            const nome = botao.dataset.produtoNome || 'produto';
-
-            botao.classList.toggle('active', noCarrinho);
-            botao.setAttribute('aria-pressed', noCarrinho ? 'true' : 'false');
-            botao.setAttribute('aria-label', noCarrinho
-                ? `Remover ${nome} do carrinho`
-                : `Adicionar ${nome} ao carrinho`);
-
-            const icone = botao.querySelector('i');
-            if (icone) {
-                icone.className = 'icon-shopping-bag';
-            }
-
-            const rotulo = botao.querySelector('[data-cart-label]');
-            if (rotulo) {
-                rotulo.textContent = noCarrinho ? 'Remover do carrinho' : 'Adicionar ao carrinho';
-            }
-        });
-    }
-
-    function sincronizarBotoesProduto() {
-        const ids = new Set(estado.itens.map((item) => String(item.produto_id)));
-
-        document.querySelectorAll('[data-adicionar]').forEach((botao) => {
-            atualizarBotaoProduto(botao.dataset.produtoId, ids.has(String(botao.dataset.produtoId)));
-        });
-    }
-
-    async function alternarCarrinho(idProduto) {
+    async function adicionarAoCarrinho(idProduto, idProdutoTamanho) {
         if (ocupado) return;
+
+        if (!idProdutoTamanho) {
+            window.location.href = '/produto?id=' + encodeURIComponent(idProduto);
+            return;
+        }
+
         ocupado = true;
         versaoEstado += 1;
 
         try {
-            const resposta = await postar('/carrinho/alternar', { produto_id: idProduto, quantidade: 1 });
+            const resposta = await postar('/carrinho/adicionar', {
+                produto_tamanho_id: idProdutoTamanho,
+                quantidade: 1
+            });
 
             if (resposta.mensagem) toast(resposta.mensagem);
             aplicarResumo(resposta);
-            atualizarBotaoProduto(idProduto, resposta.noCarrinho === true);
         } catch (erro) {
             toast(erro.message, true);
         } finally {
@@ -96,7 +74,8 @@
         }
     }
 
-    function htmlVazio() {        return '<div class="cart-empty">'
+    function htmlVazio() {
+        return '<div class="cart-empty">'
             + '<i class="icon-shopping-bag"></i>'
             + '<p>Seu carrinho está vazio</p>'
             + '<p style="font-size: 0.9rem;">Adicione produtos para continuar</p>'
@@ -123,14 +102,15 @@
                 </div>
                 <div class="cart-item-info">
                     <div class="cart-item-title">${escaparHtml(item.nome)}</div>
+                    <div class="cart-item-size">Tamanho: ${escaparHtml(item.tamanho || '—')}${item.sku ? ' · ' + escaparHtml(item.sku) : ''}</div>
                     <div class="cart-item-price">${moeda(item.valor_unitario)}</div>
                     <div class="qty-control mt-2">
-                        <button type="button" data-cart-menos data-produto-id="${item.produto_id}" aria-label="Diminuir quantidade">&minus;</button>
+                        <button type="button" data-cart-menos data-produto-tamanho-id="${item.produto_tamanho_id}" aria-label="Diminuir quantidade">&minus;</button>
                         <span data-cart-qtd>${item.quantidade}</span>
-                        <button type="button" data-cart-mais data-produto-id="${item.produto_id}" aria-label="Aumentar quantidade">+</button>
+                        <button type="button" data-cart-mais data-produto-tamanho-id="${item.produto_tamanho_id}" aria-label="Aumentar quantidade">+</button>
                     </div>
                 </div>
-                <button type="button" class="cart-item-remove" data-cart-remover data-produto-id="${item.produto_id}" aria-label="Remover ${escaparHtml(item.nome)} do carrinho">
+                <button type="button" class="cart-item-remove" data-cart-remover data-produto-tamanho-id="${item.produto_tamanho_id}" aria-label="Remover ${escaparHtml(item.nome)} do carrinho">
                     <i class="icon-trash-2"></i>
                 </button>
             </div>
@@ -149,7 +129,6 @@
         if (contador) contador.textContent = estado.quantidade;
 
         renderizarOffcanvas();
-        sincronizarBotoesProduto();
     }
 
     async function carregar() {
@@ -206,27 +185,39 @@
         const adicionar = evento.target.closest('[data-adicionar]');
         if (adicionar) {
             evento.preventDefault();
-            alternarCarrinho(adicionar.dataset.produtoId);
+            adicionarAoCarrinho(adicionar.dataset.produtoId, adicionar.dataset.produtoTamanhoId);
             return;
         }
 
         const mais = evento.target.closest('[data-cart-mais]');
         if (mais) {
-            const item = itemDoEstado(mais.dataset.produtoId);
-            if (item) mutar('/carrinho/atualizar', { produto_id: item.produto_id, quantidade: item.quantidade + 1 });
+            const item = itemDoEstado(mais.dataset.produtoTamanhoId);
+            if (item) {
+                mutar('/carrinho/atualizar', {
+                    produto_tamanho_id: item.produto_tamanho_id,
+                    quantidade: item.quantidade + 1
+                });
+            }
             return;
         }
 
         const menos = evento.target.closest('[data-cart-menos]');
         if (menos) {
-            const item = itemDoEstado(menos.dataset.produtoId);
-            if (item) mutar('/carrinho/atualizar', { produto_id: item.produto_id, quantidade: item.quantidade - 1 });
+            const item = itemDoEstado(menos.dataset.produtoTamanhoId);
+            if (item) {
+                mutar('/carrinho/atualizar', {
+                    produto_tamanho_id: item.produto_tamanho_id,
+                    quantidade: item.quantidade - 1
+                });
+            }
             return;
         }
 
         const remover = evento.target.closest('[data-cart-remover]');
         if (remover) {
-            mutar('/carrinho/remover', { produto_id: remover.dataset.produtoId });
+            mutar('/carrinho/remover', {
+                produto_tamanho_id: remover.dataset.produtoTamanhoId
+            });
             return;
         }
     });

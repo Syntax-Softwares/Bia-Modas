@@ -192,28 +192,25 @@ final class AdminRepository
         $this->pdo->beginTransaction();
 
         try {
-            $medidaId = $this->obterOuCriarMedida((string) $dados['tamanho']);
             $ofertaId = $this->obterOuCriarOferta($dados['oferta_percentual']);
 
             $stmt = $this->pdo->prepare(
                 "
                 INSERT INTO produtos
-                    (medida_produto_id, oferta_id, nome, sku, descricao, cor, estilo,
+                    (oferta_id, nome, sku, descricao, cor, estilo,
                      estoque, valor, ativo)
                 VALUES
-                    (:medida_id, :oferta_id, :nome, :sku, :descricao, :cor, :estilo,
-                     :estoque, :valor, :ativo)
+                    (:oferta_id, :nome, :sku, :descricao, :cor, :estilo,
+                     0, :valor, :ativo)
                 "
             );
             $stmt->execute([
-                ':medida_id' => $medidaId,
                 ':oferta_id' => $ofertaId,
                 ':nome' => $dados['nome'],
                 ':sku' => $dados['sku'],
                 ':descricao' => $dados['descricao'] !== '' ? $dados['descricao'] : null,
                 ':cor' => $dados['cor'] !== '' ? $dados['cor'] : null,
                 ':estilo' => $dados['estilo'] !== '' ? $dados['estilo'] : null,
-                ':estoque' => $dados['estoque'],
                 ':valor' => $dados['valor'],
                 ':ativo' => $dados['ativo'] ? 1 : 0,
             ]);
@@ -222,6 +219,7 @@ final class AdminRepository
 
             $this->vincularCategoria($produtoId, (int) $dados['categoria_id']);
             $this->salvarImagem($produtoId, (string) $dados['imagem']);
+            $this->sincronizarTamanhos($produtoId, $dados['tamanhos'] ?? []);
 
             $this->pdo->commit();
 
@@ -240,35 +238,31 @@ final class AdminRepository
         $this->pdo->beginTransaction();
 
         try {
-            $medidaId = $this->obterOuCriarMedida((string) $dados['tamanho']);
             $ofertaId = $this->obterOuCriarOferta($dados['oferta_percentual']);
 
             $stmt = $this->pdo->prepare(
                 "
                 UPDATE produtos
-                SET medida_produto_id = :medida_id,
-                    oferta_id = :oferta_id,
+                SET oferta_id = :oferta_id,
                     nome = :nome,
                     sku = :sku,
                     descricao = :descricao,
                     cor = :cor,
                     estilo = :estilo,
-                    estoque = :estoque,
                     valor = :valor,
-                    ativo = :ativo
+                    ativo = :ativo,
+                    estoque = 0
                 WHERE id_produto = :id
                   AND deletado_em IS NULL
                 "
             );
             $stmt->execute([
-                ':medida_id' => $medidaId,
                 ':oferta_id' => $ofertaId,
                 ':nome' => $dados['nome'],
                 ':sku' => $dados['sku'],
                 ':descricao' => $dados['descricao'] !== '' ? $dados['descricao'] : null,
                 ':cor' => $dados['cor'] !== '' ? $dados['cor'] : null,
                 ':estilo' => $dados['estilo'] !== '' ? $dados['estilo'] : null,
-                ':estoque' => $dados['estoque'],
                 ':valor' => $dados['valor'],
                 ':ativo' => $dados['ativo'] ? 1 : 0,
                 ':id' => $id,
@@ -276,6 +270,7 @@ final class AdminRepository
 
             $this->vincularCategoria($id, (int) $dados['categoria_id']);
             $this->salvarImagem($id, (string) $dados['imagem']);
+            $this->sincronizarTamanhos($id, $dados['tamanhos'] ?? []);
 
             $this->pdo->commit();
         } catch (Throwable $excecao) {
@@ -285,6 +280,90 @@ final class AdminRepository
 
             throw $excecao;
         }
+    }
+
+    public function listarTamanhos(): array
+    {
+        return $this->pdo->query(
+            "SELECT id_tamanho, nome
+             FROM tamanhos
+             WHERE deletado_em IS NULL
+             ORDER BY ordem ASC, id_tamanho ASC"
+        )->fetchAll();
+    }
+
+    public function tamanhosDoProduto(int $idProduto): array
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT pt.tamanho_id, pt.estoque
+             FROM produto_tamanhos pt
+             INNER JOIN tamanhos t ON t.id_tamanho = pt.tamanho_id
+             WHERE pt.produto_id = :id
+               AND pt.deletado_em IS NULL
+               AND t.deletado_em IS NULL
+             ORDER BY t.ordem ASC, t.id_tamanho ASC"
+        );
+        $stmt->execute([':id' => $idProduto]);
+
+        $tamanhos = [];
+        foreach ($stmt->fetchAll() as $linha) {
+            $tamanhos[(int) $linha['tamanho_id']] = (int) $linha['estoque'];
+        }
+
+        return $tamanhos;
+    }
+
+    private function sincronizarTamanhos(int $idProduto, array $tamanhos): void
+    {
+        $ids = array_values(array_filter(array_map('intval', array_keys($tamanhos)), static fn (int $id): bool => $id > 0));
+
+        if ($ids === []) {
+            $stmt = $this->pdo->prepare(
+                'UPDATE produto_tamanhos SET deletado_em = NOW() WHERE produto_id = :produto AND deletado_em IS NULL'
+            );
+            $stmt->execute([':produto' => $idProduto]);
+        } else {
+            $marcadores = implode(',', array_fill(0, count($ids), '?'));
+            $stmt = $this->pdo->prepare(
+                "UPDATE produto_tamanhos
+                 SET deletado_em = NOW()
+                 WHERE produto_id = ?
+                   AND tamanho_id NOT IN ({$marcadores})
+                   AND deletado_em IS NULL"
+            );
+            $stmt->execute(array_merge([$idProduto], $ids));
+        }
+
+        $stmt = $this->pdo->prepare(
+            'INSERT INTO produto_tamanhos (produto_id, tamanho_id, estoque)
+             VALUES (:produto, :tamanho, :estoque)
+             ON DUPLICATE KEY UPDATE estoque = VALUES(estoque), deletado_em = NULL'
+        );
+
+        foreach ($tamanhos as $idTamanho => $estoque) {
+            $stmt->execute([
+                ':produto' => $idProduto,
+                ':tamanho' => (int) $idTamanho,
+                ':estoque' => max(0, (int) $estoque),
+            ]);
+        }
+
+        $this->atualizarEstoqueProduto($idProduto);
+    }
+
+    private function atualizarEstoqueProduto(int $idProduto): void
+    {
+        $stmt = $this->pdo->prepare(
+            'UPDATE produtos p
+             SET p.estoque = (
+                 SELECT COALESCE(SUM(pt.estoque), 0)
+                 FROM produto_tamanhos pt
+                 WHERE pt.produto_id = p.id_produto
+                   AND pt.deletado_em IS NULL
+             )
+             WHERE p.id_produto = :id'
+        );
+        $stmt->execute([':id' => $idProduto]);
     }
 
     public function excluirProduto(int $id): void
@@ -382,7 +461,7 @@ final class AdminRepository
             "
             SELECT ic.*,
                    p.nome,
-                   p.sku,
+                   COALESCE(ic.sku, p.sku) AS sku,
                    (
                        SELECT i.caminho_imagem
                        FROM imagens i
@@ -527,7 +606,14 @@ final class AdminRepository
     {
         return "
             SELECT p.*,
-                   mp.tamanho,
+                   (
+                       SELECT GROUP_CONCAT(t.nome ORDER BY t.ordem SEPARATOR ', ')
+                       FROM produto_tamanhos pt
+                       INNER JOIN tamanhos t ON t.id_tamanho = pt.tamanho_id
+                       WHERE pt.produto_id = p.id_produto
+                         AND pt.deletado_em IS NULL
+                         AND t.deletado_em IS NULL
+                   ) AS tamanhos,
                    o.percentual AS oferta_percentual,
                    (
                        SELECT i.caminho_imagem
@@ -555,28 +641,11 @@ final class AdminRepository
                        LIMIT 1
                    ) AS categoria_id
             FROM produtos p
-            LEFT JOIN medidas_produtos mp ON mp.id_medida_produto = p.medida_produto_id
             LEFT JOIN ofertas o ON o.id_oferta = p.oferta_id
         ";
     }
 
-    private function obterOuCriarMedida(string $tamanho): int
-    {
-        $stmt = $this->pdo->prepare(
-            'SELECT id_medida_produto FROM medidas_produtos WHERE tamanho = :tamanho AND deletado_em IS NULL ORDER BY id_medida_produto ASC LIMIT 1'
-        );
-        $stmt->execute([':tamanho' => $tamanho]);
-        $id = $stmt->fetchColumn();
 
-        if ($id !== false) {
-            return (int) $id;
-        }
-
-        $stmt = $this->pdo->prepare('INSERT INTO medidas_produtos (tamanho) VALUES (:tamanho)');
-        $stmt->execute([':tamanho' => $tamanho]);
-
-        return (int) $this->pdo->lastInsertId();
-    }
 
     private function obterOuCriarOferta(?float $percentual): ?int
     {

@@ -57,22 +57,23 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
             <div class="carrinho-layout" id="carrinho-conteudo" <?= $itens === [] ? 'hidden' : '' ?>>
                 <div class="carrinho-itens" id="carrinho-itens">
                     <?php foreach ($itens as $item): ?>
-                        <article class="carrinho-item" data-item="<?= (int) $item['produto_id'] ?>">
+                        <article class="carrinho-item" data-item="<?= (int) $item['produto_tamanho_id'] ?>">
                             <div class="carrinho-item-imagem">
                                 <img src="<?= e($item['imagem'] ?: '/img/logoBiaModas.png') ?>" alt="<?= e($item['nome']) ?>">
                             </div>
                             <div class="carrinho-item-info">
                                 <span class="product-category"><?= e($item['categoria'] ?: 'Bia Modas') ?></span>
                                 <h3 class="carrinho-item-nome"><?= e($item['nome']) ?></h3>
+                                <small class="cart-item-size d-block">Tamanho: <?= e($item['tamanho']) ?> · <?= e($item['sku']) ?></small>
                                 <span class="cart-item-price"><?= money($item['valor_unitario']) ?></span>
                             </div>
                             <div class="qty-control" role="group" aria-label="Quantidade de <?= e($item['nome']) ?>">
-                                <button type="button" data-cart-menos data-produto-id="<?= (int) $item['produto_id'] ?>" aria-label="Diminuir quantidade">&minus;</button>
+                                <button type="button" data-cart-menos data-produto-tamanho-id="<?= (int) $item['produto_tamanho_id'] ?>" aria-label="Diminuir quantidade">&minus;</button>
                                 <span data-cart-qtd><?= (int) $item['quantidade'] ?></span>
-                                <button type="button" data-cart-mais data-produto-id="<?= (int) $item['produto_id'] ?>" aria-label="Aumentar quantidade">+</button>
+                                <button type="button" data-cart-mais data-produto-tamanho-id="<?= (int) $item['produto_tamanho_id'] ?>" aria-label="Aumentar quantidade">+</button>
                             </div>
                             <div class="carrinho-item-subtotal" data-cart-subtotal><?= money($item['subtotal']) ?></div>
-                            <button type="button" class="cart-item-remove" data-cart-remover data-produto-id="<?= (int) $item['produto_id'] ?>" aria-label="Remover <?= e($item['nome']) ?> do carrinho">
+                            <button type="button" class="cart-item-remove" data-cart-remover data-produto-tamanho-id="<?= (int) $item['produto_tamanho_id'] ?>" aria-label="Remover <?= e($item['nome']) ?> do carrinho">
                                 <i class="icon-trash-2"></i>
                             </button>
                         </article>

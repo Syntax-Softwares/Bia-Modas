@@ -37,7 +37,7 @@ class PedidoRepository
 
             foreach ($itens as $item) {
                 $this->inserirItem($compra['id_compra'], $item);
-                $this->baixarEstoque($item['produto_id'], $item['quantidade']);
+                $this->baixarEstoque((int) $item['produto_tamanho_id'], $item['quantidade']);
             }
 
             $this->registrarPagamento($compra['id_compra'], $dados['forma_pagamento'], $total);
@@ -139,9 +139,12 @@ class PedidoRepository
     {
         $stmt = $this->pdo->prepare(
             "SELECT ic.produto_id,
+                    ic.produto_tamanho_id,
                     ic.quantidade,
                     ic.valor_unitario,
                     ic.valor_total,
+                    ic.tamanho,
+                    COALESCE(ic.sku, p.sku) AS sku,
                     p.nome,
                     p.valor AS valor_atual,
                     (
@@ -165,15 +168,22 @@ class PedidoRepository
     {
         $stmt = $this->pdo->prepare(
             "SELECT ic.produto_id,
+                    ic.produto_tamanho_id,
                     ic.quantidade,
                     ic.valor_unitario,
                     p.nome,
-                    p.estoque
+                    p.sku,
+                    t.nome AS tamanho,
+                    pt.estoque
              FROM itens_carrinho ic
              INNER JOIN produtos p ON p.id_produto = ic.produto_id
+             INNER JOIN produto_tamanhos pt ON pt.id_produto_tamanho = ic.produto_tamanho_id
+             INNER JOIN tamanhos t ON t.id_tamanho = pt.tamanho_id
              WHERE ic.carrinho_id = :carrinho
                AND ic.deletado_em IS NULL
                AND p.deletado_em IS NULL
+               AND pt.deletado_em IS NULL
+               AND t.deletado_em IS NULL
              FOR UPDATE"
         );
         $stmt->execute([':carrinho' => $idCarrinho]);
@@ -182,6 +192,7 @@ class PedidoRepository
 
         foreach ($stmt->fetchAll() as $item) {
             $item['produto_id'] = (int) $item['produto_id'];
+            $item['produto_tamanho_id'] = (int) $item['produto_tamanho_id'];
             $item['quantidade'] = (int) $item['quantidade'];
             $item['estoque'] = (int) $item['estoque'];
             $item['valor_unitario'] = (float) $item['valor_unitario'];
@@ -256,34 +267,59 @@ class PedidoRepository
     private function inserirItem(int $idCompra, array $item): void
     {
         $stmt = $this->pdo->prepare(
-            "INSERT INTO itens_compra (compra_id, produto_id, quantidade, valor_unitario, valor_total)
-             VALUES (:compra, :produto, :quantidade, :unitario, :total)"
+            "INSERT INTO itens_compra
+                (compra_id, produto_id, produto_tamanho_id, tamanho, sku,
+                 quantidade, valor_unitario, valor_total)
+             VALUES
+                (:compra, :produto, :produto_tamanho, :tamanho, :sku,
+                 :quantidade, :unitario, :total)"
         );
         $stmt->execute([
             ':compra' => $idCompra,
             ':produto' => $item['produto_id'],
+            ':produto_tamanho' => $item['produto_tamanho_id'],
+            ':tamanho' => $item['tamanho'],
+            ':sku' => $item['sku'] . '-' . $item['tamanho'],
             ':quantidade' => $item['quantidade'],
             ':unitario' => $item['valor_unitario'],
             ':total' => round($item['valor_unitario'] * $item['quantidade'], 2),
         ]);
     }
 
-    private function baixarEstoque(int $idProduto, int $quantidade): void
+    private function baixarEstoque(int $idProdutoTamanho, int $quantidade): void
     {
         $stmt = $this->pdo->prepare(
-            "UPDATE produtos
+            "UPDATE produto_tamanhos
              SET estoque = estoque - :quantidade
-             WHERE id_produto = :produto AND estoque >= :quantidade_minima"
+             WHERE id_produto_tamanho = :produto_tamanho AND estoque >= :quantidade_minima"
         );
         $stmt->execute([
             ':quantidade' => $quantidade,
-            ':produto' => $idProduto,
+            ':produto_tamanho' => $idProdutoTamanho,
             ':quantidade_minima' => $quantidade,
         ]);
 
         if ($stmt->rowCount() === 0) {
             throw new DomainException('Estoque insuficiente para concluir o pedido.');
         }
+
+        $stmt = $this->pdo->prepare(
+            'SELECT produto_id FROM produto_tamanhos WHERE id_produto_tamanho = :id LIMIT 1'
+        );
+        $stmt->execute([':id' => $idProdutoTamanho]);
+        $idProduto = (int) $stmt->fetchColumn();
+
+        $stmt = $this->pdo->prepare(
+            'UPDATE produtos p
+             SET p.estoque = (
+                 SELECT COALESCE(SUM(pt.estoque), 0)
+                 FROM produto_tamanhos pt
+                 WHERE pt.produto_id = p.id_produto
+                   AND pt.deletado_em IS NULL
+             )
+             WHERE p.id_produto = :produto'
+        );
+        $stmt->execute([':produto' => $idProduto]);
     }
 
     private function registrarPagamento(int $idCompra, string $metodo, float $valor): void

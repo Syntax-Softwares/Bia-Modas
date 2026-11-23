@@ -127,23 +127,17 @@ CREATE TABLE ofertas(
 );
 
 -- ---------------------------------------------------------------------
--- Especificacao de tamanho/medidas de um produto
+-- Catalogo de tamanhos (PP, P, M, G, GG, 38, 42...)
 -- ---------------------------------------------------------------------
-CREATE TABLE medidas_produtos(
-  id_medida_produto BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  tamanho VARCHAR(5) NOT NULL,
-  busto DECIMAL(5,1) NULL,
-  cintura DECIMAL(5,1) NULL,
-  quadril DECIMAL(5,1) NULL,
+CREATE TABLE tamanhos(
+  id_tamanho BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(10) NOT NULL,
+  ordem INT NOT NULL DEFAULT 0,
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   deletado_em DATETIME NULL,
-  INDEX medidas_produtos_tamanho_idx (tamanho),
-  CONSTRAINT medidas_produtos_positivas_ck CHECK (
-    (busto   IS NULL OR busto   > 0) AND
-    (cintura IS NULL OR cintura > 0) AND
-    (quadril IS NULL OR quadril > 0)
-  )
+  CONSTRAINT tamanhos_nome_uk UNIQUE (nome),
+  INDEX tamanhos_ordem_idx (ordem)
 );
 
 -- ---------------------------------------------------------------------
@@ -207,7 +201,6 @@ CREATE TABLE pagamentos(
 
 CREATE TABLE produtos(
   id_produto BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  medida_produto_id BIGINT UNSIGNED NOT NULL,
   oferta_id BIGINT UNSIGNED NULL,
   nome VARCHAR(255) NOT NULL,
   sku VARCHAR(50) NOT NULL,
@@ -227,10 +220,27 @@ CREATE TABLE produtos(
   INDEX produtos_estilo_idx (estilo),
   INDEX produtos_valor_idx (valor),
   INDEX produtos_ativo_idx (ativo, deletado_em),
-  CONSTRAINT produtos_medida_fk FOREIGN KEY (medida_produto_id)
-    REFERENCES medidas_produtos(id_medida_produto) ON DELETE RESTRICT,
   CONSTRAINT produtos_oferta_fk FOREIGN KEY (oferta_id)
     REFERENCES ofertas(id_oferta) ON DELETE SET NULL
+);
+
+-- ---------------------------------------------------------------------
+-- Tamanhos disponiveis por produto, com estoque por variacao
+-- ---------------------------------------------------------------------
+CREATE TABLE produto_tamanhos(
+  id_produto_tamanho BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  produto_id BIGINT UNSIGNED NOT NULL,
+  tamanho_id BIGINT UNSIGNED NOT NULL,
+  estoque INT NOT NULL DEFAULT 0,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deletado_em DATETIME NULL,
+  CONSTRAINT produto_tamanhos_uk UNIQUE (produto_id, tamanho_id),
+  CONSTRAINT produto_tamanhos_estoque_ck CHECK (estoque >= 0),
+  CONSTRAINT produto_tamanhos_produto_fk FOREIGN KEY (produto_id)
+    REFERENCES produtos(id_produto) ON DELETE CASCADE,
+  CONSTRAINT produto_tamanhos_tamanho_fk FOREIGN KEY (tamanho_id)
+    REFERENCES tamanhos(id_tamanho) ON DELETE RESTRICT
 );
 
 CREATE TABLE categorias(
@@ -274,19 +284,22 @@ CREATE TABLE imagens(
 CREATE TABLE itens_carrinho(
   id_item_carrinho BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   carrinho_id BIGINT UNSIGNED NOT NULL,
+  produto_tamanho_id BIGINT UNSIGNED NOT NULL,
   produto_id BIGINT UNSIGNED NOT NULL,
   quantidade INT NOT NULL,
   valor_unitario DECIMAL(10,2) NOT NULL,
   criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   deletado_em DATETIME NULL,
-  CONSTRAINT itens_carrinho_uk UNIQUE (carrinho_id, produto_id),
+  CONSTRAINT itens_carrinho_uk UNIQUE (carrinho_id, produto_tamanho_id),
   CONSTRAINT itens_carrinho_quantidade_ck CHECK (quantidade > 0),
   CONSTRAINT itens_carrinho_valor_ck CHECK (valor_unitario >= 0),
   CONSTRAINT itens_carrinho_carrinho_fk FOREIGN KEY (carrinho_id)
     REFERENCES carrinhos(id_carrinho) ON DELETE CASCADE,
   CONSTRAINT itens_carrinho_produto_fk FOREIGN KEY (produto_id)
-    REFERENCES produtos(id_produto) ON DELETE CASCADE
+    REFERENCES produtos(id_produto) ON DELETE CASCADE,
+  CONSTRAINT itens_carrinho_produto_tamanho_fk FOREIGN KEY (produto_tamanho_id)
+    REFERENCES produto_tamanhos(id_produto_tamanho) ON DELETE CASCADE
 );
 
 CREATE TABLE favoritos(
@@ -310,6 +323,9 @@ CREATE TABLE itens_compra(
   id_item_compra BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   compra_id BIGINT UNSIGNED NOT NULL,
   produto_id BIGINT UNSIGNED NOT NULL,
+  produto_tamanho_id BIGINT UNSIGNED NULL,
+  tamanho VARCHAR(10) NULL,
+  sku VARCHAR(70) NULL,
   quantidade INT NOT NULL,
   valor_unitario DECIMAL(10,2) NOT NULL,
   valor_total DECIMAL(10,2) NOT NULL,
@@ -321,7 +337,9 @@ CREATE TABLE itens_compra(
   CONSTRAINT itens_compra_compra_fk FOREIGN KEY (compra_id)
     REFERENCES compras(id_compra) ON DELETE CASCADE,
   CONSTRAINT itens_compra_produto_fk FOREIGN KEY (produto_id)
-    REFERENCES produtos(id_produto) ON DELETE RESTRICT
+    REFERENCES produtos(id_produto) ON DELETE RESTRICT,
+  CONSTRAINT itens_compra_produto_tamanho_fk FOREIGN KEY (produto_tamanho_id)
+    REFERENCES produto_tamanhos(id_produto_tamanho) ON DELETE SET NULL
 );
 
 -- ---------------------------------------------------------------------

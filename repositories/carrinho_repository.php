@@ -23,13 +23,18 @@ class CarrinhoRepository
     public function listarItens(int $idCarrinho): array
     {
         $stmt = $this->pdo->prepare(
-            "SELECT ic.produto_id,
+            "SELECT ic.id_item_carrinho,
+                    ic.produto_id,
+                    ic.produto_tamanho_id,
                     ic.quantidade,
                     ic.valor_unitario,
                     (ic.valor_unitario * ic.quantidade) AS subtotal,
                     p.nome,
+                    p.sku AS sku_base,
                     p.valor AS valor_atual,
-                    p.estoque,
+                    t.nome AS tamanho,
+                    CONCAT(p.sku, '-', t.nome) AS sku,
+                    pt.estoque,
                     (
                         SELECT i.caminho_imagem
                         FROM imagens i
@@ -49,16 +54,22 @@ class CarrinhoRepository
                     ) AS categoria
              FROM itens_carrinho ic
              INNER JOIN produtos p ON p.id_produto = ic.produto_id
+             INNER JOIN produto_tamanhos pt ON pt.id_produto_tamanho = ic.produto_tamanho_id
+             INNER JOIN tamanhos t ON t.id_tamanho = pt.tamanho_id
              WHERE ic.carrinho_id = :carrinho
                AND ic.deletado_em IS NULL
                AND p.deletado_em IS NULL
+               AND pt.deletado_em IS NULL
+               AND t.deletado_em IS NULL
              ORDER BY ic.criado_em ASC, ic.id_item_carrinho ASC"
         );
         $stmt->execute([':carrinho' => $idCarrinho]);
 
         $itens = [];
         foreach ($stmt->fetchAll() as $item) {
+            $item['id_item_carrinho'] = (int) $item['id_item_carrinho'];
             $item['produto_id'] = (int) $item['produto_id'];
+            $item['produto_tamanho_id'] = (int) $item['produto_tamanho_id'];
             $item['quantidade'] = (int) $item['quantidade'];
             $item['estoque'] = (int) $item['estoque'];
             $item['valor_unitario'] = (float) $item['valor_unitario'];
@@ -102,23 +113,23 @@ class CarrinhoRepository
         return $this->resumo((int) $idCarrinho);
     }
 
-    public function alternar(int $idCarrinho, int $idProduto): array
+    public function alternar(int $idCarrinho, int $idProdutoTamanho): array
     {
         $stmt = $this->pdo->prepare(
             "SELECT quantidade
              FROM itens_carrinho
-             WHERE carrinho_id = :carrinho AND produto_id = :produto AND deletado_em IS NULL
+             WHERE carrinho_id = :carrinho AND produto_tamanho_id = :produto_tamanho AND deletado_em IS NULL
              LIMIT 1"
         );
-        $stmt->execute([':carrinho' => $idCarrinho, ':produto' => $idProduto]);
+        $stmt->execute([':carrinho' => $idCarrinho, ':produto_tamanho' => $idProdutoTamanho]);
 
         if ($stmt->fetch() !== false) {
-            $this->remover($idCarrinho, $idProduto);
+            $this->remover($idCarrinho, $idProdutoTamanho);
 
             return ['ok' => true, 'acao' => 'removido'];
         }
 
-        $resultado = $this->adicionar($idCarrinho, $idProduto, 1);
+        $resultado = $this->adicionar($idCarrinho, $idProdutoTamanho, 1);
 
         if (!$resultado['ok']) {
             return $resultado;
@@ -127,22 +138,22 @@ class CarrinhoRepository
         return ['ok' => true, 'acao' => 'adicionado'];
     }
 
-    public function adicionar(int $idCarrinho, int $idProduto, int $quantidade): array
+    public function adicionar(int $idCarrinho, int $idProdutoTamanho, int $quantidade): array
     {
         $quantidade = max(1, min(self::QUANTIDADE_MAXIMA, $quantidade));
 
         $this->pdo->beginTransaction();
 
         try {
-            $produto = $this->bloquearProduto($idProduto);
+            $variante = $this->bloquearVariante($idProdutoTamanho);
 
             $stmt = $this->pdo->prepare(
                 "SELECT quantidade, deletado_em
                  FROM itens_carrinho
-                 WHERE carrinho_id = :carrinho AND produto_id = :produto
+                 WHERE carrinho_id = :carrinho AND produto_tamanho_id = :produto_tamanho
                  FOR UPDATE"
             );
-            $stmt->execute([':carrinho' => $idCarrinho, ':produto' => $idProduto]);
+            $stmt->execute([':carrinho' => $idCarrinho, ':produto_tamanho' => $idProdutoTamanho]);
             $atual = $stmt->fetch();
 
             $quantidadeAtual = ($atual !== false && $atual['deletado_em'] === null)
@@ -151,13 +162,14 @@ class CarrinhoRepository
 
             $novaQuantidade = min(self::QUANTIDADE_MAXIMA, $quantidadeAtual + $quantidade);
 
-            if ($novaQuantidade > (int) $produto['estoque']) {
+            if ($novaQuantidade > (int) $variante['estoque']) {
                 throw new DomainException('Estoque insuficiente para a quantidade desejada.');
             }
 
             $stmt = $this->pdo->prepare(
-                "INSERT INTO itens_carrinho (carrinho_id, produto_id, quantidade, valor_unitario)
-                 VALUES (:carrinho, :produto, :quantidade, :valor)
+                "INSERT INTO itens_carrinho
+                    (carrinho_id, produto_id, produto_tamanho_id, quantidade, valor_unitario)
+                 VALUES (:carrinho, :produto, :produto_tamanho, :quantidade, :valor)
                  ON DUPLICATE KEY UPDATE
                     quantidade = VALUES(quantidade),
                     valor_unitario = VALUES(valor_unitario),
@@ -165,9 +177,10 @@ class CarrinhoRepository
             );
             $stmt->execute([
                 ':carrinho' => $idCarrinho,
-                ':produto' => $idProduto,
+                ':produto' => $variante['produto_id'],
+                ':produto_tamanho' => $idProdutoTamanho,
                 ':quantidade' => $novaQuantidade,
-                ':valor' => $produto['valor'],
+                ':valor' => $variante['valor'],
             ]);
 
             $this->pdo->commit();
@@ -183,10 +196,10 @@ class CarrinhoRepository
         }
     }
 
-    public function definirQuantidade(int $idCarrinho, int $idProduto, int $quantidade): array
+    public function definirQuantidade(int $idCarrinho, int $idProdutoTamanho, int $quantidade): array
     {
         if ($quantidade <= 0) {
-            $this->remover($idCarrinho, $idProduto);
+            $this->remover($idCarrinho, $idProdutoTamanho);
 
             return ['ok' => true, 'quantidade' => 0];
         }
@@ -196,21 +209,21 @@ class CarrinhoRepository
         $this->pdo->beginTransaction();
 
         try {
-            $produto = $this->bloquearProduto($idProduto);
+            $variante = $this->bloquearVariante($idProdutoTamanho);
 
-            if ($quantidade > (int) $produto['estoque']) {
+            if ($quantidade > (int) $variante['estoque']) {
                 throw new DomainException('Estoque insuficiente para a quantidade desejada.');
             }
 
             $stmt = $this->pdo->prepare(
                 "UPDATE itens_carrinho
                  SET quantidade = :quantidade, deletado_em = NULL
-                 WHERE carrinho_id = :carrinho AND produto_id = :produto"
+                 WHERE carrinho_id = :carrinho AND produto_tamanho_id = :produto_tamanho"
             );
             $stmt->execute([
                 ':quantidade' => $quantidade,
                 ':carrinho' => $idCarrinho,
-                ':produto' => $idProduto,
+                ':produto_tamanho' => $idProdutoTamanho,
             ]);
 
             $this->pdo->commit();
@@ -226,31 +239,38 @@ class CarrinhoRepository
         }
     }
 
-    public function remover(int $idCarrinho, int $idProduto): void
+    public function remover(int $idCarrinho, int $idProdutoTamanho): void
     {
         $stmt = $this->pdo->prepare(
             "UPDATE itens_carrinho
              SET deletado_em = NOW()
-             WHERE carrinho_id = :carrinho AND produto_id = :produto AND deletado_em IS NULL"
+             WHERE carrinho_id = :carrinho AND produto_tamanho_id = :produto_tamanho AND deletado_em IS NULL"
         );
-        $stmt->execute([':carrinho' => $idCarrinho, ':produto' => $idProduto]);
+        $stmt->execute([':carrinho' => $idCarrinho, ':produto_tamanho' => $idProdutoTamanho]);
     }
 
-    private function bloquearProduto(int $idProduto): array
+    private function bloquearVariante(int $idProdutoTamanho): array
     {
         $stmt = $this->pdo->prepare(
-            "SELECT id_produto, valor, estoque, ativo
-             FROM produtos
-             WHERE id_produto = :id AND deletado_em IS NULL
+            "SELECT pt.id_produto_tamanho,
+                    pt.produto_id,
+                    pt.estoque,
+                    p.valor,
+                    p.ativo,
+                    p.deletado_em
+             FROM produto_tamanhos pt
+             INNER JOIN produtos p ON p.id_produto = pt.produto_id
+             WHERE pt.id_produto_tamanho = :id
+               AND pt.deletado_em IS NULL
              FOR UPDATE"
         );
-        $stmt->execute([':id' => $idProduto]);
-        $produto = $stmt->fetch();
+        $stmt->execute([':id' => $idProdutoTamanho]);
+        $variante = $stmt->fetch();
 
-        if ($produto === false || !(int) $produto['ativo']) {
+        if ($variante === false || !(int) $variante['ativo'] || $variante['deletado_em'] !== null) {
             throw new DomainException('Produto indisponível.');
         }
 
-        return $produto;
+        return $variante;
     }
 }

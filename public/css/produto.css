@@ -476,3 +476,10 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* Tamanho esgotado na pagina do produto */
+.size-option:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    border-style: dashed;
+}

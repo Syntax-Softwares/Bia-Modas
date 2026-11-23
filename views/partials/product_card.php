@@ -63,11 +63,12 @@ $textoBadge = $emOferta ? '-' . $desconto . '%' : ($badge ?? null);
                 <button type="button"
                         class="botao-carrinho<?= $noCarrinho ? ' active' : '' ?>"
                         data-adicionar
+                        data-requer-tamanho="1"
                         data-produto-id="<?= $idProduto ?>"
                         data-produto-nome="<?= e($produto['nome']) ?>"
                         aria-pressed="<?= $noCarrinho ? 'true' : 'false' ?>"
                         <?= $esgotado ? 'disabled' : '' ?>
-                        aria-label="<?= $esgotado ? 'Produto esgotado' : ($noCarrinho ? 'Remover ' . e($produto['nome']) . ' do carrinho' : 'Adicionar ' . e($produto['nome']) . ' ao carrinho') ?>">
+                        aria-label="<?= $esgotado ? 'Produto esgotado' : 'Escolher tamanho de ' . e($produto['nome']) ?>">
                     <i class="icon-shopping-bag"></i>
                 </button>
             </div>
