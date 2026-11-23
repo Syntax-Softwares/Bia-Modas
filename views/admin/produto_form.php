@@ -67,23 +67,48 @@ $imagemPreview = $valorCampo('imagem') !== '' ? $valorCampo('imagem') : '/img/lo
 
             <div class="admin-field admin-field-span-2">
                 <label>Tamanhos e estoque <span>*</span></label>
-                <div class="admin-size-grid">
-                    <?php foreach (($tamanhos ?? []) as $tamanho): ?>
-                        <?php
-                        $idTamanho = (int) $tamanho['id_tamanho'];
-                        $selecionado = array_key_exists($idTamanho, $form['tamanhos'] ?? []);
-                        $estoqueTamanho = $selecionado ? (int) $form['tamanhos'][$idTamanho] : 0;
-                        ?>
-                        <div class="admin-size-item">
-                            <label class="admin-size-check">
-                                <input type="checkbox" name="tamanhos[<?= $idTamanho ?>][selecionado]" value="1" <?= $selecionado ? 'checked' : '' ?> data-size-check>
-                                <strong><?= e($tamanho['nome']) ?></strong>
-                            </label>
-                            <input type="number" name="tamanhos[<?= $idTamanho ?>][estoque]" value="<?= $estoqueTamanho ?>" min="0" step="1" aria-label="Estoque do tamanho <?= e($tamanho['nome']) ?>" data-size-stock <?= $selecionado ? '' : 'disabled' ?>>
-                        </div>
+                <?php
+                $selecionados = [];
+                foreach (($tamanhos ?? []) as $tamanho) {
+                    $idTamanho = (int) $tamanho['id_tamanho'];
+                    if (array_key_exists($idTamanho, $form['tamanhos'] ?? [])) {
+                        $selecionados[$idTamanho] = [
+                            'nome' => (string) $tamanho['nome'],
+                            'estoque' => (int) $form['tamanhos'][$idTamanho],
+                        ];
+                    }
+                }
+                ?>
+                <div class="admin-size-selector" data-size-selector>
+                    <div class="admin-size-tags" data-size-tags>
+                        <?php foreach ($selecionados as $idTamanho => $tamanhoSelecionado): ?>
+                            <span class="admin-size-tag" data-size-tag="<?= $idTamanho ?>">
+                                <?= e($tamanhoSelecionado['nome']) ?>
+                                <button type="button" class="admin-size-tag-remove" data-size-remove aria-label="Remover tamanho <?= e($tamanhoSelecionado['nome']) ?>">&times;</button>
+                                <input type="hidden" name="tamanhos[<?= $idTamanho ?>][selecionado]" value="1" data-size-hidden>
+                            </span>
+                        <?php endforeach; ?>
+                        <select class="admin-size-picker" data-size-picker aria-label="Adicionar tamanho">
+                            <option value="">Adicionar tamanho...</option>
+                            <?php foreach (($tamanhos ?? []) as $tamanho): ?>
+                                <?php $idTamanho = (int) $tamanho['id_tamanho']; ?>
+                                <option value="<?= $idTamanho ?>" data-nome="<?= e($tamanho['nome']) ?>" <?= array_key_exists($idTamanho, $selecionados) ? 'disabled' : '' ?>>
+                                    <?= e($tamanho['nome']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="admin-size-stocks" data-size-stocks>
+                    <?php foreach ($selecionados as $idTamanho => $tamanhoSelecionado): ?>
+                        <label class="admin-size-stock" data-size-stock-row="<?= $idTamanho ?>">
+                            <span><?= e($tamanhoSelecionado['nome']) ?></span>
+                            <input type="number" name="tamanhos[<?= $idTamanho ?>][estoque]" value="<?= $tamanhoSelecionado['estoque'] ?>" min="0" step="1" aria-label="Estoque do tamanho <?= e($tamanhoSelecionado['nome']) ?>">
+                        </label>
                     <?php endforeach; ?>
                 </div>
-                <small>Marque os tamanhos disponíveis e informe o estoque de cada um.</small>
+                <p class="admin-size-empty" data-size-empty <?= $selecionados !== [] ? 'hidden' : '' ?>>Nenhum tamanho selecionado.</p>
+                <small>Selecione os tamanhos disponíveis e informe o estoque de cada um.</small>
                 <?= $erroCampo('tamanhos') ?>
             </div>
 
