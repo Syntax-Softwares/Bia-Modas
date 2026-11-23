@@ -127,6 +127,9 @@ $receita = (float) ($resumo['receita'] ?? 0);
         <a class="admin-btn admin-btn-ghost" href="/admin/categorias">
             <i class="icon-tag"></i> Nova categoria
         </a>
+        <a class="admin-btn admin-btn-ghost" href="/admin/tamanhos">
+            <i class="icon-ruler"></i> Novo tamanho
+        </a>
         <a class="admin-btn admin-btn-ghost" href="/admin/pedidos">
             <i class="icon-receipt"></i> Ver pedidos
         </a>
