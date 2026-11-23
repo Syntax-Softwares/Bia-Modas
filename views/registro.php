@@ -43,7 +43,7 @@ if (isset($errors['medidas'])) {
             <div class="auth-card-body">
                 <?php require __DIR__ . '/partials/alerts.php'; ?>
 
-                <form class="auth-form" method="post" action="/registro" id="registro-form" novalidate>
+                <form class="auth-form" method="post" action="/registro" id="registro-form" novalidate data-endereco-form>
                     <?= Auth::csrfField() ?>
 
                     <div class="wizard-progress" aria-label="Etapas do cadastro">
@@ -185,9 +185,10 @@ if (isset($errors['medidas'])) {
                                     autocomplete="postal-code"
                                     maxlength="9"
                                 >
+                                <small class="endereco-feedback" data-cep-feedback hidden></small>
                             </div>
                             <div class="col-md-8 form-group">
-                                <label for="reg-logradouro">Endereço</label>
+                                <label for="reg-logradouro">Rua:</label>
                                 <input
                                     type="text"
                                     class="form-control"
@@ -199,16 +200,24 @@ if (isset($errors['medidas'])) {
                                 >
                             </div>
                             <div class="col-md-4 form-group">
+                                <?php $semNumeroReg = strtoupper(trim((string) ($old['numero'] ?? ''))) === 'S/N'; ?>
                                 <label for="reg-numero">Número</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="reg-numero"
-                                    name="numero"
-                                    value="<?= e($old['numero'] ?? '') ?>"
-                                    placeholder="123"
-                                    maxlength="10"
-                                >
+                                <div class="numero-linha">
+                                    <input
+                                        type="text"
+                                        class="form-control<?= $semNumeroReg ? ' is-readonly' : '' ?>"
+                                        id="reg-numero"
+                                        name="numero"
+                                        value="<?= e($old['numero'] ?? '') ?>"
+                                        placeholder="123"
+                                        maxlength="10"
+                                        <?= $semNumeroReg ? 'readonly aria-readonly="true"' : '' ?>
+                                    >
+                                    <label class="sem-numero-check" for="reg-sem-numero">
+                                        <input type="checkbox" id="reg-sem-numero" data-sem-numero <?= $semNumeroReg ? 'checked' : '' ?>>
+                                        <span>Este endereço não possui número</span>
+                                    </label>
+                                </div>
                             </div>
                             <div class="col-md-8 form-group">
                                 <label for="reg-complemento">Complemento</label>

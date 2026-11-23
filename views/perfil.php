@@ -242,7 +242,7 @@ $formAction = $editando !== null ? '/perfil/enderecos/atualizar' : '/perfil/ende
                                     <?= $editando !== null ? 'Editar endereço' : 'Adicionar endereço' ?>
                                 </h3>
 
-                                <form class="auth-form" method="post" action="<?= Html::e($formAction) ?>" autocomplete="off" novalidate>
+                                <form class="auth-form" method="post" action="<?= Html::e($formAction) ?>" autocomplete="off" novalidate data-endereco-form>
                                     <?= Sessao::csrfCampo() ?>
 
                                     <?php if ($editando !== null): ?>
@@ -263,11 +263,12 @@ $formAction = $editando !== null ? '/perfil/enderecos/atualizar' : '/perfil/ende
                                             <input type="text" class="form-control" id="pf-cep" name="cep"
                                                    value="<?= Html::e(Html::cep($valorEndereco('cep'))) ?>"
                                                    required maxlength="9" inputmode="numeric" autocomplete="postal-code">
+                                            <small class="endereco-feedback" data-cep-feedback hidden></small>
                                             <?= $campoErro('cep') ?>
                                         </div>
 
                                         <div class="col-md-8 form-group">
-                                            <label for="pf-logradouro">Endereço</label>
+                                            <label for="pf-logradouro">Rua:</label>
                                             <input type="text" class="form-control" id="pf-logradouro" name="logradouro"
                                                    value="<?= Html::e($valorEndereco('logradouro')) ?>"
                                                    required maxlength="255" autocomplete="address-line1">
@@ -275,10 +276,17 @@ $formAction = $editando !== null ? '/perfil/enderecos/atualizar' : '/perfil/ende
                                         </div>
 
                                         <div class="col-md-4 form-group">
+                                            <?php $semNumero = strtoupper(trim($valorEndereco('numero'))) === 'S/N'; ?>
                                             <label for="pf-numero">Número</label>
-                                            <input type="text" class="form-control" id="pf-numero" name="numero"
-                                                   value="<?= Html::e($valorEndereco('numero')) ?>"
-                                                   required maxlength="10" autocomplete="address-line2">
+                                            <div class="numero-linha">
+                                                <input type="text" class="form-control<?= $semNumero ? ' is-readonly' : '' ?>" id="pf-numero" name="numero"
+                                                       value="<?= Html::e($valorEndereco('numero')) ?>"
+                                                       required maxlength="10" autocomplete="address-line2"<?= $semNumero ? ' readonly aria-readonly="true"' : '' ?>>
+                                                <label class="sem-numero-check" for="pf-sem-numero">
+                                                    <input type="checkbox" id="pf-sem-numero" data-sem-numero <?= $semNumero ? 'checked' : '' ?>>
+                                                    <span>Este endereço não possui número</span>
+                                                </label>
+                                            </div>
                                             <?= $campoErro('numero') ?>
                                         </div>
 

@@ -273,7 +273,7 @@ final class Sessao
             . "script-src 'self' https://cdn.jsdelivr.net; "
             . "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; "
             . "font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; "
-            . "connect-src 'self'"
+            . "connect-src 'self' https://viacep.com.br"
         );
     }
 }

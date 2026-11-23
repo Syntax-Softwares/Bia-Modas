@@ -56,7 +56,7 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
             <?php endif; ?>
 
             <div class="checkout-layout">
-                <form class="checkout-form" method="post" action="/checkout" novalidate>
+                <form class="checkout-form" method="post" action="/checkout" novalidate data-endereco-form>
                     <?= Sessao::csrfField() ?>
 
                     <fieldset class="checkout-bloco">
@@ -100,14 +100,23 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
                                 <?php if (isset($erros['endereco_cep'])): ?>
                                     <span class="campo-erro"><?= e($erros['endereco_cep']) ?></span>
                                 <?php endif; ?>
+                                <small class="endereco-feedback" data-cep-feedback hidden></small>
                             </div>
 
                             <div class="campo">
+                                <?php $semNumeroCheckout = strtoupper(trim((string) ($dados['endereco_numero'] ?? ''))) === 'S/N'; ?>
                                 <label for="endereco_numero">Número</label>
-                                <input type="text" id="endereco_numero" name="endereco_numero"
-                                       value="<?= e($dados['endereco_numero'] ?? '') ?>"
-                                       autocomplete="address-line2" maxlength="10"
-                                       class="<?= isset($erros['endereco_numero']) ? 'tem-erro' : '' ?>">
+                                <div class="numero-linha">
+                                    <input type="text" id="endereco_numero" name="endereco_numero"
+                                           value="<?= e($dados['endereco_numero'] ?? '') ?>"
+                                           autocomplete="address-line2" maxlength="10"
+                                           <?= $semNumeroCheckout ? 'readonly aria-readonly="true"' : '' ?>
+                                           class="<?= isset($erros['endereco_numero']) ? 'tem-erro ' : '' ?><?= $semNumeroCheckout ? 'is-readonly' : '' ?>">
+                                    <label class="sem-numero-check" for="endereco-sem-numero">
+                                        <input type="checkbox" id="endereco-sem-numero" data-sem-numero <?= $semNumeroCheckout ? 'checked' : '' ?>>
+                                        <span>Este endereço não possui número</span>
+                                    </label>
+                                </div>
                                 <?php if (isset($erros['endereco_numero'])): ?>
                                     <span class="campo-erro"><?= e($erros['endereco_numero']) ?></span>
                                 <?php endif; ?>
@@ -226,7 +235,7 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
                                 <img src="<?= e($item['imagem'] ?: '/img/logoBiaModas.png') ?>" alt="<?= e($item['nome']) ?>">
                                 <div class="checkout-item-info">
                                     <span><?= e($item['nome']) ?></span>
-                                    <small>Tamanho: <?= e($item['tamanho']) ?> · <?= e($item['sku']) ?></small>
+                                    <small>Tamanho: <?= e($item['tamanho']) ?></small>
                                     <small><?= (int) $item['quantidade'] ?> x <?= money($item['valor_unitario']) ?></small>
                                 </div>
                                 <strong><?= money($item['subtotal']) ?></strong>

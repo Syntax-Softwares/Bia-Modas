@@ -102,7 +102,7 @@
                 </div>
                 <div class="cart-item-info">
                     <div class="cart-item-title">${escaparHtml(item.nome)}</div>
-                    <div class="cart-item-size">Tamanho: ${escaparHtml(item.tamanho || '—')}${item.sku ? ' · ' + escaparHtml(item.sku) : ''}</div>
+                    <div class="cart-item-size">Tamanho: ${escaparHtml(item.tamanho || '—')}</div>
                     <div class="cart-item-price">${moeda(item.valor_unitario)}</div>
                     <div class="qty-control mt-2">
                         <button type="button" data-cart-menos data-produto-tamanho-id="${item.produto_tamanho_id}" aria-label="Diminuir quantidade">&minus;</button>

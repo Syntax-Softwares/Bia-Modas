@@ -64,7 +64,7 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
                             <div class="carrinho-item-info">
                                 <span class="product-category"><?= e($item['categoria'] ?: 'Bia Modas') ?></span>
                                 <h3 class="carrinho-item-nome"><?= e($item['nome']) ?></h3>
-                                <small class="cart-item-size d-block">Tamanho: <?= e($item['tamanho']) ?> · <?= e($item['sku']) ?></small>
+                                <small class="cart-item-size d-block">Tamanho: <?= e($item['tamanho']) ?></small>
                                 <span class="cart-item-price"><?= money($item['valor_unitario']) ?></span>
                             </div>
                             <div class="qty-control" role="group" aria-label="Quantidade de <?= e($item['nome']) ?>">

@@ -30,10 +30,8 @@ class CarrinhoRepository
                     ic.valor_unitario,
                     (ic.valor_unitario * ic.quantidade) AS subtotal,
                     p.nome,
-                    p.sku AS sku_base,
                     p.valor AS valor_atual,
                     t.nome AS tamanho,
-                    CONCAT(p.sku, '-', t.nome) AS sku,
                     pt.estoque,
                     (
                         SELECT i.caminho_imagem

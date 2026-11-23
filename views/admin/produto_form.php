@@ -8,7 +8,7 @@ $erroCampo = static fn (string $campo): string => isset($errors[$campo])
 $imagemPreview = $valorCampo('imagem') !== '' ? $valorCampo('imagem') : '/img/logoBiaModas.png';
 ?>
 <section class="admin-panel">
-    <form method="post" action="/admin/produtos/salvar" class="admin-form">
+    <form method="post" action="/admin/produtos/salvar" class="admin-form" novalidate>
         <?= Sessao::csrfCampo() ?>
         <?php if (!empty($form['id_produto'])): ?>
             <input type="hidden" name="id_produto" value="<?= (int) $form['id_produto'] ?>">

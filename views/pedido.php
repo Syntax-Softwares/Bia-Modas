@@ -72,7 +72,7 @@ $cepFormatado = strlen($cep) === 8 ? substr($cep, 0, 5) . '-' . substr($cep, 5) 
                                 <img src="<?= e($item['imagem'] ?: '/img/logoBiaModas.png') ?>" alt="<?= e($item['nome']) ?>">
                                 <div class="pedido-item-info">
                                     <span><?= e($item['nome']) ?></span>
-                                    <small>Tamanho: <?= e($item['tamanho'] ?? '—') ?> · <?= e($item['sku']) ?></small>
+                                    <small>Tamanho: <?= e($item['tamanho'] ?? '—') ?></small>
                                     <small><?= (int) $item['quantidade'] ?> x <?= money($item['valor_unitario']) ?></small>
                                 </div>
                                 <strong><?= money($item['valor_total']) ?></strong>

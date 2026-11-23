@@ -144,7 +144,6 @@ class PedidoRepository
                     ic.valor_unitario,
                     ic.valor_total,
                     ic.tamanho,
-                    COALESCE(ic.sku, p.sku) AS sku,
                     p.nome,
                     p.valor AS valor_atual,
                     (
