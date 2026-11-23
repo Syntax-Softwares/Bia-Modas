@@ -28,6 +28,7 @@ class HomeController
         $usuario = Auth::user();
 
         $data = [
+            'categoriasHome' => $this->repository->categoriasComImagem(),
             'novidades' => $this->repository->getNovidades(8),
             'promocoes' => $this->repository->getPromocoes(8),
             'favoritosIds' => $favoritosIds,

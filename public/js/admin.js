@@ -22,6 +22,17 @@
         });
     }
 
+    const categoriaInput = document.querySelector('[data-categoria-input]');
+    const categoriaPreview = document.querySelector('[data-categoria-preview]');
+
+    if (categoriaInput && categoriaPreview) {
+        categoriaInput.addEventListener('change', function () {
+            const arquivo = categoriaInput.files && categoriaInput.files[0];
+            if (!arquivo) return;
+            categoriaPreview.src = URL.createObjectURL(arquivo);
+        });
+    }
+
     function fecharSelectsAdmin() {
         document.querySelectorAll('[data-admin-select].is-open').forEach(function (wrapper) {
             wrapper.classList.remove('is-open');

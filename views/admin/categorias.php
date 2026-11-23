@@ -13,7 +13,7 @@ $editandoId = (int) ($editando['id_categoria'] ?? 0);
             <?php endif; ?>
         </div>
 
-        <form method="post" action="/admin/categorias/salvar" class="admin-form">
+        <form method="post" action="/admin/categorias/salvar" class="admin-form" enctype="multipart/form-data">
             <?= Sessao::csrfCampo() ?>
             <?php if ($editando): ?>
                 <input type="hidden" name="id_categoria" value="<?= $editandoId ?>">
@@ -27,6 +27,17 @@ $editandoId = (int) ($editando['id_categoria'] ?? 0);
             <div class="admin-field">
                 <label for="categoria-descricao">Descrição</label>
                 <textarea id="categoria-descricao" name="descricao" rows="3" maxlength="255"><?= e($editando['descricao'] ?? '') ?></textarea>
+            </div>
+
+            <div class="admin-field">
+                <label for="categoria-imagem">Imagem da categoria</label>
+                <input type="file" id="categoria-imagem" name="imagem" accept="image/png,image/jpeg,image/webp" data-categoria-input>
+                <small>JPG, PNG ou WebP, até 2 MB. Prefira uma foto do produto sem pessoas.</small>
+                <input type="hidden" name="imagem_atual" value="<?= e($editando['imagem'] ?? '') ?>">
+            </div>
+
+            <div class="admin-category-preview">
+                <img src="<?= e($editando['imagem'] ?? '/img/logoBiaModas.png') ?>" alt="Prévia da imagem da categoria" data-categoria-preview>
             </div>
 
             <div class="admin-form-actions">
@@ -50,6 +61,7 @@ $editandoId = (int) ($editando['id_categoria'] ?? 0);
                 <table class="admin-table">
                     <thead>
                         <tr>
+                            <th>Imagem</th>
                             <th>Nome</th>
                             <th>Descrição</th>
                             <th>Produtos</th>
@@ -60,6 +72,13 @@ $editandoId = (int) ($editando['id_categoria'] ?? 0);
                         <?php foreach ($categorias as $categoria): ?>
                             <?php $id = (int) $categoria['id_categoria']; ?>
                             <tr>
+                                <td>
+                                    <?php if (!empty($categoria['imagem'])): ?>
+                                        <img class="admin-category-thumb" src="<?= e($categoria['imagem']) ?>" alt="" loading="lazy">
+                                    <?php else: ?>
+                                        <span class="admin-muted">—</span>
+                                    <?php endif; ?>
+                                </td>
                                 <td><strong><?= e($categoria['nome']) ?></strong></td>
                                 <td><?= e($categoria['descricao'] ?? '—') ?></td>
                                 <td><?= (int) $categoria['total_produtos'] ?></td>

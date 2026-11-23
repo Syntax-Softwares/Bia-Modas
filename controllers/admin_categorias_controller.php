@@ -40,6 +40,7 @@ class AdminCategoriasController
         $id = is_int($id) && $id > 0 ? $id : null;
         $nome = trim((string) ($_POST['nome'] ?? ''));
         $descricao = trim((string) ($_POST['descricao'] ?? ''));
+        $imagem = trim((string) ($_POST['imagem_atual'] ?? ''));
 
         $errors = [];
 
@@ -57,13 +58,21 @@ class AdminCategoriasController
         }
 
         try {
+            if (isset($_FILES['imagem']) && (int) ($_FILES['imagem']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
+                $imagem = $this->salvarImagem($_FILES['imagem']);
+            }
+
+            $imagemFinal = $imagem !== '' ? $imagem : null;
+
             if ($id === null) {
-                $this->repository->criarCategoria($nome, $descricao !== '' ? $descricao : null);
+                $this->repository->criarCategoria($nome, $descricao !== '' ? $descricao : null, $imagemFinal);
                 Sessao::flash('success', 'Categoria criada com sucesso.');
             } else {
-                $this->repository->atualizarCategoria($id, $nome, $descricao !== '' ? $descricao : null);
+                $this->repository->atualizarCategoria($id, $nome, $descricao !== '' ? $descricao : null, $imagemFinal);
                 Sessao::flash('success', 'Categoria atualizada com sucesso.');
             }
+        } catch (RuntimeException $excecao) {
+            Sessao::flash('danger', $excecao->getMessage());
         } catch (PDOException $excecao) {
             Sessao::flash(
                 'danger',
@@ -90,6 +99,52 @@ class AdminCategoriasController
         $this->repository->excluirCategoria($id);
         Sessao::flash('success', 'Categoria removida. Os produtos continuam cadastrados.');
         redirect('/admin/categorias');
+    }
+
+    private function salvarImagem(array $arquivo): string
+    {
+        if (!isset($arquivo['tmp_name'], $arquivo['error'], $arquivo['size'])) {
+            throw new RuntimeException('Envie uma imagem válida.');
+        }
+
+        if ((int) $arquivo['error'] !== UPLOAD_ERR_OK) {
+            throw new RuntimeException('Não foi possível enviar a imagem.');
+        }
+
+        if ((int) $arquivo['size'] > 2 * 1024 * 1024) {
+            throw new RuntimeException('A imagem deve ter no máximo 2 MB.');
+        }
+
+        $info = @getimagesize($arquivo['tmp_name']);
+
+        if ($info === false) {
+            throw new RuntimeException('O arquivo enviado não é uma imagem válida.');
+        }
+
+        $extensoes = [
+            IMAGETYPE_JPEG => 'jpg',
+            IMAGETYPE_PNG => 'png',
+            IMAGETYPE_WEBP => 'webp',
+        ];
+
+        if (!isset($extensoes[$info[2]])) {
+            throw new RuntimeException('Use uma imagem JPG, PNG ou WebP.');
+        }
+
+        $diretorio = __DIR__ . '/../public/img/categorias';
+
+        if (!is_dir($diretorio) && !mkdir($diretorio, 0775, true) && !is_dir($diretorio)) {
+            throw new RuntimeException('Não foi possível criar a pasta de imagens.');
+        }
+
+        $nomeArquivo = 'categoria-' . bin2hex(random_bytes(8)) . '.' . $extensoes[$info[2]];
+        $destino = $diretorio . '/' . $nomeArquivo;
+
+        if (!move_uploaded_file($arquivo['tmp_name'], $destino)) {
+            throw new RuntimeException('Não foi possível salvar a imagem enviada.');
+        }
+
+        return '/img/categorias/' . $nomeArquivo;
     }
 
     private function exigirCsrf(): void

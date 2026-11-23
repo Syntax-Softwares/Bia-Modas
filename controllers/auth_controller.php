@@ -190,6 +190,10 @@ class AuthController
                 }
             }
 
+            if (!isset($errors['endereco']) && strlen($endereco['logradouro']) > 100) {
+                $errors['endereco'] = 'A rua deve ter até 100 caracteres.';
+            }
+
             if (!isset($errors['endereco']) && strlen($endereco['uf']) !== 2) {
                 $errors['endereco'] = 'A UF deve ter 2 letras.';
             }

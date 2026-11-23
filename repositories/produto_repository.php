@@ -194,6 +194,29 @@ class ProdutoRepository
         return $produtos;
     }
 
+    public function categoriasComImagem(): array
+    {
+        return $this->pdo->query(
+            "SELECT c.id_categoria,
+                    c.nome,
+                    c.imagem,
+                    (
+                        SELECT COUNT(*)
+                        FROM categorias_produtos cp
+                        INNER JOIN produtos p ON p.id_produto = cp.produto_id
+                        WHERE cp.categoria_id = c.id_categoria
+                          AND cp.deletado_em IS NULL
+                          AND p.ativo = TRUE
+                          AND p.deletado_em IS NULL
+                    ) AS total_produtos
+             FROM categorias c
+             WHERE c.deletado_em IS NULL
+               AND c.imagem IS NOT NULL
+               AND c.imagem <> ''
+             ORDER BY c.nome ASC"
+        )->fetchAll();
+    }
+
     private function selectBase(): string
     {
         return "

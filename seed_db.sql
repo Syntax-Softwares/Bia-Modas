@@ -8,13 +8,18 @@ USE biamodas;
 SET NAMES utf8mb4;
 
 -- Categorias
-INSERT INTO categorias (id_categoria, nome) VALUES
-(1, 'Plus Size'),
-(2, 'Blusas'),
-(3, 'Calças'),
-(4, 'Conjuntos'),
-(5, 'Saias'),
-(6, 'Vestidos');
+INSERT INTO categorias (id_categoria, nome, imagem) VALUES
+(1, 'Plus Size', '/img/categorias/plus-size.png'),
+(2, 'Blusas', '/img/categorias/blusas.png'),
+(3, 'Calças', '/img/categorias/calcas.png'),
+(4, 'Conjuntos', NULL),
+(5, 'Saias', '/img/categorias/saias.png'),
+(6, 'Vestidos', '/img/categorias/vestidos.png'),
+(7, 'Acessórios', '/img/categorias/acessorios.png'),
+(8, 'Shorts', '/img/categorias/shorts.png'),
+(9, 'Casacos', '/img/categorias/casacos.png'),
+(10, 'Moda Praia', '/img/categorias/moda-praia.png'),
+(11, 'Fitness', '/img/categorias/fitness.png');
 
 -- Catalogo de tamanhos
 INSERT INTO tamanhos (id_tamanho, nome, ordem) VALUES

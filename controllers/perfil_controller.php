@@ -425,8 +425,8 @@ final class PerfilController
             $erros['nome_endereco'] = 'Informe um nome para o endereco (ate 30 caracteres).';
         }
 
-        if ($dados['logradouro'] === '' || strlen($dados['logradouro']) > 255) {
-            $erros['logradouro'] = 'Informe o endereco (ate 255 caracteres).';
+        if ($dados['logradouro'] === '' || strlen($dados['logradouro']) > 100) {
+            $erros['logradouro'] = 'Informe o endereco (ate 100 caracteres).';
         }
 
         if ($dados['numero'] === '' || strlen($dados['numero']) > 10) {

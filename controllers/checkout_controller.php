@@ -100,8 +100,8 @@ class CheckoutController
         $tamanhoLogradouro = tamanho_texto($dados['endereco_logradouro']);
         if ($tamanhoLogradouro < 3) {
             $erros['endereco_logradouro'] = 'Informe a rua ou avenida.';
-        } elseif ($tamanhoLogradouro > 255) {
-            $erros['endereco_logradouro'] = 'A rua/avenida deve ter até 255 caracteres.';
+        } elseif ($tamanhoLogradouro > 100) {
+            $erros['endereco_logradouro'] = 'A rua/avenida deve ter até 100 caracteres.';
         }
 
         if ($dados['endereco_numero'] === '' || tamanho_texto($dados['endereco_numero']) > 10) {

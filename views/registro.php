@@ -197,6 +197,7 @@ if (isset($errors['medidas'])) {
                                     value="<?= e($old['logradouro'] ?? '') ?>"
                                     placeholder="Rua, Avenida..."
                                     autocomplete="address-line1"
+                                    maxlength="100"
                                 >
                             </div>
                             <div class="col-md-4 form-group">

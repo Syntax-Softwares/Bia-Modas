@@ -63,90 +63,26 @@ $busca = '';
     </section>
 
     <!-- Visual Category Menu -->
+    <?php
+    $categoriasHome = $data['categoriasHome'] ?? [];
+    if ($categoriasHome !== []):
+        $colunasCategorias = max(1, (int) ceil(count($categoriasHome) / 2));
+    ?>
     <section class="category-grid-section">
         <div class="container">
-            <div class="category-grid">
-                <a href="/categoria?categoria=Vestidos" class="category-circle-item">
-                    <div class="category-circle">
-                        <img src="/img/VestidoVerdePlusSize.png" alt="Vestidos">
-                    </div>
-                    <span class="category-circle-name">Vestidos</span>
-                </a>
-                <a href="/categoria?categoria=Blusas" class="category-circle-item">
-                    <div class="category-circle">
-                        <img src="/img/BlusaPlusSizeVermelho.png" alt="Blusas">
-                    </div>
-                    <span class="category-circle-name">Blusas</span>
-                </a>
-                <a href="/categoria?categoria=Calças" class="category-circle-item">
-                    <div class="category-circle">
-                        <img src="/img/calcas.png" alt="Calças">
-                    </div>
-                    <span class="category-circle-name">Calças</span>
-                </a>
-                <a href="/categoria?categoria=Plus%20Size" class="category-circle-item">
-                    <div class="category-circle">
-                        <img src="/img/BlusaPlusSizePreta.png" alt="Plus Size">
-                    </div>
-                    <span class="category-circle-name">Plus Size</span>
-                </a>
-                <a href="/categoria?categoria=Acessórios" class="category-circle-item">
-                    <div class="category-circle">
-                        <img src="/img/acessorios.png" alt="Acessórios">
-                    </div>
-                    <span class="category-circle-name">Acessórios</span>
-                </a>
-                <a href="/categoria?categoria=Saias" class="category-circle-item">
-                    <div class="category-circle">
-                        <img src="/img/saia.png" alt="Saias">
-                    </div>
-                    <span class="category-circle-name">Saias</span>
-                </a>
-                <a href="/categoria?categoria=Shorts" class="category-circle-item">
-                    <div class="category-circle">
-                        <img src="/img/shorts.png" alt="Shorts">
-                    </div>
-                    <span class="category-circle-name">Shorts</span>
-                </a>
-                <a href="/categoria?categoria=Casacos" class="category-circle-item">
-                    <div class="category-circle">
-                        <img src="/img/casaco.png" alt="Casacos">
-                    </div>
-                    <span class="category-circle-name">Casacos</span>
-                </a>
-                <a href="/categoria?categoria=Moda%20Praia" class="category-circle-item">
-                    <div class="category-circle">
-                        <img src="/img/modapraia.png" alt="Moda Praia">
-                    </div>
-                    <span class="category-circle-name">Moda Praia</span>
-                </a>
-                <a href="/categoria?categoria=Fitness" class="category-circle-item">
-                    <div class="category-circle">
-                        <img src="/img/fitness.png" alt="Fitness">
-                    </div>
-                    <span class="category-circle-name">Fitness</span>
-                </a>
-                <a href="/categoria?categoria=Infantil" class="category-circle-item">
-                    <div class="category-circle">
-                        <img src="/img/infantil.png" alt="Infantil">
-                    </div>
-                    <span class="category-circle-name">Infantil</span>
-                </a>
-                <a href="/categoria?categoria=Moda%20Íntima" class="category-circle-item">
-                    <div class="category-circle">
-                        <img src="/img/modaintima.png" alt="Moda Íntima">
-                    </div>
-                    <span class="category-circle-name">Moda Íntima</span>
-                </a>
-                <a href="/categoria?categoria=Sapatos" class="category-circle-item">
-                    <div class="category-circle">
-                        <img src="/img/sapatos.png" alt="Sapatos">
-                    </div>
-                    <span class="category-circle-name">Sapatos</span>
-                </a>
+            <div class="category-grid" style="--category-columns: <?= $colunasCategorias ?>">
+                <?php foreach ($categoriasHome as $categoria): ?>
+                    <a href="/categoria?<?= e(http_build_query(['categoria' => $categoria['nome']])) ?>" class="category-circle-item">
+                        <div class="category-circle">
+                            <img src="<?= e($categoria['imagem']) ?>" alt="<?= e($categoria['nome']) ?>">
+                        </div>
+                        <span class="category-circle-name"><?= e($categoria['nome']) ?></span>
+                    </a>
+                <?php endforeach; ?>
             </div>
         </div>
     </section>
+    <?php endif; ?>
 
     <!-- Features -->
     <section class="features-section">

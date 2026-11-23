@@ -126,7 +126,7 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
                                 <label for="endereco_logradouro">Rua / Avenida</label>
                                 <input type="text" id="endereco_logradouro" name="endereco_logradouro"
                                        value="<?= e($dados['endereco_logradouro'] ?? '') ?>"
-                                       autocomplete="address-line1" maxlength="255"
+                                       autocomplete="address-line1" maxlength="100"
                                        class="<?= isset($erros['endereco_logradouro']) ? 'tem-erro' : '' ?>">
                                 <?php if (isset($erros['endereco_logradouro'])): ?>
                                     <span class="campo-erro"><?= e($erros['endereco_logradouro']) ?></span>

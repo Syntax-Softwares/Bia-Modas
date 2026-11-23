@@ -124,6 +124,7 @@ final class AdminRepository
             SELECT c.id_categoria,
                    c.nome,
                    c.descricao,
+                   c.imagem,
                    c.criado_em,
                    (
                        SELECT COUNT(*)
@@ -150,7 +151,7 @@ final class AdminRepository
     public function buscarCategoria(int $id): ?array
     {
         $stmt = $this->pdo->prepare(
-            'SELECT id_categoria, nome, descricao FROM categorias WHERE id_categoria = :id AND deletado_em IS NULL LIMIT 1'
+            'SELECT id_categoria, nome, descricao, imagem FROM categorias WHERE id_categoria = :id AND deletado_em IS NULL LIMIT 1'
         );
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -160,22 +161,28 @@ final class AdminRepository
         return $categoria === false ? null : $categoria;
     }
 
-    public function criarCategoria(string $nome, ?string $descricao): int
+    public function criarCategoria(string $nome, ?string $descricao, ?string $imagem = null): int
     {
         $stmt = $this->pdo->prepare(
-            'INSERT INTO categorias (nome, descricao) VALUES (:nome, :descricao)'
+            'INSERT INTO categorias (nome, descricao, imagem) VALUES (:nome, :descricao, :imagem)'
         );
-        $stmt->execute([':nome' => $nome, ':descricao' => $descricao]);
+        $stmt->execute([':nome' => $nome, ':descricao' => $descricao, ':imagem' => $imagem]);
 
         return (int) $this->pdo->lastInsertId();
     }
 
-    public function atualizarCategoria(int $id, string $nome, ?string $descricao): void
+    public function atualizarCategoria(int $id, string $nome, ?string $descricao, ?string $imagem = null): void
     {
         $stmt = $this->pdo->prepare(
-            'UPDATE categorias SET nome = :nome, descricao = :descricao WHERE id_categoria = :id AND deletado_em IS NULL'
+            'UPDATE categorias SET nome = :nome, descricao = :descricao, imagem = :imagem
+             WHERE id_categoria = :id AND deletado_em IS NULL'
         );
-        $stmt->execute([':nome' => $nome, ':descricao' => $descricao, ':id' => $id]);
+        $stmt->execute([
+            ':nome' => $nome,
+            ':descricao' => $descricao,
+            ':imagem' => $imagem,
+            ':id' => $id,
+        ]);
     }
 
     public function excluirCategoria(int $id): void

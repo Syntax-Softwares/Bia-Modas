@@ -271,7 +271,7 @@ $formAction = $editando !== null ? '/perfil/enderecos/atualizar' : '/perfil/ende
                                             <label for="pf-logradouro">Rua:</label>
                                             <input type="text" class="form-control" id="pf-logradouro" name="logradouro"
                                                    value="<?= Html::e($valorEndereco('logradouro')) ?>"
-                                                   required maxlength="255" autocomplete="address-line1">
+                                                   required maxlength="100" autocomplete="address-line1">
                                             <?= $campoErro('logradouro') ?>
                                         </div>
 
