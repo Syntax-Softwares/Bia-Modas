@@ -44,6 +44,22 @@ services:
       - .:/app
     command: install --no-interaction --prefer-dist
 
+  # Suite de testes unitarios. A imagem oficial do Composer ja traz o PHP CLI
+  # e as extensoes exigidas pelo PHPUnit (mbstring, dom, xml e xmlwriter),
+  # portanto nao e necessario ter PHP/Composer instalados no host.
+  # Uso: docker compose run --rm tests
+  tests:
+    image: composer:2
+    profiles: ["tools"]
+    working_dir: /app
+    volumes:
+      - .:/app
+    entrypoint: ["sh", "-c"]
+    command:
+      - >
+        composer install --no-interaction --prefer-dist --no-progress
+        && php vendor/bin/phpunit --configuration phpunit.xml $${PHPUNIT_ARGS:-}
+
   db:
     image: mariadb:11
     restart: unless-stopped
