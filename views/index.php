@@ -78,7 +78,7 @@ $busca = '';
                 <?php foreach ($categoriasHome as $categoria): ?>
                     <a href="/categoria?<?= e(http_build_query(['categoria' => $categoria['nome']])) ?>" class="category-circle-item">
                         <div class="category-circle">
-                            <img src="<?= e($categoria['imagem']) ?>" alt="<?= e($categoria['nome']) ?>">
+                            <img src="<?= e(asset($categoria['imagem'])) ?>" alt="<?= e($categoria['nome']) ?>">
                         </div>
                         <span class="category-circle-name"><?= e($categoria['nome']) ?></span>
                     </a>
