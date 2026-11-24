@@ -2,25 +2,7 @@
    Bia Modas — Sistema de Autenticação (Estilos)
    ===================================================== */
 
-/* --- Header Avatar & Dropdown --- */
-.auth-avatar-logged {
-    width: 36px;
-    height: 36px;
-    border-radius: 0;
-    background: var(--color-primary);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    font-size: 1rem;
-    transition: transform 0.3s;
-}
-
-.auth-avatar-logged:hover {
-    transform: scale(1.05);
-}
-
+/* --- Header Dropdown --- */
 .auth-dropdown {
     position: absolute;
     top: calc(100% + 12px);
