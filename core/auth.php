@@ -45,7 +45,9 @@ class Auth
 
     public static function login(array $usuario): void
     {
-        session_regenerate_id(true);
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_regenerate_id(true);
+        }
 
         $_SESSION['usuario'] = [
             'id_usuario' => (int) $usuario['id_usuario'],
@@ -58,7 +60,10 @@ class Auth
     public static function logout(): void
     {
         unset($_SESSION['usuario'], $_SESSION['csrf_token']);
-        session_regenerate_id(true);
+
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_regenerate_id(true);
+        }
     }
 
     public static function csrfToken(): string
