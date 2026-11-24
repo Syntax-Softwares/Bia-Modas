@@ -2,15 +2,22 @@
 
 require_once __DIR__ . '/../core/auth.php';
 require_once __DIR__ . '/../core/helpers.php';
+require_once __DIR__ . '/../core/sessao.php';
 require_once __DIR__ . '/../repositories/usuario_repository.php';
+require_once __DIR__ . '/../repositories/carrinho_repository.php';
+require_once __DIR__ . '/../repositories/favorito_repository.php';
 
 class AuthController
 {
     private UsuarioRepository $repository;
+    private CarrinhoRepository $carrinho;
+    private FavoritoRepository $favoritos;
 
     public function __construct(private PDO $pdo)
     {
         $this->repository = new UsuarioRepository($pdo);
+        $this->carrinho = new CarrinhoRepository($pdo);
+        $this->favoritos = new FavoritoRepository($pdo);
     }
 
     public function showLogin(): void
@@ -68,9 +75,10 @@ class AuthController
         }
 
         Auth::login($usuario);
+        $this->vincularDadosDoVisitante((int) $usuario['id_usuario']);
         Auth::flash('success', 'Bem-vinda de volta, ' . $this->primeiroNome($usuario['nome']) . '!');
 
-        redirect('/perfil');
+        redirect(Sessao::consumirDestinoAposLogin() ?? '/perfil');
     }
 
     public function showRegister(): void
@@ -245,9 +253,10 @@ class AuthController
         }
 
         Auth::login($usuario);
+        $this->vincularDadosDoVisitante($usuarioId);
         Auth::flash('success', 'Cadastro realizado com sucesso. Bem-vinda à Bia Modas!');
 
-        redirect('/perfil');
+        redirect(Sessao::consumirDestinoAposLogin() ?? '/perfil');
     }
 
     public function account(): void
@@ -283,6 +292,29 @@ class AuthController
         Auth::flash('success', 'Sessão encerrada com sucesso.');
 
         redirect('/login');
+    }
+
+    /**
+     * Migra carrinho e favoritos anonimos para a conta que acabou de entrar.
+     *
+     * Falhas aqui nao impedem o login: os dados da conta continuam validos e
+     * o visitante apenas perde a migracao daquele carrinho/favorito.
+     */
+    private function vincularDadosDoVisitante(int $usuarioId): void
+    {
+        $sessaoVisitante = Sessao::visitanteIdAtual();
+
+        if ($sessaoVisitante === null) {
+            return;
+        }
+
+        try {
+            $this->carrinho->vincularAoUsuario($usuarioId, $sessaoVisitante);
+            $this->favoritos->vincularAoUsuario($usuarioId, $sessaoVisitante);
+            unset($_SESSION['visitante_id']);
+        } catch (Throwable $excecao) {
+            error_log('[bia-modas] Falha ao vincular carrinho/favoritos: ' . $excecao->getMessage());
+        }
     }
 
     private function decimalOuNull(mixed $value): ?float

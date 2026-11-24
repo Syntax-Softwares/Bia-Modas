@@ -7,7 +7,7 @@ class PedidoRepository
     ) {
     }
 
-    public function criar(string $sessaoId, int $idCarrinho, array $dados): array
+    public function criar(int $usuarioId, int $idCarrinho, array $dados): array
     {
         $this->pdo->beginTransaction();
 
@@ -33,7 +33,7 @@ class PedidoRepository
             $desconto = 0.0;
             $total = round($subtotal + $frete - $desconto, 2);
 
-            $compra = $this->inserirCompra($sessaoId, $dados, $frete, $desconto, $total);
+            $compra = $this->inserirCompra($usuarioId, $dados, $frete, $desconto, $total);
 
             foreach ($itens as $item) {
                 $this->inserirItem($compra['id_compra'], $item);
@@ -61,7 +61,7 @@ class PedidoRepository
         }
     }
 
-    public function listarPorVisitante(string $sessaoId): array
+    public function listarDoUsuario(int $usuarioId): array
     {
         $stmt = $this->pdo->prepare(
             "SELECT c.id_compra,
@@ -89,16 +89,16 @@ class PedidoRepository
                         LIMIT 1
                     ) AS pagamento_metodo
              FROM compras c
-             WHERE c.sessao_id = :sessao
+             WHERE c.usuario_id = :usuario
                AND c.deletado_em IS NULL
              ORDER BY c.criado_em DESC, c.id_compra DESC"
         );
-        $stmt->execute([':sessao' => $sessaoId]);
+        $stmt->execute([':usuario' => $usuarioId]);
 
         return $stmt->fetchAll();
     }
 
-    public function buscarPorNumero(string $sessaoId, int $numeroPedido): ?array
+    public function buscarPorNumeroDoUsuario(int $usuarioId, int $numeroPedido): ?array
     {
         $stmt = $this->pdo->prepare(
             "SELECT c.*,
@@ -124,12 +124,12 @@ class PedidoRepository
                         LIMIT 1
                     ) AS pagamento_codigo
              FROM compras c
-             WHERE c.sessao_id = :sessao
+             WHERE c.usuario_id = :usuario
                AND c.numero_pedido = :numero
                AND c.deletado_em IS NULL
              LIMIT 1"
         );
-        $stmt->execute([':sessao' => $sessaoId, ':numero' => $numeroPedido]);
+        $stmt->execute([':usuario' => $usuarioId, ':numero' => $numeroPedido]);
         $pedido = $stmt->fetch();
 
         return $pedido === false ? null : $pedido;
@@ -202,7 +202,7 @@ class PedidoRepository
     }
 
     private function inserirCompra(
-        string $sessaoId,
+        int $usuarioId,
         array $dados,
         float $frete,
         float $desconto,
@@ -220,7 +220,7 @@ class PedidoRepository
                         endereco_numero, endereco_complemento, endereco_bairro,
                         endereco_cidade, endereco_uf
                      ) VALUES (
-                        NULL, :sessao, NULL, NULL, :numero,
+                        :usuario, NULL, NULL, NULL, :numero,
                         :total, FALSE, :frete, :desconto,
                         :destinatario, :telefone, :cep, :logradouro,
                         :numero_endereco, :complemento, :bairro,
@@ -228,7 +228,7 @@ class PedidoRepository
                      )"
                 );
                 $stmt->execute([
-                    ':sessao' => $sessaoId,
+                    ':usuario' => $usuarioId,
                     ':numero' => $numeroPedido,
                     ':total' => $total,
                     ':frete' => $frete,

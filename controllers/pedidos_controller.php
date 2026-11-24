@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../core/sessao.php';
+require_once __DIR__ . '/../core/comprador.php';
 require_once __DIR__ . '/../repositories/carrinho_repository.php';
 require_once __DIR__ . '/../repositories/favorito_repository.php';
 require_once __DIR__ . '/../repositories/pedido_repository.php';
@@ -20,12 +21,13 @@ class PedidosController
 
     public function index(): void
     {
-        $visitante = Sessao::visitanteId();
-        $resumo = $this->carrinho->resumoPorVisitante($visitante);
-        $favoritosIds = $this->favoritos->ids($visitante);
+        $usuarioId = $this->exigirLogin();
+        $comprador = Comprador::atual();
+        $resumo = $this->carrinho->resumoDe($comprador);
+        $favoritosIds = $this->favoritos->ids($comprador);
 
         $data = [
-            'pedidos' => $this->pedidos->listarPorVisitante($visitante),
+            'pedidos' => $this->pedidos->listarDoUsuario($usuarioId),
             'resumo' => $resumo,
             'favoritosIds' => $favoritosIds,
             'favoritosTotal' => count($favoritosIds),
@@ -39,6 +41,8 @@ class PedidosController
 
     public function ver(): void
     {
+        $usuarioId = $this->exigirLogin();
+
         $numero = filter_var($_GET['numero'] ?? null, FILTER_VALIDATE_INT);
 
         if ($numero === false || $numero <= 0) {
@@ -46,16 +50,16 @@ class PedidosController
             return;
         }
 
-        $visitante = Sessao::visitanteId();
-        $pedido = $this->pedidos->buscarPorNumero($visitante, $numero);
+        $pedido = $this->pedidos->buscarPorNumeroDoUsuario($usuarioId, $numero);
 
         if ($pedido === null) {
             $this->naoEncontrado();
             return;
         }
 
-        $resumo = $this->carrinho->resumoPorVisitante($visitante);
-        $favoritosIds = $this->favoritos->ids($visitante);
+        $comprador = Comprador::atual();
+        $resumo = $this->carrinho->resumoDe($comprador);
+        $favoritosIds = $this->favoritos->ids($comprador);
 
         $data = [
             'pedido' => $pedido,
@@ -68,6 +72,19 @@ class PedidosController
         ];
 
         require __DIR__ . '/../views/pedido.php';
+    }
+
+    private function exigirLogin(): int
+    {
+        $usuarioId = Sessao::id();
+
+        if ($usuarioId === null) {
+            Sessao::definirDestinoAposLogin('/pedidos');
+            Sessao::flash('info', 'Entre na sua conta para ver seus pedidos.');
+            Sessao::redirecionar('/login');
+        }
+
+        return $usuarioId;
     }
 
     private function naoEncontrado(): void

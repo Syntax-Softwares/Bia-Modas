@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../core/sessao.php';
+require_once __DIR__ . '/../core/comprador.php';
 require_once __DIR__ . '/../repositories/favorito_repository.php';
 require_once __DIR__ . '/../repositories/carrinho_repository.php';
 
@@ -17,9 +18,9 @@ class CarrinhoController
 
     public function index(): void
     {
-        $visitante = Sessao::visitanteId();
-        $favoritosIds = $this->favoritos->ids($visitante);
-        $resumo = $this->carrinho->resumoPorVisitante($visitante);
+        $comprador = Comprador::atual();
+        $favoritosIds = $this->favoritos->ids($comprador);
+        $resumo = $this->carrinho->resumoDe($comprador);
 
         $data = [
             'resumo' => $resumo,
@@ -130,12 +131,12 @@ class CarrinhoController
 
     private function carrinhoId(): int
     {
-        return $this->carrinho->obterPorVisitante(Sessao::visitanteId());
+        return $this->carrinho->obter(Comprador::atual());
     }
 
     private function resumoAtual(): array
     {
-        return ['ok' => true] + $this->carrinho->resumoPorVisitante(Sessao::visitanteId());
+        return ['ok' => true] + $this->carrinho->resumoDe(Comprador::atual());
     }
 
     private function exigirCsrf(): void

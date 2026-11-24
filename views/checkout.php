@@ -51,6 +51,18 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
         <div class="container">
             <?php require __DIR__ . '/partials/alerts.php'; ?>
 
+            <?php if (!empty($data['temEnderecoPrincipal'])): ?>
+                <div class="alerta alerta-info" role="status">
+                    Nome, telefone e endereço preenchidos com os dados do seu cadastro.
+                    <a href="/perfil/enderecos">Gerenciar endereços</a>
+                </div>
+            <?php else: ?>
+                <div class="alerta alerta-info" role="status">
+                    Você ainda não tem um endereço principal no cadastro. Preencha os dados de entrega abaixo ou
+                    <a href="/perfil/enderecos">cadastre um endereço</a>.
+                </div>
+            <?php endif; ?>
+
             <?php if (isset($erros['geral'])): ?>
                 <div class="alerta alerta-erro" role="alert"><?= e($erros['geral']) ?></div>
             <?php endif; ?>

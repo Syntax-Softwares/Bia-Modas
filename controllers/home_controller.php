@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../core/auth.php';
 require_once __DIR__ . '/../core/sessao.php';
+require_once __DIR__ . '/../core/comprador.php';
 require_once __DIR__ . '/../repositories/produto_repository.php';
 require_once __DIR__ . '/../repositories/favorito_repository.php';
 require_once __DIR__ . '/../repositories/carrinho_repository.php';
@@ -21,9 +22,9 @@ class HomeController
 
     public function index(): void
     {
-        $visitante = Sessao::visitanteId();
-        $favoritosIds = $this->favoritos->ids($visitante);
-        $resumo = $this->carrinho->resumoPorVisitante($visitante);
+        $comprador = Comprador::atual();
+        $favoritosIds = $this->favoritos->ids($comprador);
+        $resumo = $this->carrinho->resumoDe($comprador);
 
         $usuario = Auth::user();
 

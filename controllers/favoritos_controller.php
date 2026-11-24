@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../core/sessao.php';
+require_once __DIR__ . '/../core/comprador.php';
 require_once __DIR__ . '/../repositories/produto_repository.php';
 require_once __DIR__ . '/../repositories/favorito_repository.php';
 require_once __DIR__ . '/../repositories/carrinho_repository.php';
@@ -20,9 +21,9 @@ class FavoritosController
 
     public function index(): void
     {
-        $visitante = Sessao::visitanteId();
-        $favoritosIds = $this->favoritos->ids($visitante);
-        $resumo = $this->carrinho->resumoPorVisitante($visitante);
+        $comprador = Comprador::atual();
+        $favoritosIds = $this->favoritos->ids($comprador);
+        $resumo = $this->carrinho->resumoDe($comprador);
 
         $produtos = [];
         $mapa = $this->produtos->buscarPorIds($favoritosIds);
@@ -54,7 +55,7 @@ class FavoritosController
             json_erro('Produto inválido.');
         }
 
-        $resultado = $this->favoritos->alternar(Sessao::visitanteId(), $idProduto);
+        $resultado = $this->favoritos->alternar(Comprador::atual(), $idProduto);
 
         if (!$resultado['ok']) {
             json_erro($resultado['mensagem'] ?? 'Não foi possível atualizar o favorito.');
@@ -72,8 +73,7 @@ class FavoritosController
 
     public function dados(): void
     {
-        $visitante = Sessao::visitanteId();
-        $ids = $this->favoritos->ids($visitante);
+        $ids = $this->favoritos->ids(Comprador::atual());
 
         json_response([
             'ok' => true,

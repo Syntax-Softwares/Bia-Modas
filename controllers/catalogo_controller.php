@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../core/sessao.php';
+require_once __DIR__ . '/../core/comprador.php';
 require_once __DIR__ . '/../core/html.php';
 require_once __DIR__ . '/../core/catalogo.php';
 require_once __DIR__ . '/../core/rate_limit.php';
@@ -100,9 +101,9 @@ final class CatalogoController
         $totalProdutos = $this->catalogo->contarAtivos();
         $flash = Sessao::mensagensFlash();
 
-        $visitante = Sessao::visitanteId();
-        $favoritosIds = $this->favoritos->ids($visitante);
-        $resumo = $this->carrinho->resumoPorVisitante($visitante);
+        $comprador = Comprador::atual();
+        $favoritosIds = $this->favoritos->ids($comprador);
+        $resumo = $this->carrinho->resumoDe($comprador);
         $carrinhoIds = array_column($resumo['itens'], 'produto_id');
         $favoritosTotal = count($favoritosIds);
         $quantidadeCarrinho = $resumo['quantidade'];
@@ -147,9 +148,9 @@ final class CatalogoController
         $sugestoes = $this->catalogo->sugestoes();
         $flash = Sessao::mensagensFlash();
 
-        $visitante = Sessao::visitanteId();
-        $favoritosIds = $this->favoritos->ids($visitante);
-        $resumo = $this->carrinho->resumoPorVisitante($visitante);
+        $comprador = Comprador::atual();
+        $favoritosIds = $this->favoritos->ids($comprador);
+        $resumo = $this->carrinho->resumoDe($comprador);
         $carrinhoIds = array_column($resumo['itens'], 'produto_id');
         $favoritosTotal = count($favoritosIds);
         $quantidadeCarrinho = $resumo['quantidade'];
