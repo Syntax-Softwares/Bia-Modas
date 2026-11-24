@@ -1,0 +1,331 @@
+USE biamodas;
+
+-- =========================================================
+-- Dados iniciais (catálogo real). Execute após db.sql.
+-- Script de desenvolvimento: recrie o volume para reaplicar.
+-- =========================================================
+
+SET NAMES utf8mb4;
+
+-- Categorias
+INSERT INTO categorias (id_categoria, nome, imagem) VALUES
+(1, 'Plus Size', '/img/categorias/plus-size.png'),
+(2, 'Blusas', '/img/categorias/blusas.png'),
+(3, 'Calças', '/img/categorias/calcas.png'),
+(4, 'Conjuntos', NULL),
+(5, 'Saias', '/img/categorias/saias.png'),
+(6, 'Vestidos', '/img/categorias/vestidos.png'),
+(7, 'Acessórios', '/img/categorias/acessorios.png'),
+(8, 'Shorts', '/img/categorias/shorts.png'),
+(9, 'Casacos', '/img/categorias/casacos.png'),
+(10, 'Moda Praia', '/img/categorias/moda-praia.png'),
+(11, 'Fitness', '/img/categorias/fitness.png');
+
+-- Catalogo de tamanhos
+INSERT INTO tamanhos (id_tamanho, nome, ordem) VALUES
+(1, 'PP', 1),
+(2, 'P', 2),
+(3, 'M', 3),
+(4, 'G', 4),
+(5, 'GG', 5),
+(6, 'XG', 6),
+(7, 'XXG', 7),
+(8, '36', 8),
+(9, '38', 9),
+(10, '40', 10),
+(11, '42', 11),
+(12, '44', 12),
+(13, '46', 13),
+(14, '48', 14),
+(15, '50', 15);
+
+-- Ofertas
+INSERT INTO ofertas (id_oferta, percentual, inicio_em, ativo) VALUES
+(1, 0.22, DATE_SUB(NOW(), INTERVAL 7 DAY), TRUE),
+(2, 0.24, DATE_SUB(NOW(), INTERVAL 7 DAY), TRUE),
+(3, 0.20, DATE_SUB(NOW(), INTERVAL 7 DAY), TRUE),
+(4, 0.20, DATE_SUB(NOW(), INTERVAL 7 DAY), TRUE),
+(5, 0.24, DATE_SUB(NOW(), INTERVAL 7 DAY), TRUE),
+(6, 0.20, DATE_SUB(NOW(), INTERVAL 7 DAY), TRUE),
+(7, 0.20, DATE_SUB(NOW(), INTERVAL 7 DAY), TRUE),
+(8, 0.20, DATE_SUB(NOW(), INTERVAL 7 DAY), TRUE),
+(9, 0.18, DATE_SUB(NOW(), INTERVAL 7 DAY), TRUE),
+(10, 0.19, DATE_SUB(NOW(), INTERVAL 7 DAY), TRUE),
+(11, 0.20, DATE_SUB(NOW(), INTERVAL 7 DAY), TRUE),
+(12, 0.20, DATE_SUB(NOW(), INTERVAL 7 DAY), TRUE),
+(13, 0.15, DATE_SUB(NOW(), INTERVAL 7 DAY), TRUE),
+(14, 0.15, DATE_SUB(NOW(), INTERVAL 7 DAY), TRUE),
+(15, 0.15, DATE_SUB(NOW(), INTERVAL 7 DAY), TRUE);
+
+-- Produtos
+INSERT INTO produtos
+    (id_produto, oferta_id, nome, sku, descricao, estoque, valor, ativo, criado_em)
+VALUES
+(1,  NULL, 'Conjunto Social Marrom', 'BM-0001', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Marrom.', 5, 249.90, TRUE, DATE_SUB(NOW(), INTERVAL 0 DAY)),
+(2,  1, 'Vestido Longo Onça', 'BM-0002', 'Peça da coleção Bia Modas. Categoria: Vestidos. Estilo: Elegante. Cor: Estampado.', 6, 179.90, TRUE, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(3,  NULL, 'Body Preto Manga Longa', 'BM-0003', 'Peça da coleção Bia Modas. Categoria: Plus Size. Estilo: Casual. Cor: Preto.', 7, 89.90, TRUE, DATE_SUB(NOW(), INTERVAL 4 DAY)),
+(4,  NULL, 'Camisa Poá Bordô', 'BM-0004', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Romântico. Cor: Vermelho.', 8, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 6 DAY)),
+(5,  2, 'Vestido Jeans Curto', 'BM-0005', 'Peça da coleção Bia Modas. Categoria: Vestidos. Estilo: Casual. Cor: Jeans.', 9, 129.90, TRUE, DATE_SUB(NOW(), INTERVAL 8 DAY)),
+(6,  NULL, 'Camisa Social Marrom', 'BM-0006', 'Peça da coleção Bia Modas. Categoria: Plus Size. Estilo: Casual. Cor: Marrom.', 10, 109.90, TRUE, DATE_SUB(NOW(), INTERVAL 10 DAY)),
+(7,  3, 'Blusa Canelada Marrom', 'BM-0007', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Marrom.', 11, 79.90, TRUE, DATE_SUB(NOW(), INTERVAL 12 DAY)),
+(8,  NULL, 'Blusa Animal Print', 'BM-0008', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Estampado.', 12, 99.90, TRUE, DATE_SUB(NOW(), INTERVAL 14 DAY)),
+(9,  NULL, 'Camisa Poá Vermelha', 'BM-0009', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Romântico. Cor: Vermelho.', 13, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 16 DAY)),
+(10,  4, 'Conjunto Saia Marrom', 'BM-0010', 'Peça da coleção Bia Modas. Categoria: Plus Size. Estilo: Casual. Cor: Marrom.', 14, 159.90, TRUE, DATE_SUB(NOW(), INTERVAL 18 DAY)),
+(11,  NULL, 'Conjunto Moletom Rosê', 'BM-0011', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Esportivo. Cor: Rosa.', 15, 139.90, TRUE, DATE_SUB(NOW(), INTERVAL 20 DAY)),
+(12,  NULL, 'Blusa Gola Alta Branca', 'BM-0012', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Branco.', 16, 89.90, TRUE, DATE_SUB(NOW(), INTERVAL 22 DAY)),
+(13,  5, 'Vestido Jeans Curto', 'BM-0013', 'Peça da coleção Bia Modas. Categoria: Vestidos. Estilo: Casual. Cor: Jeans.', 17, 129.90, TRUE, DATE_SUB(NOW(), INTERVAL 24 DAY)),
+(14,  NULL, 'Blusa Marrom Gola Redonda', 'BM-0014', 'Peça da coleção Bia Modas. Categoria: Plus Size. Estilo: Casual. Cor: Marrom.', 18, 79.90, TRUE, DATE_SUB(NOW(), INTERVAL 26 DAY)),
+(15,  NULL, 'Jaqueta Couro Preta', 'BM-0015', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Vintage. Cor: Preto.', 19, 199.90, TRUE, DATE_SUB(NOW(), INTERVAL 28 DAY)),
+(16,  NULL, 'Blusa Canelada Marrom', 'BM-0016', 'Peça da coleção Bia Modas. Categoria: Plus Size. Estilo: Casual. Cor: Marrom.', 20, 89.90, TRUE, DATE_SUB(NOW(), INTERVAL 30 DAY)),
+(17,  NULL, 'Blusa Gola Alta Bege', 'BM-0017', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Minimalista. Cor: Bege.', 21, 79.90, TRUE, DATE_SUB(NOW(), INTERVAL 32 DAY)),
+(18,  NULL, 'Conjunto Moletom Rosê', 'BM-0018', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Esportivo. Cor: Rosa.', 22, 139.90, TRUE, DATE_SUB(NOW(), INTERVAL 34 DAY)),
+(19,  NULL, 'Blusa Gola Alta Bege', 'BM-0019', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Minimalista. Cor: Bege.', 23, 79.90, TRUE, DATE_SUB(NOW(), INTERVAL 36 DAY)),
+(20,  NULL, 'Camisa Xadrez Preta', 'BM-0020', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Preto.', 24, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 38 DAY)),
+(21,  6, 'Calça Cargo Bege', 'BM-0021', 'Peça da coleção Bia Modas. Categoria: Calças. Estilo: Casual. Cor: Bege.', 5, 159.90, TRUE, DATE_SUB(NOW(), INTERVAL 40 DAY)),
+(22,  NULL, 'Calça Jeans Wide Leg', 'BM-0022', 'Peça da coleção Bia Modas. Categoria: Calças. Estilo: Casual. Cor: Jeans.', 6, 149.90, TRUE, DATE_SUB(NOW(), INTERVAL 42 DAY)),
+(23,  7, 'Conjunto Social Marrom', 'BM-0023', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Marrom.', 7, 279.90, TRUE, DATE_SUB(NOW(), INTERVAL 44 DAY)),
+(24,  NULL, 'Blusa Canelada Marrom', 'BM-0024', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Marrom.', 8, 79.90, TRUE, DATE_SUB(NOW(), INTERVAL 46 DAY)),
+(25,  8, 'Saia Couro Preta', 'BM-0025', 'Peça da coleção Bia Modas. Categoria: Saias. Estilo: Elegante. Cor: Preto.', 9, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 48 DAY)),
+(26,  NULL, 'Conjunto Social Preto', 'BM-0026', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Preto.', 10, 299.90, TRUE, DATE_SUB(NOW(), INTERVAL 50 DAY)),
+(27,  NULL, 'Camisa Social Rosa', 'BM-0027', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Rosa.', 11, 99.90, TRUE, DATE_SUB(NOW(), INTERVAL 52 DAY)),
+(28,  NULL, 'Conjunto Plus Size Bege', 'BM-0028', 'Peça da coleção Bia Modas. Categoria: Plus Size. Estilo: Casual. Cor: Bege.', 12, 189.90, TRUE, DATE_SUB(NOW(), INTERVAL 54 DAY)),
+(29,  NULL, 'Conjunto Esportivo Verde', 'BM-0029', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Esportivo. Cor: Verde.', 13, 159.90, TRUE, DATE_SUB(NOW(), INTERVAL 56 DAY)),
+(30,  9, 'Blusa Texturizada Preta', 'BM-0030', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Preto.', 14, 89.90, TRUE, DATE_SUB(NOW(), INTERVAL 58 DAY)),
+(31,  NULL, 'Blusa Tricô Gola Alta Bege', 'BM-0031', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Bege.', 15, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 60 DAY)),
+(32,  NULL, 'Saia Couro Preta', 'BM-0032', 'Peça da coleção Bia Modas. Categoria: Saias. Estilo: Elegante. Cor: Preto.', 16, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 62 DAY)),
+(33,  NULL, 'Conjunto Plus Size Bege', 'BM-0033', 'Peça da coleção Bia Modas. Categoria: Plus Size. Estilo: Casual. Cor: Bege.', 17, 189.90, TRUE, DATE_SUB(NOW(), INTERVAL 64 DAY)),
+(34,  NULL, 'Conjunto Esportivo Verde', 'BM-0034', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Esportivo. Cor: Verde.', 18, 159.90, TRUE, DATE_SUB(NOW(), INTERVAL 66 DAY)),
+(35,  NULL, 'Conjunto Plus Size Bicolor', 'BM-0035', 'Peça da coleção Bia Modas. Categoria: Plus Size. Estilo: Elegante. Cor: Preto.', 19, 219.90, TRUE, DATE_SUB(NOW(), INTERVAL 68 DAY)),
+(36,  NULL, 'Blusa Gola Alta Branca', 'BM-0036', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Branco.', 20, 89.90, TRUE, DATE_SUB(NOW(), INTERVAL 70 DAY)),
+(37,  NULL, 'Blusa Tricô Gola Alta Bege', 'BM-0037', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Bege.', 21, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 72 DAY)),
+(38,  10, 'Conjunto Social Marrom', 'BM-0038', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Marrom.', 22, 289.90, TRUE, DATE_SUB(NOW(), INTERVAL 74 DAY)),
+(39,  NULL, 'Blusa Gola Alta Branca', 'BM-0039', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Branco.', 23, 89.90, TRUE, DATE_SUB(NOW(), INTERVAL 76 DAY)),
+(40,  NULL, 'Vestido Tule Degradê', 'BM-0040', 'Peça da coleção Bia Modas. Categoria: Vestidos. Estilo: Elegante. Cor: Marrom.', 24, 149.90, TRUE, DATE_SUB(NOW(), INTERVAL 78 DAY)),
+(41,  11, 'Conjunto Couro Preto Bege', 'BM-0041', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Preto.', 5, 259.90, TRUE, DATE_SUB(NOW(), INTERVAL 80 DAY)),
+(42,  12, 'Calça Flare Vinho', 'BM-0042', 'Peça da coleção Bia Modas. Categoria: Calças. Estilo: Elegante. Cor: Vermelho.', 6, 129.90, TRUE, DATE_SUB(NOW(), INTERVAL 82 DAY)),
+(43,  NULL, 'Conjunto Couro Marrom', 'BM-0043', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Casual. Cor: Marrom.', 7, 249.90, TRUE, DATE_SUB(NOW(), INTERVAL 84 DAY)),
+(44,  NULL, 'Blusa Tule Preta', 'BM-0044', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Preto.', 8, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 86 DAY)),
+(45,  NULL, 'Blusa Laço Preta', 'BM-0045', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Preto.', 9, 109.90, TRUE, DATE_SUB(NOW(), INTERVAL 88 DAY)),
+(46,  NULL, 'Camisa Alongada Preta', 'BM-0046', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Preto.', 10, 129.90, TRUE, DATE_SUB(NOW(), INTERVAL 90 DAY)),
+(47,  NULL, 'Camisa Alongada Preta', 'BM-0047', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Preto.', 11, 119.90, TRUE, DATE_SUB(NOW(), INTERVAL 92 DAY)),
+(48,  13, 'Vestido Tule Marrom', 'BM-0048', 'Peça da coleção Bia Modas. Categoria: Vestidos. Estilo: Elegante. Cor: Marrom.', 12, 149.90, TRUE, DATE_SUB(NOW(), INTERVAL 94 DAY)),
+(49,  NULL, 'Conjunto Couro Marrom', 'BM-0049', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Casual. Cor: Marrom.', 13, 249.90, TRUE, DATE_SUB(NOW(), INTERVAL 96 DAY)),
+(50,  14, 'Blazer Social Preto', 'BM-0050', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Preto.', 14, 189.90, TRUE, DATE_SUB(NOW(), INTERVAL 98 DAY)),
+(51,  15, 'Conjunto Social Bege', 'BM-0051', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Bege.', 15, 299.90, TRUE, DATE_SUB(NOW(), INTERVAL 100 DAY)),
+(52,  NULL, 'Blazer Marrom', 'BM-0052', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Marrom.', 16, 199.90, TRUE, DATE_SUB(NOW(), INTERVAL 102 DAY)),
+(53,  NULL, 'Conjunto Social Bege', 'BM-0053', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Bege.', 17, 289.90, TRUE, DATE_SUB(NOW(), INTERVAL 104 DAY)),
+(54,  NULL, 'Camisa Xadrez Preta', 'BM-0054', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Preto.', 18, 139.90, TRUE, DATE_SUB(NOW(), INTERVAL 106 DAY)),
+(55,  NULL, 'Camisa Xadrez Preta', 'BM-0055', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Preto.', 19, 149.90, TRUE, DATE_SUB(NOW(), INTERVAL 108 DAY)),
+(56,  NULL, 'Conjunto Social Marrom', 'BM-0056', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Marrom.', 20, 279.90, TRUE, DATE_SUB(NOW(), INTERVAL 110 DAY)),
+(57,  NULL, 'Camisa Xadrez Preta', 'BM-0057', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Preto.', 21, 129.90, TRUE, DATE_SUB(NOW(), INTERVAL 112 DAY)),
+(58,  NULL, 'Camisa Xadrez Preta', 'BM-0058', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Casual. Cor: Preto.', 22, 139.90, TRUE, DATE_SUB(NOW(), INTERVAL 114 DAY)),
+(59,  NULL, 'Blazer Marrom', 'BM-0059', 'Peça da coleção Bia Modas. Categoria: Conjuntos. Estilo: Elegante. Cor: Marrom.', 23, 189.90, TRUE, DATE_SUB(NOW(), INTERVAL 116 DAY)),
+(60,  NULL, 'Blusa Marsala', 'BM-0060', 'Peça da coleção Bia Modas. Categoria: Blusas. Estilo: Elegante. Cor: Vermelho.', 24, 99.90, TRUE, DATE_SUB(NOW(), INTERVAL 118 DAY));
+
+-- Fotos dos produtos
+INSERT INTO imagens (produto_id, caminho_imagem) VALUES
+(1, '/img/produtos/655763783_18587522434040712_5117797556536014863_n.jpg'),
+(2, '/img/produtos/656166026_18573763729040712_759498418098033265_n.jpg'),
+(3, '/img/produtos/656202496_18587522443040712_9008272828061942804_n.jpg'),
+(4, '/img/produtos/656432116_18573763876040712_4770343261418897423_n.jpg'),
+(5, '/img/produtos/656650964_18573763798040712_693249757322836689_n.jpg'),
+(6, '/img/produtos/657389963_18577711444040712_4903765406060661891_n.jpg'),
+(7, '/img/produtos/657539762_18573763816040712_7436584707047200505_n.jpg'),
+(8, '/img/produtos/657598651_18573763777040712_6966380605204482899_n.jpg'),
+(9, '/img/produtos/657729819_18573763867040712_1697772356227926921_n.jpg'),
+(10, '/img/produtos/657820557_18577711375040712_2935750976970278950_n.jpg'),
+(11, '/img/produtos/659331847_18577711228040712_207586077417158524_n.jpg'),
+(12, '/img/produtos/660120340_18580649032040712_2327605271232299418_n.jpg'),
+(13, '/img/produtos/661169861_18573763807040712_2163788536673407058_n.jpg'),
+(14, '/img/produtos/662020798_18577711387040712_2068533779891762205_n.jpg'),
+(15, '/img/produtos/662211355_18577711363040712_7694680724075539718_n.jpg'),
+(16, '/img/produtos/662858455_18577711330040712_4708135202645298654_n.jpg'),
+(17, '/img/produtos/663165894_18577711297040712_3855995851393585690_n.jpg'),
+(18, '/img/produtos/663197905_18577711219040712_3992758836225461434_n.jpg'),
+(19, '/img/produtos/670147132_18577711309040712_9135976680544019447_n.jpg'),
+(20, '/img/produtos/670303168_18586731355040712_3317129960623501582_n.jpg'),
+(21, '/img/produtos/670394453_18577711366040712_4631773348593910628_n.jpg'),
+(22, '/img/produtos/670407822_18586731364040712_651977335953068708_n.jpg'),
+(23, '/img/produtos/670413793_18586731391040712_2971456660877126061_n.jpg'),
+(24, '/img/produtos/670419882_18577711360040712_3093543179046810338_n.jpg'),
+(25, '/img/produtos/670431327_18586731382040712_5006795616984798374_n.jpg'),
+(26, '/img/produtos/670460732_18586731334040712_4622915985530912812_n.jpg'),
+(27, '/img/produtos/670517171_18577711438040712_9122070279626613748_n.jpg'),
+(28, '/img/produtos/670643116_18577711270040712_4125657114981036381_n.jpg'),
+(29, '/img/produtos/670648115_18577711411040712_9011143600728075283_n.jpg'),
+(30, '/img/produtos/670660149_18580649050040712_1718079630445820814_n.jpg'),
+(31, '/img/produtos/670977164_18580649005040712_5852872655235177723_n.jpg'),
+(32, '/img/produtos/671064037_18580649041040712_4075390779235412184_n.jpg'),
+(33, '/img/produtos/671112481_18577711252040712_6393062624550921342_n.jpg'),
+(34, '/img/produtos/671136273_18577711420040712_8592843297735420137_n.jpg'),
+(35, '/img/produtos/671745416_18582607435040712_190100085083067256_n.jpg'),
+(36, '/img/produtos/671899500_18580649023040712_8559865803877799356_n.jpg'),
+(37, '/img/produtos/672328011_18580648996040712_8466195470436935411_n.jpg'),
+(38, '/img/produtos/673189175_18587522401040712_5919760069831626742_n.jpg'),
+(39, '/img/produtos/673260984_18580649014040712_4327349068603948369_n.jpg'),
+(40, '/img/produtos/682102794_18582607462040712_9081933668023055675_n.jpg'),
+(41, '/img/produtos/682710293_18582607444040712_1235039031968563093_n.jpg'),
+(42, '/img/produtos/682818276_18582607471040712_1237684732226028984_n.jpg'),
+(43, '/img/produtos/682982345_18582607414040712_6152058859851151506_n.jpg'),
+(44, '/img/produtos/683440809_18582607522040712_3025202322902037125_n.jpg'),
+(45, '/img/produtos/683967425_18582607480040712_3834882235091960366_n.jpg'),
+(46, '/img/produtos/684146986_18582607489040712_1782324324990995387_n.jpg'),
+(47, '/img/produtos/684401781_18582607501040712_5169914425854877907_n.jpg'),
+(48, '/img/produtos/684760661_18582607453040712_943410346854778167_n.jpg'),
+(49, '/img/produtos/686797299_18582607426040712_619473844024588183_n.jpg'),
+(50, '/img/produtos/687243777_18587522362040712_1508478109097199937_n.jpg'),
+(51, '/img/produtos/687506768_18587522422040712_1465828937258330440_n.jpg'),
+(52, '/img/produtos/687805528_18587522344040712_6686027011365187315_n.jpg'),
+(53, '/img/produtos/692544231_18586731373040712_2219992187691794873_n.jpg'),
+(54, '/img/produtos/696554125_18586731343040712_2361827012407827099_n.jpg'),
+(55, '/img/produtos/698324810_18587522380040712_1360404467050186317_n.jpg'),
+(56, '/img/produtos/698621656_18586731322040712_6239315426509153096_n.jpg'),
+(57, '/img/produtos/702176730_18587522371040712_1888693146393576607_n.jpg'),
+(58, '/img/produtos/702501625_18587522353040712_1412636360257886150_n.jpg'),
+(59, '/img/produtos/702569022_18587522329040712_5552315002095402149_n.jpg'),
+(60, '/img/produtos/702611507_18587522398040712_7839140292566599040_n.jpg');
+
+-- Relação N:N entre produtos e categorias
+INSERT INTO categorias_produtos (produto_id, categoria_id) VALUES
+(1, 4),
+(2, 6),
+(3, 1),
+(3, 2),
+(4, 2),
+(5, 6),
+(6, 1),
+(6, 2),
+(7, 2),
+(8, 2),
+(9, 2),
+(10, 1),
+(10, 4),
+(11, 4),
+(12, 2),
+(13, 6),
+(14, 1),
+(14, 2),
+(15, 2),
+(16, 1),
+(16, 2),
+(17, 2),
+(18, 4),
+(19, 2),
+(20, 2),
+(21, 3),
+(22, 3),
+(23, 4),
+(24, 2),
+(25, 5),
+(26, 4),
+(27, 2),
+(28, 1),
+(28, 4),
+(29, 4),
+(30, 2),
+(31, 2),
+(32, 5),
+(33, 1),
+(33, 4),
+(34, 4),
+(35, 1),
+(35, 4),
+(36, 2),
+(37, 2),
+(38, 4),
+(39, 2),
+(40, 6),
+(41, 4),
+(42, 3),
+(43, 4),
+(44, 2),
+(45, 2),
+(46, 2),
+(47, 2),
+(48, 6),
+(49, 4),
+(50, 4),
+(51, 4),
+(52, 4),
+(53, 4),
+(54, 2),
+(55, 2),
+(56, 4),
+(57, 2),
+(58, 2),
+(59, 4),
+(60, 2);
+
+-- Variacoes de tamanho dos produtos (mock)
+-- Roupas: PP, P, M, G, GG. Calcas: 36, 38, 40, 42, 44, 46.
+INSERT INTO produto_tamanhos (produto_id, tamanho_id, estoque)
+SELECT p.id_produto,
+       t.id_tamanho,
+       GREATEST(1, FLOOR(p.estoque / 5))
+FROM produtos p
+INNER JOIN tamanhos t ON (
+    (
+        EXISTS (
+            SELECT 1
+            FROM categorias_produtos cp
+            INNER JOIN categorias c ON c.id_categoria = cp.categoria_id
+            WHERE cp.produto_id = p.id_produto
+              AND cp.deletado_em IS NULL
+              AND c.deletado_em IS NULL
+              AND c.nome = 'Calças'
+        )
+        AND t.nome IN ('36', '38', '40', '42', '44', '46')
+    )
+    OR
+    (
+        NOT EXISTS (
+            SELECT 1
+            FROM categorias_produtos cp
+            INNER JOIN categorias c ON c.id_categoria = cp.categoria_id
+            WHERE cp.produto_id = p.id_produto
+              AND cp.deletado_em IS NULL
+              AND c.deletado_em IS NULL
+              AND c.nome = 'Calças'
+        )
+        AND t.nome IN ('PP', 'P', 'M', 'G', 'GG')
+    )
+)
+WHERE p.deletado_em IS NULL;
+
+-- Estoque do produto = soma do estoque das variacoes
+UPDATE produtos p
+SET p.estoque = (
+    SELECT COALESCE(SUM(pt.estoque), 0)
+    FROM produto_tamanhos pt
+    WHERE pt.produto_id = p.id_produto
+      AND pt.deletado_em IS NULL
+);
+
+
+-- Preenche os filtros de cor/estilo do catalogo a partir da descricao.
+UPDATE produtos
+SET cor = TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(descricao, 'Cor: ', -1), '.', 1)),
+    estilo = TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(descricao, 'Estilo: ', -1), '.', 1))
+WHERE descricao LIKE '%Cor: %'
+  AND (cor IS NULL OR estilo IS NULL);
+
+-- Usuario administrador de desenvolvimento.
+-- E-mail: admin@biamodas.local | Senha: Admin@123
+-- Troque a senha apos o primeiro acesso em producao.
+INSERT INTO usuarios (nome, email, senha_hash, telefone, is_admin)
+SELECT 'Administrador', 'admin@biamodas.local',
+       '$2y$12$Pm5dOdmnfGzB5LGIvvM5Q.JLJYXh8qrmCz.n5LN389gb1IRNHiFRK',
+       '14999999999', TRUE
+WHERE NOT EXISTS (
+    SELECT 1 FROM usuarios WHERE email = 'admin@biamodas.local'
+);
+
+-- Usuario cliente de desenvolvimento.
+-- E-mail: cliente@biamodas.local | Senha: Cliente@123
+INSERT INTO usuarios (nome, email, senha_hash, telefone, is_admin)
+SELECT 'Cliente Teste', 'cliente@biamodas.local',
+       '$2y$12$Q3F0p4GTK8.v82X7mvdNPu1.4y/5SnwvEk14gzlKsUhs2mKGRmVVe',
+       '14988887777', FALSE
+WHERE NOT EXISTS (
+    SELECT 1 FROM usuarios WHERE email = 'cliente@biamodas.local'
+);

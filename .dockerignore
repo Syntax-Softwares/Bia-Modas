@@ -1,0 +1,20 @@
+.git
+.github
+.gitignore
+.vscode
+.idea
+.env
+
+**/*.log
+**/node_modules
+**/vendor
+
+# Arquivos gerados em runtime (rate limit, sessoes locais, seeds)
+storage/
+
+# O schema e os dados iniciais sao montados direto no container do banco,
+# entao nao precisam ir na imagem da aplicacao
+db.sql
+seed_db.sql
+db/
+README.md

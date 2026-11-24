@@ -1,0 +1,77 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8080:80" # host:container
+    volumes:
+      - .:/var/www/html
+    environment:
+      TZ: America/Sao_Paulo
+      # Habilita apenas ferramentas de desenvolvimento (tools/dev-session.php).
+      APP_ENV: development
+      # A aplicacao usa o usuario nao-root criado pelo MariaDB (menor privilegio).
+      DB_HOST: db
+      DB_NAME: biamodas
+      DB_USER: syntax
+      DB_PASSWORD: Syntax@123
+      # E-mail transacional (Mailpit em desenvolvimento).
+      MAIL_HOST: mailpit
+      MAIL_PORT: 1025
+      MAIL_USERNAME: ""
+      MAIL_PASSWORD: ""
+      MAIL_SECURE: ""
+      MAIL_FROM: "nao-responda@biamodas.local"
+      MAIL_FROM_NAME: "Bia Modas"
+    depends_on:
+      db:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+
+  mailpit:
+    image: axllent/mailpit
+    ports:
+      - "1025:1025" # SMTP
+      - "8025:8025" # Interface web
+
+  # Servico utilitario, fora do "up" normal (profile tools).
+  # Uso: docker compose run --rm composer
+  composer:
+    image: composer:2
+    profiles: ["tools"]
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: install --no-interaction --prefer-dist
+
+  db:
+    image: mariadb:11
+    restart: unless-stopped
+    ports:
+      # Expoe o banco apenas para a maquina local, nao para a rede.
+      - "127.0.0.1:3306:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: biamodas
+      MARIADB_USER: syntax
+      MARIADB_PASSWORD: Syntax@123
+      TZ: America/Sao_Paulo
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      # Executado automaticamente so na primeira subida (volume vazio).
+      # Para recriar o banco do zero:
+      #   docker compose down -v && docker compose up -d --build
+      - ./db.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./seed_db.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+volumes:
+  mariadb_data:
