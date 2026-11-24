@@ -1,0 +1,31 @@
+name: Testes
+
+on:
+  push:
+    branches:
+      - main
+      - integracao_backend
+  pull_request:
+
+jobs:
+  phpunit:
+    name: PHPUnit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, dom, libxml, xml, xmlwriter, pdo, pdo_mysql
+          coverage: none
+          tools: composer:v2
+
+      - name: Instalar dependencias
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Executar testes
+        run: composer test
