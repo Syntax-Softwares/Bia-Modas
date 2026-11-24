@@ -220,7 +220,7 @@ class PedidoRepository
                         endereco_numero, endereco_complemento, endereco_bairro,
                         endereco_cidade, endereco_uf
                      ) VALUES (
-                        :usuario, NULL, NULL, NULL, :numero,
+                        :usuario, NULL, :endereco, NULL, :numero,
                         :total, FALSE, :frete, :desconto,
                         :destinatario, :telefone, :cep, :logradouro,
                         :numero_endereco, :complemento, :bairro,
@@ -229,6 +229,9 @@ class PedidoRepository
                 );
                 $stmt->execute([
                     ':usuario' => $usuarioId,
+                    ':endereco' => ctype_digit((string) ($dados['endereco_id'] ?? ''))
+                        ? (int) $dados['endereco_id']
+                        : null,
                     ':numero' => $numeroPedido,
                     ':total' => $total,
                     ':frete' => $frete,

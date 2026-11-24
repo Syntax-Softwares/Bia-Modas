@@ -27,7 +27,7 @@
     background: rgba(13, 110, 253, 0.08);
 }
 
-.alerta-info a {
+.alerta a {
     color: inherit;
     text-decoration: underline;
 }
@@ -41,6 +41,226 @@
 
 .checkout-form {
     min-width: 0;
+}
+
+/* Identidade de quem esta comprando */
+.checkout-conta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 22px;
+    margin-bottom: 30px;
+    background: var(--color-secondary);
+    border: 1px solid var(--color-light-gray);
+}
+
+.checkout-conta-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--color-dark);
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    line-height: 1;
+}
+
+.checkout-conta-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    flex: 1;
+    min-width: 0;
+}
+
+.checkout-conta-rotulo {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--color-gray);
+}
+
+.checkout-conta-nome {
+    font-family: var(--font-display);
+    font-size: 1.12rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--color-dark);
+}
+
+.checkout-conta-contato {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px 8px;
+    min-width: 0;
+    font-size: 0.82rem;
+    color: var(--color-gray);
+}
+
+.checkout-conta-contato span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.checkout-conta-separador {
+    color: var(--color-light-gray);
+}
+
+.checkout-conta-link {
+    flex-shrink: 0;
+    padding-bottom: 1px;
+    border-bottom: 1px solid currentColor;
+    color: var(--color-dark);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.checkout-conta-link:hover {
+    color: var(--color-primary);
+}
+
+/* Enderecos salvos */
+.checkout-enderecos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.checkout-endereco-opcao {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    min-width: 0;
+    padding: 16px;
+    background: #fff;
+    border: 1px solid var(--color-light-gray);
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+
+.checkout-endereco-opcao:hover {
+    border-color: var(--color-dark);
+}
+
+.checkout-endereco-opcao:has(input:checked),
+.checkout-endereco-opcao.is-selecionado {
+    background: var(--color-secondary);
+    border-color: var(--color-dark);
+    box-shadow: inset 0 0 0 1px var(--color-dark);
+}
+
+.checkout-endereco-opcao input {
+    width: 17px;
+    height: 17px;
+    margin-top: 3px;
+    flex-shrink: 0;
+    accent-color: var(--color-primary);
+}
+
+.checkout-endereco-conteudo {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.checkout-endereco-topo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 2px;
+}
+
+.checkout-endereco-topo strong {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--color-dark);
+}
+
+.checkout-endereco-tag {
+    padding: 2px 7px;
+    background: var(--color-dark);
+    color: #fff;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.checkout-endereco-linha {
+    overflow-wrap: anywhere;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--color-gray);
+}
+
+.checkout-endereco-cep {
+    font-size: 0.74rem;
+}
+
+.checkout-endereco-opcao-nova .checkout-endereco-topo strong {
+    color: var(--color-primary);
+}
+
+.checkout-endereco-novo {
+    margin-top: 16px;
+    padding: 20px;
+    background: #fcfcfc;
+    border: 1px dashed var(--color-light-gray);
+}
+
+.checkout-endereco-novo[hidden] {
+    display: none;
+}
+
+.checkout-endereco-novo-topo {
+    margin-bottom: 16px;
+}
+
+.checkout-endereco-novo-topo h3 {
+    margin: 0 0 2px;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--color-dark);
+}
+
+.checkout-endereco-novo-topo p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--color-gray);
+}
+
+.checkout-endereco-rodape {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.checkout-link-gerenciar {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--color-gray);
+    font-size: 0.82rem;
+    text-decoration: none;
+}
+
+.checkout-link-gerenciar:hover {
+    color: var(--color-primary);
 }
 
 .checkout-bloco {
@@ -207,6 +427,27 @@
     color: var(--color-primary);
 }
 
+.checkout-resumo-topo {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.checkout-resumo-topo h2 {
+    margin: 0;
+}
+
+.checkout-resumo-topo > span {
+    flex-shrink: 0;
+    color: var(--color-gray);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+}
+
 .checkout-itens {
     list-style: none;
     padding: 0;
@@ -254,6 +495,27 @@
     font-size: 0.9rem;
     color: var(--color-dark);
     white-space: nowrap;
+}
+
+.checkout-resumo-entrega {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 0;
+    border-top: 1px solid var(--color-light-gray);
+    color: var(--color-gray);
+    font-size: 0.85rem;
+}
+
+.checkout-resumo-entrega span:first-child {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkout-resumo-entrega span:last-child {
+    color: var(--color-dark);
+    font-weight: 600;
 }
 
 .checkout-nota {
@@ -499,9 +761,32 @@
     }
 }
 
+@media (max-width: 767px) {
+    .checkout-conta {
+        flex-wrap: wrap;
+        padding: 16px 18px;
+    }
+
+    .checkout-conta-link {
+        margin-left: 62px;
+    }
+
+    .checkout-enderecos {
+        grid-template-columns: 1fr;
+    }
+}
+
 @media (max-width: 575px) {
     .checkout-grade {
         grid-template-columns: 1fr;
+    }
+
+    .checkout-endereco-novo {
+        padding: 16px;
+    }
+
+    .checkout-conta-link {
+        margin-left: 0;
     }
 
     .pedido-card {

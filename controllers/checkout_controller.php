@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../core/sessao.php';
 require_once __DIR__ . '/../core/comprador.php';
 require_once __DIR__ . '/../repositories/carrinho_repository.php';
+require_once __DIR__ . '/../repositories/endereco_repository.php';
 require_once __DIR__ . '/../repositories/favorito_repository.php';
 require_once __DIR__ . '/../repositories/pedido_repository.php';
 require_once __DIR__ . '/../repositories/usuario_repository.php';
@@ -10,6 +11,7 @@ require_once __DIR__ . '/../repositories/usuario_repository.php';
 class CheckoutController
 {
     private CarrinhoRepository $carrinho;
+    private EnderecoRepository $enderecos;
     private FavoritoRepository $favoritos;
     private PedidoRepository $pedidos;
     private UsuarioRepository $usuarios;
@@ -19,6 +21,7 @@ class CheckoutController
     public function __construct(private PDO $pdo)
     {
         $this->carrinho = new CarrinhoRepository($pdo);
+        $this->enderecos = new EnderecoRepository($pdo);
         $this->favoritos = new FavoritoRepository($pdo);
         $this->pedidos = new PedidoRepository($pdo);
         $this->usuarios = new UsuarioRepository($pdo);
@@ -55,7 +58,7 @@ class CheckoutController
             redirecionar('/carrinho');
         }
 
-        $dados = $this->validar($_POST);
+        $dados = $this->validar($_POST, $usuarioId);
 
         if ($dados['erros'] !== []) {
             $this->renderizar($resumo, $dados['erros'], $dados['dados']);
@@ -74,9 +77,12 @@ class CheckoutController
     }
 
     /**
-     * Dados iniciais do checkout: nome, telefone e endereco principal do
-     * cadastro. O cliente ainda pode ajustar antes de confirmar; o pedido
-     * guarda uma copia (snapshot) do que foi enviado.
+     * Dados iniciais do checkout.
+     *
+     * Nome, telefone e e-mail vem do cadastro e nao sao mais digitados no
+     * checkout. O endereco vem da lista de enderecos salvos: o principal ja
+     * fica selecionado, mas o cliente pode trocar por outro ou informar um
+     * endereco avulso. O pedido guarda uma copia (snapshot) do que foi usado.
      */
     private function dadosDoCadastro(int $usuarioId): array
     {
@@ -84,47 +90,80 @@ class CheckoutController
         $usuario = $this->usuarios->buscarPorId($usuarioId);
 
         if ($usuario === null) {
+            $dados['endereco_id'] = 'novo';
+
             return $dados;
         }
 
-        $dados['destinatario'] = (string) ($usuario['nome'] ?? '');
-        $dados['telefone'] = (string) ($usuario['telefone'] ?? '');
-        $dados['endereco_cep'] = (string) ($usuario['endereco_cep'] ?? '');
-        $dados['endereco_logradouro'] = (string) ($usuario['endereco_logradouro'] ?? '');
-        $dados['endereco_numero'] = (string) ($usuario['endereco_numero'] ?? '');
-        $dados['endereco_complemento'] = (string) ($usuario['endereco_complemento'] ?? '');
-        $dados['endereco_bairro'] = (string) ($usuario['endereco_bairro'] ?? '');
-        $dados['endereco_cidade'] = (string) ($usuario['endereco_cidade'] ?? '');
-        $dados['endereco_uf'] = (string) ($usuario['endereco_uf'] ?? '');
+        $dados['destinatario'] = trim((string) ($usuario['nome'] ?? ''));
+        $dados['telefone'] = preg_replace('/\D+/', '', (string) ($usuario['telefone'] ?? ''));
+
+        $enderecoId = (int) ($usuario['endereco_id'] ?? 0);
+        $dados['endereco_id'] = $enderecoId > 0 ? (string) $enderecoId : 'novo';
 
         return $dados;
     }
 
-    private function validar(array $entrada): array
+    private function validar(array $entrada, int $usuarioId): array
     {
-        $dados = [
-            'destinatario' => trim((string) ($entrada['destinatario'] ?? '')),
-            'telefone' => preg_replace('/\D+/', '', (string) ($entrada['telefone'] ?? '')),
-            'endereco_cep' => preg_replace('/\D+/', '', (string) ($entrada['endereco_cep'] ?? '')),
-            'endereco_logradouro' => trim((string) ($entrada['endereco_logradouro'] ?? '')),
-            'endereco_numero' => trim((string) ($entrada['endereco_numero'] ?? '')),
-            'endereco_complemento' => trim((string) ($entrada['endereco_complemento'] ?? '')),
-            'endereco_bairro' => trim((string) ($entrada['endereco_bairro'] ?? '')),
-            'endereco_cidade' => trim((string) ($entrada['endereco_cidade'] ?? '')),
-            'endereco_uf' => strtoupper(trim((string) ($entrada['endereco_uf'] ?? ''))),
-            'forma_pagamento' => (string) ($entrada['forma_pagamento'] ?? ''),
-        ];
+        $dados = $this->dadosDoCadastro($usuarioId);
+        $dados['endereco_id'] = trim((string) ($entrada['endereco_id'] ?? ''));
+        $dados['forma_pagamento'] = (string) ($entrada['forma_pagamento'] ?? '');
 
         $erros = [];
 
-        if (tamanho_texto($dados['destinatario']) < 3 || tamanho_texto($dados['destinatario']) > 255) {
-            $erros['destinatario'] = 'Informe o nome de quem vai receber.';
+        if (
+            tamanho_texto($dados['destinatario']) < 3
+            || tamanho_texto($dados['destinatario']) > 255
+            || strlen($dados['telefone']) < 10
+            || strlen($dados['telefone']) > 11
+        ) {
+            $erros['contato'] = 'Complete seu nome e telefone no cadastro para finalizar a compra.';
         }
 
-        $tamanhoTelefone = strlen($dados['telefone']);
-        if ($tamanhoTelefone < 10 || $tamanhoTelefone > 11) {
-            $erros['telefone'] = 'Informe um telefone com DDD.';
+        if ($dados['endereco_id'] === 'novo') {
+            $this->validarNovoEndereco($entrada, $dados, $erros);
+        } elseif ($dados['endereco_id'] === '') {
+            $erros['endereco_id'] = 'Escolha o endereço de entrega.';
+        } else {
+            $endereco = ctype_digit($dados['endereco_id'])
+                ? $this->enderecos->buscarDoUsuario((int) $dados['endereco_id'], $usuarioId)
+                : null;
+
+            if ($endereco === null) {
+                $erros['endereco_id'] = 'Escolha um endereço de entrega válido.';
+                $dados['endereco_id'] = '';
+            } else {
+                $dados['endereco_id'] = (string) $endereco['id_endereco'];
+                $dados['endereco_cep'] = (string) $endereco['cep'];
+                $dados['endereco_logradouro'] = (string) $endereco['logradouro'];
+                $dados['endereco_numero'] = (string) $endereco['numero'];
+                $dados['endereco_complemento'] = (string) ($endereco['complemento'] ?? '');
+                $dados['endereco_bairro'] = (string) $endereco['bairro'];
+                $dados['endereco_cidade'] = (string) $endereco['cidade'];
+                $dados['endereco_uf'] = (string) $endereco['uf'];
+            }
         }
+
+        if (!in_array($dados['forma_pagamento'], self::FORMAS_PAGAMENTO, true)) {
+            $erros['forma_pagamento'] = 'Escolha a forma de pagamento.';
+        }
+
+        return [
+            'dados' => $dados,
+            'erros' => $erros,
+        ];
+    }
+
+    private function validarNovoEndereco(array $entrada, array &$dados, array &$erros): void
+    {
+        $dados['endereco_cep'] = preg_replace('/\D+/', '', (string) ($entrada['endereco_cep'] ?? ''));
+        $dados['endereco_logradouro'] = trim((string) ($entrada['endereco_logradouro'] ?? ''));
+        $dados['endereco_numero'] = trim((string) ($entrada['endereco_numero'] ?? ''));
+        $dados['endereco_complemento'] = trim((string) ($entrada['endereco_complemento'] ?? ''));
+        $dados['endereco_bairro'] = trim((string) ($entrada['endereco_bairro'] ?? ''));
+        $dados['endereco_cidade'] = trim((string) ($entrada['endereco_cidade'] ?? ''));
+        $dados['endereco_uf'] = strtoupper(trim((string) ($entrada['endereco_uf'] ?? '')));
 
         if (strlen($dados['endereco_cep']) !== 8) {
             $erros['endereco_cep'] = 'Informe um CEP válido (8 dígitos).';
@@ -162,15 +201,6 @@ class CheckoutController
         if (preg_match('/^[A-Z]{2}$/', $dados['endereco_uf']) !== 1) {
             $erros['endereco_uf'] = 'Informe a UF com 2 letras.';
         }
-
-        if (!in_array($dados['forma_pagamento'], self::FORMAS_PAGAMENTO, true)) {
-            $erros['forma_pagamento'] = 'Escolha a forma de pagamento.';
-        }
-
-        return [
-            'dados' => $dados,
-            'erros' => $erros,
-        ];
     }
 
     private function dadosVazios(): array
@@ -178,6 +208,7 @@ class CheckoutController
         return [
             'destinatario' => '',
             'telefone' => '',
+            'endereco_id' => '',
             'endereco_cep' => '',
             'endereco_logradouro' => '',
             'endereco_numero' => '',
@@ -213,11 +244,12 @@ class CheckoutController
             'resumo' => $resumo,
             'erros' => $erros,
             'dados' => $dados,
+            'usuario' => $usuario,
+            'enderecos' => $usuarioId !== null ? $this->enderecos->listarPorUsuario($usuarioId) : [],
             'favoritosIds' => $favoritosIds,
             'favoritosTotal' => count($favoritosIds),
             'carrinhoIds' => array_column($resumo['itens'], 'produto_id'),
             'quantidadeCarrinho' => $resumo['quantidade'],
-            'temEnderecoPrincipal' => $usuario !== null && !empty($usuario['endereco_logradouro']),
             'flashes' => Sessao::flashes(),
         ];
 

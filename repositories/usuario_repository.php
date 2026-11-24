@@ -39,6 +39,7 @@ class UsuarioRepository
                 m.busto AS medida_busto,
                 m.cintura AS medida_cintura,
                 m.quadril AS medida_quadril,
+                e.id_endereco AS endereco_id,
                 e.nome_endereco AS endereco_nome,
                 e.logradouro AS endereco_logradouro,
                 e.numero AS endereco_numero,

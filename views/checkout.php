@@ -2,9 +2,31 @@
 $resumo = $data['resumo'];
 $erros = $data['erros'] ?? [];
 $dados = $data['dados'] ?? [];
+$usuario = $data['usuario'] ?? null;
+$enderecos = $data['enderecos'] ?? [];
 $favoritosIds = $data['favoritosIds'] ?? [];
 $favoritosTotal = $data['favoritosTotal'] ?? 0;
 $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
+
+$enderecoSelecionado = (string) ($dados['endereco_id'] ?? '');
+$novoEnderecoComErro = isset($erros['endereco_cep'])
+    || isset($erros['endereco_logradouro'])
+    || isset($erros['endereco_numero'])
+    || isset($erros['endereco_complemento'])
+    || isset($erros['endereco_bairro'])
+    || isset($erros['endereco_cidade'])
+    || isset($erros['endereco_uf']);
+$usandoNovoEndereco = $enderecoSelecionado === 'novo' || $enderecos === [] || $novoEnderecoComErro;
+$valorNovoEndereco = static function (string $campo) use ($dados, $enderecoSelecionado): string {
+    return $enderecoSelecionado === 'novo' ? (string) ($dados[$campo] ?? '') : '';
+};
+
+$nomeUsuario = trim((string) ($usuario['nome'] ?? '')) !== ''
+    ? trim((string) $usuario['nome'])
+    : trim((string) ($dados['destinatario'] ?? ''));
+$emailUsuario = trim((string) ($usuario['email'] ?? ''));
+$telefoneUsuario = preg_replace('/\D+/', '', (string) ($usuario['telefone'] ?? ($dados['telefone'] ?? '')));
+$totalItens = array_sum(array_map(static fn (array $item): int => (int) $item['quantidade'], $resumo['itens']));
 ?>
 <!doctype html>
 <html lang="pt-br">
@@ -47,7 +69,7 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
                 <span>Checkout</span>
             </nav>
             <h1>Finalizar compra</h1>
-            <p>Confirme seus dados e escolha como pagar</p>
+            <p>Revise seus dados e escolha como pagar</p>
         </div>
     </header>
 
@@ -55,15 +77,32 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
         <div class="container">
             <?php require __DIR__ . '/partials/alerts.php'; ?>
 
-            <?php if (!empty($data['temEnderecoPrincipal'])): ?>
-                <div class="alerta alerta-info" role="status">
-                    Nome, telefone e endereço preenchidos com os dados do seu cadastro.
-                    <a href="/perfil/enderecos">Gerenciar endereços</a>
-                </div>
-            <?php else: ?>
-                <div class="alerta alerta-info" role="status">
-                    Você ainda não tem um endereço principal no cadastro. Preencha os dados de entrega abaixo ou
-                    <a href="/perfil/enderecos">cadastre um endereço</a>.
+            <div class="checkout-conta">
+                <span class="checkout-conta-avatar" aria-hidden="true"><?= e(Html::inicial($nomeUsuario)) ?></span>
+                <span class="checkout-conta-info">
+                    <span class="checkout-conta-rotulo">Comprando como</span>
+                    <strong class="checkout-conta-nome"><?= e($nomeUsuario !== '' ? $nomeUsuario : 'Sua conta') ?></strong>
+                    <?php if ($emailUsuario !== '' || $telefoneUsuario !== ''): ?>
+                        <span class="checkout-conta-contato">
+                            <?php if ($emailUsuario !== ''): ?>
+                                <span><?= e($emailUsuario) ?></span>
+                            <?php endif; ?>
+                            <?php if ($emailUsuario !== '' && $telefoneUsuario !== ''): ?>
+                                <span class="checkout-conta-separador" aria-hidden="true">•</span>
+                            <?php endif; ?>
+                            <?php if ($telefoneUsuario !== ''): ?>
+                                <span><?= e(Html::telefone($telefoneUsuario)) ?></span>
+                            <?php endif; ?>
+                        </span>
+                    <?php endif; ?>
+                </span>
+                <a href="/perfil" class="checkout-conta-link">Minha conta</a>
+            </div>
+
+            <?php if (isset($erros['contato'])): ?>
+                <div class="alerta alerta-erro" role="alert">
+                    <?= e($erros['contato']) ?>
+                    <a href="/perfil">Atualizar meus dados</a>
                 </div>
             <?php endif; ?>
 
@@ -71,133 +110,181 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
                 <div class="alerta alerta-erro" role="alert"><?= e($erros['geral']) ?></div>
             <?php endif; ?>
 
+            <?php if ($enderecos === []): ?>
+                <div class="alerta alerta-aviso" role="status">
+                    Você ainda não tem um endereço cadastrado. Informe o endereço de entrega abaixo ou
+                    <a href="/perfil/enderecos">cadastre um endereço na sua conta</a>.
+                </div>
+            <?php endif; ?>
+
             <div class="checkout-layout">
-                <form class="checkout-form" method="post" action="/checkout" novalidate data-endereco-form>
+                <form class="checkout-form" method="post" action="/checkout" novalidate data-checkout-form>
                     <?= Sessao::csrfField() ?>
 
                     <fieldset class="checkout-bloco">
-                        <legend><span class="checkout-passo">1</span> Quem recebe</legend>
+                        <legend><span class="checkout-passo">1</span> Endereço de entrega</legend>
 
-                        <div class="checkout-grade">
-                            <div class="campo campo-cheio">
-                                <label for="destinatario">Nome completo</label>
-                                <input type="text" id="destinatario" name="destinatario"
-                                       value="<?= e($dados['destinatario'] ?? '') ?>"
-                                       autocomplete="name" maxlength="255"
-                                       class="<?= isset($erros['destinatario']) ? 'tem-erro' : '' ?>">
-                                <?php if (isset($erros['destinatario'])): ?>
-                                    <span class="campo-erro"><?= e($erros['destinatario']) ?></span>
-                                <?php endif; ?>
-                            </div>
-
-                            <div class="campo">
-                                <label for="telefone">Telefone / WhatsApp</label>
-                                <input type="tel" id="telefone" name="telefone" inputmode="numeric"
-                                       value="<?= e($dados['telefone'] ?? '') ?>"
-                                       placeholder="(14) 99999-9999" autocomplete="tel" maxlength="15"
-                                       data-mask="telefone"
-                                       class="<?= isset($erros['telefone']) ? 'tem-erro' : '' ?>">
-                                <?php if (isset($erros['telefone'])): ?>
-                                    <span class="campo-erro"><?= e($erros['telefone']) ?></span>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </fieldset>
-
-                    <fieldset class="checkout-bloco">
-                        <legend><span class="checkout-passo">2</span> Endereço de entrega</legend>
-
-                        <div class="checkout-grade">
-                            <div class="campo">
-                                <label for="endereco_cep">CEP</label>
-                                <input type="text" id="endereco_cep" name="endereco_cep" inputmode="numeric"
-                                       value="<?= e($dados['endereco_cep'] ?? '') ?>"
-                                       placeholder="17201-320" autocomplete="postal-code" maxlength="9"
-                                       class="<?= isset($erros['endereco_cep']) ? 'tem-erro' : '' ?>">
-                                <?php if (isset($erros['endereco_cep'])): ?>
-                                    <span class="campo-erro"><?= e($erros['endereco_cep']) ?></span>
-                                <?php endif; ?>
-                                <small class="endereco-feedback" data-cep-feedback hidden></small>
-                            </div>
-
-                            <div class="campo">
-                                <?php $semNumeroCheckout = strtoupper(trim((string) ($dados['endereco_numero'] ?? ''))) === 'S/N'; ?>
-                                <label for="endereco_numero">Número</label>
-                                <div class="numero-linha">
-                                    <input type="text" id="endereco_numero" name="endereco_numero"
-                                           value="<?= e($dados['endereco_numero'] ?? '') ?>"
-                                           autocomplete="address-line2" maxlength="10"
-                                           <?= $semNumeroCheckout ? 'readonly aria-readonly="true"' : '' ?>
-                                           class="<?= isset($erros['endereco_numero']) ? 'tem-erro ' : '' ?><?= $semNumeroCheckout ? 'is-readonly' : '' ?>">
-                                    <label class="sem-numero-check" for="endereco-sem-numero">
-                                        <input type="checkbox" id="endereco-sem-numero" data-sem-numero <?= $semNumeroCheckout ? 'checked' : '' ?>>
-                                        <span>Este endereço não possui número</span>
+                        <?php if ($enderecos !== []): ?>
+                            <div class="checkout-enderecos">
+                                <?php foreach ($enderecos as $endereco): ?>
+                                    <?php
+                                    $idEndereco = (int) $endereco['id_endereco'];
+                                    $selecionado = $enderecoSelecionado === (string) $idEndereco;
+                                    $principal = (int) $endereco['principal'] === 1;
+                                    $nomeEndereco = trim((string) $endereco['nome_endereco']);
+                                    $mostrarTagPrincipal = $principal && strcasecmp($nomeEndereco, 'Principal') !== 0;
+                                    ?>
+                                    <label class="checkout-endereco-opcao<?= $selecionado ? ' is-selecionado' : '' ?>">
+                                        <input type="radio" name="endereco_id" value="<?= $idEndereco ?>"
+                                            <?= $selecionado ? 'checked' : '' ?>>
+                                        <span class="checkout-endereco-conteudo">
+                                            <span class="checkout-endereco-topo">
+                                                <strong><?= e($nomeEndereco) ?></strong>
+                                                <?php if ($mostrarTagPrincipal): ?>
+                                                    <span class="checkout-endereco-tag">Principal</span>
+                                                <?php endif; ?>
+                                            </span>
+                                            <span class="checkout-endereco-linha">
+                                                <?= e($endereco['logradouro']) ?>, <?= e($endereco['numero']) ?>
+                                                <?php if (!empty($endereco['complemento'])): ?>
+                                                    — <?= e($endereco['complemento']) ?>
+                                                <?php endif; ?>
+                                            </span>
+                                            <span class="checkout-endereco-linha">
+                                                <?= e($endereco['bairro']) ?> · <?= e($endereco['cidade']) ?>/<?= e($endereco['uf']) ?>
+                                            </span>
+                                            <span class="checkout-endereco-linha checkout-endereco-cep">
+                                                CEP <?= e(Html::cep($endereco['cep'])) ?>
+                                            </span>
+                                        </span>
                                     </label>
+                                <?php endforeach; ?>
+
+                                <label class="checkout-endereco-opcao checkout-endereco-opcao-nova<?= $usandoNovoEndereco ? ' is-selecionado' : '' ?>">
+                                    <input type="radio" name="endereco_id" value="novo"
+                                        <?= $usandoNovoEndereco ? 'checked' : '' ?> data-checkout-novo-endereco>
+                                    <span class="checkout-endereco-conteudo">
+                                        <span class="checkout-endereco-topo">
+                                            <strong>Outro endereço</strong>
+                                        </span>
+                                        <span class="checkout-endereco-linha">
+                                            Informar um endereço diferente só para este pedido
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+
+                            <?php if (isset($erros['endereco_id'])): ?>
+                                <span class="campo-erro"><?= e($erros['endereco_id']) ?></span>
+                            <?php endif; ?>
+                        <?php else: ?>
+                            <input type="hidden" name="endereco_id" value="novo">
+                        <?php endif; ?>
+
+                        <div class="checkout-endereco-novo" data-checkout-endereco-novo <?= $usandoNovoEndereco ? '' : 'hidden' ?>>
+                            <div class="checkout-endereco-novo-topo">
+                                <h3>Endereço para esta entrega</h3>
+                                <p>Preencha os dados de quem vai receber.</p>
+                            </div>
+
+                            <div class="checkout-grade" data-endereco-form>
+                                <div class="campo">
+                                    <label for="endereco_cep">CEP</label>
+                                    <input type="text" id="endereco_cep" name="endereco_cep" inputmode="numeric"
+                                           value="<?= e($valorNovoEndereco('endereco_cep')) ?>"
+                                           placeholder="17201-320" autocomplete="postal-code" maxlength="9"
+                                           class="<?= isset($erros['endereco_cep']) ? 'tem-erro' : '' ?>">
+                                    <?php if (isset($erros['endereco_cep'])): ?>
+                                        <span class="campo-erro"><?= e($erros['endereco_cep']) ?></span>
+                                    <?php endif; ?>
+                                    <small class="endereco-feedback" data-cep-feedback hidden></small>
                                 </div>
-                                <?php if (isset($erros['endereco_numero'])): ?>
-                                    <span class="campo-erro"><?= e($erros['endereco_numero']) ?></span>
-                                <?php endif; ?>
-                            </div>
 
-                            <div class="campo campo-cheio">
-                                <label for="endereco_logradouro">Rua / Avenida</label>
-                                <input type="text" id="endereco_logradouro" name="endereco_logradouro"
-                                       value="<?= e($dados['endereco_logradouro'] ?? '') ?>"
-                                       autocomplete="address-line1" maxlength="100"
-                                       class="<?= isset($erros['endereco_logradouro']) ? 'tem-erro' : '' ?>">
-                                <?php if (isset($erros['endereco_logradouro'])): ?>
-                                    <span class="campo-erro"><?= e($erros['endereco_logradouro']) ?></span>
-                                <?php endif; ?>
-                            </div>
+                                <div class="campo">
+                                    <?php $semNumeroCheckout = strtoupper(trim($valorNovoEndereco('endereco_numero'))) === 'S/N'; ?>
+                                    <label for="endereco_numero">Número</label>
+                                    <div class="numero-linha">
+                                        <input type="text" id="endereco_numero" name="endereco_numero"
+                                               value="<?= e($valorNovoEndereco('endereco_numero')) ?>"
+                                               autocomplete="address-line2" maxlength="10"
+                                               <?= $semNumeroCheckout ? 'readonly aria-readonly="true"' : '' ?>
+                                               class="<?= isset($erros['endereco_numero']) ? 'tem-erro ' : '' ?><?= $semNumeroCheckout ? 'is-readonly' : '' ?>">
+                                        <label class="sem-numero-check" for="endereco-sem-numero">
+                                            <input type="checkbox" id="endereco-sem-numero" data-sem-numero <?= $semNumeroCheckout ? 'checked' : '' ?>>
+                                            <span>Este endereço não possui número</span>
+                                        </label>
+                                    </div>
+                                    <?php if (isset($erros['endereco_numero'])): ?>
+                                        <span class="campo-erro"><?= e($erros['endereco_numero']) ?></span>
+                                    <?php endif; ?>
+                                </div>
 
-                            <div class="campo">
-                                <label for="endereco_complemento">Complemento <span class="campo-opcional">(opcional)</span></label>
-                                <input type="text" id="endereco_complemento" name="endereco_complemento"
-                                       value="<?= e($dados['endereco_complemento'] ?? '') ?>"
-                                       maxlength="60"
-                                       class="<?= isset($erros['endereco_complemento']) ? 'tem-erro' : '' ?>">
-                                <?php if (isset($erros['endereco_complemento'])): ?>
-                                    <span class="campo-erro"><?= e($erros['endereco_complemento']) ?></span>
-                                <?php endif; ?>
-                            </div>
+                                <div class="campo campo-cheio">
+                                    <label for="endereco_logradouro">Rua / Avenida</label>
+                                    <input type="text" id="endereco_logradouro" name="endereco_logradouro"
+                                           value="<?= e($valorNovoEndereco('endereco_logradouro')) ?>"
+                                           autocomplete="address-line1" maxlength="100"
+                                           class="<?= isset($erros['endereco_logradouro']) ? 'tem-erro' : '' ?>">
+                                    <?php if (isset($erros['endereco_logradouro'])): ?>
+                                        <span class="campo-erro"><?= e($erros['endereco_logradouro']) ?></span>
+                                    <?php endif; ?>
+                                </div>
 
-                            <div class="campo">
-                                <label for="endereco_bairro">Bairro</label>
-                                <input type="text" id="endereco_bairro" name="endereco_bairro"
-                                       value="<?= e($dados['endereco_bairro'] ?? '') ?>"
-                                       autocomplete="address-level3" maxlength="60"
-                                       class="<?= isset($erros['endereco_bairro']) ? 'tem-erro' : '' ?>">
-                                <?php if (isset($erros['endereco_bairro'])): ?>
-                                    <span class="campo-erro"><?= e($erros['endereco_bairro']) ?></span>
-                                <?php endif; ?>
-                            </div>
+                                <div class="campo">
+                                    <label for="endereco_complemento">Complemento <span class="campo-opcional">(opcional)</span></label>
+                                    <input type="text" id="endereco_complemento" name="endereco_complemento"
+                                           value="<?= e($valorNovoEndereco('endereco_complemento')) ?>"
+                                           maxlength="60"
+                                           class="<?= isset($erros['endereco_complemento']) ? 'tem-erro' : '' ?>">
+                                    <?php if (isset($erros['endereco_complemento'])): ?>
+                                        <span class="campo-erro"><?= e($erros['endereco_complemento']) ?></span>
+                                    <?php endif; ?>
+                                </div>
 
-                            <div class="campo">
-                                <label for="endereco_cidade">Cidade</label>
-                                <input type="text" id="endereco_cidade" name="endereco_cidade"
-                                       value="<?= e($dados['endereco_cidade'] ?? '') ?>"
-                                       autocomplete="address-level2" maxlength="60"
-                                       class="<?= isset($erros['endereco_cidade']) ? 'tem-erro' : '' ?>">
-                                <?php if (isset($erros['endereco_cidade'])): ?>
-                                    <span class="campo-erro"><?= e($erros['endereco_cidade']) ?></span>
-                                <?php endif; ?>
-                            </div>
+                                <div class="campo">
+                                    <label for="endereco_bairro">Bairro</label>
+                                    <input type="text" id="endereco_bairro" name="endereco_bairro"
+                                           value="<?= e($valorNovoEndereco('endereco_bairro')) ?>"
+                                           autocomplete="address-level3" maxlength="60"
+                                           class="<?= isset($erros['endereco_bairro']) ? 'tem-erro' : '' ?>">
+                                    <?php if (isset($erros['endereco_bairro'])): ?>
+                                        <span class="campo-erro"><?= e($erros['endereco_bairro']) ?></span>
+                                    <?php endif; ?>
+                                </div>
 
-                            <div class="campo">
-                                <label for="endereco_uf">UF</label>
-                                <input type="text" id="endereco_uf" name="endereco_uf" maxlength="2"
-                                       value="<?= e($dados['endereco_uf'] ?? '') ?>"
-                                       autocomplete="address-level1" placeholder="SP"
-                                       class="campo-uf <?= isset($erros['endereco_uf']) ? 'tem-erro' : '' ?>">
-                                <?php if (isset($erros['endereco_uf'])): ?>
-                                    <span class="campo-erro"><?= e($erros['endereco_uf']) ?></span>
-                                <?php endif; ?>
+                                <div class="campo">
+                                    <label for="endereco_cidade">Cidade</label>
+                                    <input type="text" id="endereco_cidade" name="endereco_cidade"
+                                           value="<?= e($valorNovoEndereco('endereco_cidade')) ?>"
+                                           autocomplete="address-level2" maxlength="60"
+                                           class="<?= isset($erros['endereco_cidade']) ? 'tem-erro' : '' ?>">
+                                    <?php if (isset($erros['endereco_cidade'])): ?>
+                                        <span class="campo-erro"><?= e($erros['endereco_cidade']) ?></span>
+                                    <?php endif; ?>
+                                </div>
+
+                                <div class="campo">
+                                    <label for="endereco_uf">UF</label>
+                                    <input type="text" id="endereco_uf" name="endereco_uf" maxlength="2"
+                                           value="<?= e($valorNovoEndereco('endereco_uf')) ?>"
+                                           autocomplete="address-level1" placeholder="SP"
+                                           class="campo-uf <?= isset($erros['endereco_uf']) ? 'tem-erro' : '' ?>">
+                                    <?php if (isset($erros['endereco_uf'])): ?>
+                                        <span class="campo-erro"><?= e($erros['endereco_uf']) ?></span>
+                                    <?php endif; ?>
+                                </div>
                             </div>
+                        </div>
+
+                        <div class="checkout-endereco-rodape">
+                            <a href="/perfil/enderecos" class="checkout-link-gerenciar">
+                                <i class="icon-map-pin"></i> Gerenciar meus endereços
+                            </a>
                         </div>
                     </fieldset>
 
                     <fieldset class="checkout-bloco">
-                        <legend><span class="checkout-passo">3</span> Pagamento</legend>
+                        <legend><span class="checkout-passo">2</span> Pagamento</legend>
 
                         <div class="checkout-pagamentos">
                             <label class="pagamento-opcao">
@@ -244,7 +331,10 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
                 </form>
 
                 <aside class="carrinho-resumo checkout-resumo">
-                    <h2>Resumo do pedido</h2>
+                    <div class="checkout-resumo-topo">
+                        <h2>Resumo do pedido</h2>
+                        <span><?= (int) $totalItens ?> <?= $totalItens === 1 ? 'item' : 'itens' ?></span>
+                    </div>
 
                     <ul class="checkout-itens">
                         <?php foreach ($resumo['itens'] as $item): ?>
@@ -260,16 +350,22 @@ $quantidadeCarrinho = $data['quantidadeCarrinho'] ?? 0;
                         <?php endforeach; ?>
                     </ul>
 
+                    <div class="checkout-resumo-entrega">
+                        <span><i class="icon-truck"></i> Entrega</span>
+                        <span>A combinar</span>
+                    </div>
+
                     <div class="carrinho-total">
                         <span>Total</span>
                         <span><?= money($resumo['subtotal']) ?></span>
                     </div>
-                    <p class="checkout-nota">Frete combinado no atendimento.</p>
+                    <p class="checkout-nota">O frete será combinado no atendimento.</p>
                 </aside>
             </div>
         </div>
     </section>
 
     <?php require __DIR__ . '/partials/site_footer.php'; ?>
+    <script src="<?= asset('/js/checkout.js') ?>"></script>
 </body>
 </html>

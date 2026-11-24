@@ -462,7 +462,7 @@
 .btn-checkout {
     width: 100%;
     padding: 15px;
-    background: #25d366;
+    background: var(--color-primary);
     color: white;
     border: none;
     font-weight: 600;
@@ -475,11 +475,17 @@
     gap: 10px;
     text-transform: uppercase;
     letter-spacing: 1px;
+    text-decoration: none;
+}
+
+.btn-checkout:hover,
+.btn-checkout:focus,
+.btn-checkout:active {
+    text-decoration: none;
 }
 
 .btn-checkout:hover {
-    background: #128c7e;
-    transform: translateY(-2px);
+    background: var(--color-primary-dark);
 }
 
 .btn-checkout i {
