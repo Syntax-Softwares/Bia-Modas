@@ -132,13 +132,13 @@ $faixasPreco = [
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="/css/base.css">
-    <link rel="stylesheet" href="/css/layout.css">
-    <link rel="stylesheet" href="/css/components.css">
-    <link rel="stylesheet" href="/css/responsive.css">
-    <link rel="stylesheet" href="/css/auth.css">
-    <link rel="stylesheet" href="/css/categoria.css">
-    <link rel="stylesheet" href="/css/carrinho.css">
+    <link rel="stylesheet" href="<?= asset('/css/base.css') ?>">
+    <link rel="stylesheet" href="<?= asset('/css/layout.css') ?>">
+    <link rel="stylesheet" href="<?= asset('/css/components.css') ?>">
+    <link rel="stylesheet" href="<?= asset('/css/responsive.css') ?>">
+    <link rel="stylesheet" href="<?= asset('/css/auth.css') ?>">
+    <link rel="stylesheet" href="<?= asset('/css/categoria.css') ?>">
+    <link rel="stylesheet" href="<?= asset('/css/carrinho.css') ?>">
 </head>
 <body data-page="catalogo">
     <?php require __DIR__ . '/partials/catalogo_header.php'; ?>
