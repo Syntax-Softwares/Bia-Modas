@@ -8,7 +8,7 @@ $erroCampo = static fn (string $campo): string => isset($errors[$campo])
 $imagemPreview = $valorCampo('imagem') !== '' ? $valorCampo('imagem') : '/img/logoBiaModas.png';
 ?>
 <section class="admin-panel">
-    <form method="post" action="/admin/produtos/salvar" class="admin-form" novalidate>
+    <form method="post" action="/admin/produtos/salvar" class="admin-form" enctype="multipart/form-data" novalidate>
         <?= Sessao::csrfCampo() ?>
         <?php if (!empty($form['id_produto'])): ?>
             <input type="hidden" name="id_produto" value="<?= (int) $form['id_produto'] ?>">
@@ -119,9 +119,10 @@ $imagemPreview = $valorCampo('imagem') !== '' ? $valorCampo('imagem') : '/img/lo
             </div>
 
             <div class="admin-field admin-field-span-2">
-                <label for="produto-imagem">Caminho da imagem</label>
-                <input type="text" id="produto-imagem" name="imagem" value="<?= e($valorCampo('imagem')) ?>" maxlength="255" placeholder="/img/produtos/foto.jpg" data-image-input>
-                <small>Use um caminho já disponível em <code>/public</code>.</small>
+                <label for="produto-imagem">Imagem do produto</label>
+                <input type="file" id="produto-imagem" name="imagem_arquivo" accept="image/png,image/jpeg,image/webp" data-image-input>
+                <small>JPG, PNG ou WebP, até 2 MB.<?= $isEdicao ? ' Deixe vazio para manter a imagem atual.' : '' ?></small>
+                <input type="hidden" name="imagem_atual" value="<?= e($valorCampo('imagem')) ?>">
                 <?= $erroCampo('imagem') ?>
             </div>
 

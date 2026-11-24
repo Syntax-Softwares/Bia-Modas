@@ -16,10 +16,18 @@
     const preview = document.querySelector('[data-image-preview]');
 
     if (input && preview) {
-        input.addEventListener('input', function () {
-            const caminho = input.value.trim();
-            preview.src = caminho !== '' ? caminho : '/img/logoBiaModas.png';
-        });
+        if (input.type === 'file') {
+            input.addEventListener('change', function () {
+                const arquivo = input.files && input.files[0];
+                if (!arquivo) return;
+                preview.src = URL.createObjectURL(arquivo);
+            });
+        } else {
+            input.addEventListener('input', function () {
+                const caminho = input.value.trim();
+                preview.src = caminho !== '' ? caminho : '/img/logoBiaModas.png';
+            });
+        }
     }
 
     const categoriaInput = document.querySelector('[data-categoria-input]');

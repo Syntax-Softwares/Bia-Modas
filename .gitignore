@@ -12,3 +12,6 @@
 # Editores
 .vscode/
 .idea/
+
+# Uploads feitos pelo painel
+/public/img/produtos/produto-*

@@ -87,11 +87,24 @@ class AdminProdutosController
             'cor' => trim((string) ($_POST['cor'] ?? '')),
             'estilo' => trim((string) ($_POST['estilo'] ?? '')),
             'oferta_percentual' => trim((string) ($_POST['oferta_percentual'] ?? '')),
-            'imagem' => trim((string) ($_POST['imagem'] ?? '')),
+            'imagem' => trim((string) ($_POST['imagem_atual'] ?? '')),
             'ativo' => isset($_POST['ativo']),
         ];
 
         $errors = $this->validar($form, $id);
+
+        if ($errors === [] && isset($_FILES['imagem_arquivo'])) {
+            $arquivo = $_FILES['imagem_arquivo'];
+            $erroUpload = (int) ($arquivo['error'] ?? UPLOAD_ERR_NO_FILE);
+
+            if ($erroUpload !== UPLOAD_ERR_NO_FILE) {
+                try {
+                    $form['imagem'] = $this->salvarImagem($arquivo);
+                } catch (RuntimeException $excecao) {
+                    $errors['imagem'] = $excecao->getMessage();
+                }
+            }
+        }
 
         if ($errors !== []) {
             $categorias = $this->repository->categoriasAtivas();
@@ -259,6 +272,52 @@ class AdminProdutosController
         }
 
         return $tamanhos;
+    }
+
+    private function salvarImagem(array $arquivo): string
+    {
+        if (!isset($arquivo['tmp_name'], $arquivo['error'], $arquivo['size'])) {
+            throw new RuntimeException('Envie uma imagem válida.');
+        }
+
+        if ((int) $arquivo['error'] !== UPLOAD_ERR_OK) {
+            throw new RuntimeException('Não foi possível enviar a imagem.');
+        }
+
+        if ((int) $arquivo['size'] > 2 * 1024 * 1024) {
+            throw new RuntimeException('A imagem deve ter no máximo 2 MB.');
+        }
+
+        $info = @getimagesize($arquivo['tmp_name']);
+
+        if ($info === false) {
+            throw new RuntimeException('O arquivo enviado não é uma imagem válida.');
+        }
+
+        $extensoes = [
+            IMAGETYPE_JPEG => 'jpg',
+            IMAGETYPE_PNG => 'png',
+            IMAGETYPE_WEBP => 'webp',
+        ];
+
+        if (!isset($extensoes[$info[2]])) {
+            throw new RuntimeException('Use uma imagem JPG, PNG ou WebP.');
+        }
+
+        $diretorio = __DIR__ . '/../public/img/produtos';
+
+        if (!is_dir($diretorio) && !mkdir($diretorio, 0775, true) && !is_dir($diretorio)) {
+            throw new RuntimeException('Não foi possível criar a pasta de imagens.');
+        }
+
+        $nomeArquivo = 'produto-' . bin2hex(random_bytes(8)) . '.' . $extensoes[$info[2]];
+        $destino = $diretorio . '/' . $nomeArquivo;
+
+        if (!move_uploaded_file($arquivo['tmp_name'], $destino)) {
+            throw new RuntimeException('Não foi possível salvar a imagem enviada.');
+        }
+
+        return '/img/produtos/' . $nomeArquivo;
     }
 
     private function formularioVazio(): array
