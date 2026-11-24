@@ -99,23 +99,18 @@ O MVP foi estimado em **8 a 10 semanas**, organizado em cinco fases:
 
 ## • Requisitos não funcionais
 
-| Código | Nome | Descrição |
+| Código | Nome | Critério |
 |--------|------|----------|
-| RNF01 | Usabilidade | O sistema deve possuir interface simples, intuitiva e acolhedora. |
-| RNF02 | Desempenho | O sistema deve responder às requisições da usuária em até 2 segundos, em condições normais de uso. |
-| RNF03 | Escalabilidade | O sistema deve suportar múltiplos acessos simultâneos sem degradação significativa de desempenho. |
-| RNF04 | Confiabilidade | O sistema deve garantir a integridade e a consistência dos dados. |
-| RNF05 | Disponibilidade | O sistema deve estar disponível 24 horas por dia, 7 dias por semana, com taxa mínima de 99%. |
-| RNF06 | Responsividade | O sistema deve funcionar corretamente em desktop, tablet e dispositivos móveis. |
-| RNF07 | Compatibilidade | O sistema deve ser compatível com os principais navegadores do mercado. |
-| RNF08 | Manutenibilidade | O sistema deve possuir código organizado e de fácil manutenção. |
-| RNF09 | Conformidade com a LGPD | O sistema deve garantir privacidade e consentimento no uso dos dados das usuárias. |
-| RNF10 | Segurança de Dados | O sistema deve proteger os dados contra acessos não autorizados, incluindo criptografia de senhas e informações sensíveis. |
-| RNF11 | Backup | O sistema deve realizar backups periódicos dos dados. |
-| RNF12 | Controle de Acesso | O sistema deve restringir o acesso à área administrativa apenas a administradores autorizados. |
-| RNF13 | Integração com APIs | O sistema deve integrar-se de forma eficiente com APIs externas, como pagamento, e-mail e serviços de recomendação. |
-| RNF14 | Autenticação Segura | O sistema deve armazenar senhas criptografadas e utilizar mecanismos seguros de autenticação. |
-| RNF15 | Recuperação de Falhas | O sistema deve ser capaz de se recuperar rapidamente após falhas. |
+| RNF01 | Usabilidade | Interface simples, intuitiva e acolhedora. |
+| RNF02 | Desempenho | Resposta em até 2 segundos. |
+| RNF03 | Escalabilidade | Múltiplos acessos simultâneos. |
+| RNF04 | Confiabilidade | Integridade e consistência dos dados. |
+| RNF05 | Disponibilidade | 24/7 com 99% de disponibilidade. |
+| RNF06 | Responsividade | Desktop, tablet e mobile. |
+| RNF07 | Compatibilidade | Principais navegadores. |
+| RNF08 | Manutenibilidade | Código organizado e de fácil manutenção. |
+| RNF09 | LGPD | Privacidade e consentimento no uso dos dados. |
+| RNF10 | Segurança | Criptografia, autenticação, controle de acesso e backup. |
 
 # 3. Modelo de casos de uso
 
