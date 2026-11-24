@@ -712,3 +712,66 @@ O deploy é automatizado por **GitHub Actions** para uma VPS:
 - `apresentacao-pi` → `/var/www/html/apresentacao/`
 
 O workflow usa `rsync` via SSH e ignora `.git` e `.github`.
+
+## 11.5 Testes
+
+A suíte usa **PHPUnit 12** e não precisa de banco de dados: os fluxos de
+repositório são exercitados com um PDO em memória (`tests/Support/FakePDO.php`).
+
+Com PHP/Composer instalados no host:
+
+```bash
+composer install
+composer test
+```
+
+Com apenas Docker (não exige PHP no host):
+
+```bash
+docker compose run --rm composer   # instala as dependências
+docker compose run --rm tests      # instala e executa a suíte
+```
+
+Para ver o nome de cada teste em vez das bolinhas:
+
+```bash
+php vendor/bin/phpunit --testdox
+```
+
+Ou, via Docker:
+
+```bash
+docker compose run --rm -e PHPUNIT_ARGS="--testdox" tests
+```
+
+Outros modos úteis:
+
+```bash
+php vendor/bin/phpunit --debug      # início/fim de cada teste
+php vendor/bin/phpunit --list-tests # lista sem executar
+```
+
+Os mesmos atalhos existem no Composer:
+
+```bash
+composer test:dox
+composer test:debug
+composer test:list
+```
+
+Para gerar o relatório de cobertura (requer Xdebug ou PCOV):
+
+```bash
+composer test:coverage
+```
+
+Organização da suíte:
+
+| Diretório | Escopo |
+|---|---|
+| `tests/Unit/Core` | Validações, helpers, catálogo, sessão/CSRF, autenticação, rate limit, router e e-mail. |
+| `tests/Unit/Repositories` | Carrinho, favoritos, pedidos/checkout, catálogo, produtos, usuários, endereços, medidas, códigos de recuperação e painel administrativo. |
+| `tests/Unit/Controllers` | Regras de validação e normalização dos controllers de checkout, perfil, catálogo, recuperação de senha, provador e produtos. |
+
+Os testes também rodam no GitHub Actions a cada push em `main`/`integracao_backend`
+e em pull requests.
