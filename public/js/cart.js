@@ -11,6 +11,11 @@
     const offcanvas = document.getElementById('cart-offcanvas');
     const overlay = document.getElementById('cart-overlay');
 
+    const variacoesCache = new Map();
+    let seletorTamanho = null;
+    let seletorTamanhoBotao = null;
+    let cardSeletorTamanho = null;
+
     function escaparHtml(texto) {
         const div = document.createElement('div');
         div.textContent = texto == null ? '' : String(texto);
@@ -60,6 +65,152 @@
             toast(erro.message, true);
         } finally {
             ocupado = false;
+        }
+    }
+
+    function fecharSeletorTamanho() {
+        if (!seletorTamanho) return;
+
+        seletorTamanho.remove();
+        seletorTamanho = null;
+        seletorTamanhoBotao = null;
+
+        if (cardSeletorTamanho) {
+            cardSeletorTamanho.classList.remove('is-picker-open');
+            cardSeletorTamanho = null;
+        }
+    }
+
+    function posicionarSeletorTamanho() {
+        if (!seletorTamanho || !seletorTamanhoBotao) return;
+
+        const botao = seletorTamanhoBotao.getBoundingClientRect();
+
+        if (botao.bottom < 0
+            || botao.top > window.innerHeight
+            || botao.right < 0
+            || botao.left > window.innerWidth) {
+            fecharSeletorTamanho();
+            return;
+        }
+
+        const largura = seletorTamanho.offsetWidth;
+        const altura = seletorTamanho.offsetHeight;
+        const margem = 8;
+
+        let esquerda = botao.right + 12;
+        let topo = botao.top;
+
+        if (esquerda + largura > window.innerWidth - margem) {
+            esquerda = Math.max(margem, botao.left - largura - 12);
+        }
+
+        if (topo + altura > window.innerHeight - margem) {
+            topo = Math.max(margem, window.innerHeight - altura - margem);
+        }
+
+        seletorTamanho.style.left = esquerda + 'px';
+        seletorTamanho.style.top = topo + 'px';
+    }
+
+    function renderizarOpcoesTamanho(seletor, variacoes) {
+        const opcoes = seletor.querySelector('.size-picker-options');
+        if (!opcoes) return;
+
+        if (!Array.isArray(variacoes) || variacoes.length === 0) {
+            opcoes.innerHTML = '<span class="size-picker-empty">Nenhum tamanho cadastrado. '
+                + '<a href="/produto?id=' + encodeURIComponent(seletor.dataset.produtoId) + '">Ver produto</a></span>';
+            posicionarSeletorTamanho();
+            return;
+        }
+
+        opcoes.innerHTML = variacoes.map((variacao) => {
+            const semEstoque = Number(variacao.estoque) <= 0;
+            const nome = escaparHtml(variacao.tamanho);
+
+            return '<button type="button"'
+                + ' data-size-id="' + escaparHtml(variacao.id_produto_tamanho) + '"'
+                + (semEstoque ? ' disabled title="Tamanho esgotado"' : ' title="Adicionar tamanho ' + nome + '"')
+                + '>' + nome + '</button>';
+        }).join('');
+
+        opcoes.querySelectorAll('[data-size-id]').forEach((botao) => {
+            botao.addEventListener('click', () => {
+                const idTamanho = botao.dataset.sizeId;
+                const produtoId = seletor.dataset.produtoId;
+
+                fecharSeletorTamanho();
+                adicionarAoCarrinho(produtoId, idTamanho);
+            });
+        });
+
+        posicionarSeletorTamanho();
+    }
+
+    function buscarVariacoes(idProduto) {
+        if (!variacoesCache.has(String(idProduto))) {
+            const requisicao = fetch('/produto/variacoes?id=' + encodeURIComponent(idProduto), {
+                credentials: 'same-origin',
+                headers: { Accept: 'application/json' }
+            })
+                .then((resposta) => {
+                    if (!resposta.ok) throw new Error('Não foi possível carregar os tamanhos.');
+                    return resposta.json();
+                })
+                .then((dados) => (Array.isArray(dados.variacoes) ? dados.variacoes : []))
+                .catch((erro) => {
+                    variacoesCache.delete(String(idProduto));
+                    throw erro;
+                });
+
+            variacoesCache.set(String(idProduto), requisicao);
+        }
+
+        return variacoesCache.get(String(idProduto));
+    }
+
+    async function abrirSeletorTamanho(botao) {
+        const idProduto = botao.dataset.produtoId;
+
+        if (!idProduto) return;
+
+        if (seletorTamanho && seletorTamanhoBotao === botao) {
+            fecharSeletorTamanho();
+            return;
+        }
+
+        fecharSeletorTamanho();
+
+        seletorTamanhoBotao = botao;
+        cardSeletorTamanho = botao.closest('.product-card');
+
+        if (cardSeletorTamanho) {
+            cardSeletorTamanho.classList.add('is-picker-open');
+        }
+
+        seletorTamanho = document.createElement('div');
+        seletorTamanho.className = 'size-picker';
+        seletorTamanho.dataset.produtoId = String(idProduto);
+        seletorTamanho.setAttribute('role', 'dialog');
+        seletorTamanho.setAttribute('aria-label', 'Escolha o tamanho de ' + (botao.dataset.produtoNome || 'produto'));
+        seletorTamanho.innerHTML = '<div class="size-picker-title">Escolha o tamanho</div>'
+            + '<div class="size-picker-options"><span class="size-picker-loading">Carregando tamanhos...</span></div>';
+
+        document.body.appendChild(seletorTamanho);
+        posicionarSeletorTamanho();
+
+        try {
+            const variacoes = await buscarVariacoes(idProduto);
+
+            if (!seletorTamanho || seletorTamanho.dataset.produtoId !== String(idProduto)) return;
+
+            renderizarOpcoesTamanho(seletorTamanho, variacoes);
+        } catch (erro) {
+            if (!seletorTamanho || seletorTamanho.dataset.produtoId !== String(idProduto)) return;
+
+            const opcoes = seletorTamanho.querySelector('.size-picker-options');
+            if (opcoes) opcoes.innerHTML = '<span class="size-picker-empty">' + escaparHtml(erro.message) + '</span>';
+            posicionarSeletorTamanho();
         }
     }
 
@@ -170,6 +321,12 @@
     }
 
     document.addEventListener('click', (evento) => {
+        if (seletorTamanho
+            && !seletorTamanho.contains(evento.target)
+            && !evento.target.closest('[data-adicionar]')) {
+            fecharSeletorTamanho();
+        }
+
         const abrir = evento.target.closest('[data-cart-open]');
         if (abrir && offcanvas) {
             evento.preventDefault();
@@ -185,6 +342,12 @@
         const adicionar = evento.target.closest('[data-adicionar]');
         if (adicionar) {
             evento.preventDefault();
+
+            if (!adicionar.dataset.produtoTamanhoId && adicionar.dataset.requerTamanho) {
+                abrirSeletorTamanho(adicionar);
+                return;
+            }
+
             adicionarAoCarrinho(adicionar.dataset.produtoId, adicionar.dataset.produtoTamanhoId);
             return;
         }
@@ -223,8 +386,25 @@
     });
 
     document.addEventListener('keydown', (evento) => {
-        if (evento.key === 'Escape') fecharCarrinho();
+        if (evento.key === 'Escape') {
+            fecharSeletorTamanho();
+            fecharCarrinho();
+        }
     });
+
+    let posicaoAgendada = 0;
+
+    function reposicionarSeletorTamanho() {
+        if (!seletorTamanho || posicaoAgendada) return;
+
+        posicaoAgendada = window.requestAnimationFrame(() => {
+            posicaoAgendada = 0;
+            posicionarSeletorTamanho();
+        });
+    }
+
+    window.addEventListener('resize', reposicionarSeletorTamanho);
+    window.addEventListener('scroll', reposicionarSeletorTamanho, { passive: true, capture: true });
 
     const estadoInicial = lerEstadoInicial();
     if (estadoInicial) aplicarResumo(estadoInicial);

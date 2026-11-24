@@ -158,6 +158,33 @@ final class CatalogoController
         require __DIR__ . '/../views/produto_detalhe.php';
     }
 
+    /**
+     * Tamanhos disponiveis de um produto, consumidos pelo seletor rapido
+     * dos cards da vitrine.
+     */
+    public function variacoes(): void
+    {
+        Sessao::cabecalhosSeguranca();
+
+        $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+
+        if (!is_int($id) || $id <= 0) {
+            json_erro('Produto inválido.', 400);
+        }
+
+        $produto = $this->catalogo->buscarPorId($id);
+
+        if ($produto === null) {
+            json_erro('Produto não encontrado.', 404);
+        }
+
+        json_response([
+            'ok' => true,
+            'produto_id' => $id,
+            'variacoes' => $produto['variacoes'],
+        ]);
+    }
+
     private function limitarGet(): void
     {
         if (!RateLimit::consumir('catalogo_get', RateLimit::ip(), self::LIMITE_GET, 60)) {

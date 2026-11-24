@@ -83,6 +83,7 @@ $router->post('/recuperar-senha/reenviar', [$recuperacaoSenhaController, 'reenvi
 // Catalogo, busca e filtros (MVC07)
 $router->get('/categoria', [$catalogoController, 'index']);
 $router->get('/produto', [$catalogoController, 'produto']);
+$router->get('/produto/variacoes', [$catalogoController, 'variacoes']);
 
 // Perfil, enderecos e seguranca (MVC06)
 $router->get('/perfil', [$perfilController, 'index']);
