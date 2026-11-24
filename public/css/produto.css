@@ -262,15 +262,20 @@
     margin-bottom: 18px;
     cursor: pointer;
     text-align: left;
-    transition: background 0.25s, color 0.25s, transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    transition: background 0.25s, color 0.25s;
     font-family: var(--font-primary);
+}
+
+.btn-try-on:focus,
+.btn-try-on:active {
+    text-decoration: none;
 }
 
 .btn-try-on:hover {
     background: var(--color-primary);
     color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 24px rgba(209, 0, 31, 0.22);
+    text-decoration: none;
 }
 
 .btn-try-on-icon {

@@ -294,14 +294,33 @@ final class Sessao
         exit;
     }
 
-    public static function cabecalhosSeguranca(): void
+    /**
+     * Politica de permissoes do navegador (camera, microfone e geolocalizacao).
+     *
+     * O front controller aplica a versao restritiva a todas as requisicoes; a
+     * tela do provador virtual chama com $permitirCamera = true para liberar a
+     * camera apenas na propria origem.
+     */
+    public static function politicaPermissoes(bool $permitirCamera = false): void
+    {
+        header(
+            'Permissions-Policy: geolocation=(), microphone=(), camera='
+            . ($permitirCamera ? '(self)' : '()')
+        );
+    }
+
+    /**
+     * @param bool $permitirCamera Libera a camera apenas para a propria origem
+     *                             (usado pela tela do provador virtual).
+     */
+    public static function cabecalhosSeguranca(bool $permitirCamera = false): void
     {
         header_remove('X-Powered-By');
 
         header('X-Content-Type-Options: nosniff');
         header('X-Frame-Options: DENY');
         header('Referrer-Policy: no-referrer');
-        header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
+        self::politicaPermissoes($permitirCamera);
         header('Cache-Control: no-store, no-cache, must-revalidate, private');
         header('Pragma: no-cache');
         header('Expires: 0');

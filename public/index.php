@@ -30,6 +30,7 @@ require_once __DIR__ . '/../controllers/favoritos_controller.php';
 require_once __DIR__ . '/../controllers/carrinho_controller.php';
 require_once __DIR__ . '/../controllers/checkout_controller.php';
 require_once __DIR__ . '/../controllers/pedidos_controller.php';
+require_once __DIR__ . '/../controllers/provador_controller.php';
 require_once __DIR__ . '/../controllers/admin_controller.php';
 require_once __DIR__ . '/../controllers/admin_produtos_controller.php';
 require_once __DIR__ . '/../controllers/admin_categorias_controller.php';
@@ -41,6 +42,8 @@ date_default_timezone_set(getenv('TZ') ?: 'America/Sao_Paulo');
 
 Sessao::iniciar();
 Auth::start();
+// Politica restritiva padrao; o provador virtual a substitui para liberar a camera.
+Sessao::politicaPermissoes();
 
 $pdo = Database::conenct();
 
@@ -53,6 +56,7 @@ $favoritosController = new FavoritosController($pdo);
 $carrinhoController = new CarrinhoController($pdo);
 $checkoutController = new CheckoutController($pdo);
 $pedidosController = new PedidosController($pdo);
+$provadorController = new ProvadorController($pdo);
 
 $router = new Router();
 
@@ -110,6 +114,10 @@ $router->get('/checkout', [$checkoutController, 'index']);
 $router->post('/checkout', [$checkoutController, 'confirmar']);
 $router->get('/pedidos', [$pedidosController, 'index']);
 $router->get('/pedido', [$pedidosController, 'ver']);
+
+// Provador virtual e medidas (MVC10)
+$router->get('/provador-virtual', [$provadorController, 'index']);
+$router->post('/provador-virtual/medidas', [$provadorController, 'salvarMedidas']);
 
 // Painel administrativo
 $router->get('/admin', static function () use ($pdo): void {

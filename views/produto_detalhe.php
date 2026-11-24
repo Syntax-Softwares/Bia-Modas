@@ -172,6 +172,22 @@ $temMedidas = $produto['medida_busto'] !== null
                         </div>
                     <?php endif; ?>
 
+                    <a
+                        class="btn-try-on"
+                        id="btn-try-on"
+                        data-provador-link
+                        data-provador-base="<?= Html::e('/provador-virtual?id=' . $idProduto) ?>"
+                        href="<?= Html::e('/provador-virtual?id=' . $idProduto) ?>"
+                        aria-label="Abrir o Provador Virtual"
+                    >
+                        <i class="icon-box btn-try-on-icon" aria-hidden="true"></i>
+                        <span class="btn-try-on-text">
+                            <strong>Provador Virtual</strong>
+                            <small>Veja a peça em um avatar 3D</small>
+                        </span>
+                        <span class="btn-try-on-tag">NOVO</span>
+                    </a>
+
                     <div class="product-buttons">
                         <?php if ($esgotado): ?>
                             <button type="button" class="btn-primary-solid" disabled>

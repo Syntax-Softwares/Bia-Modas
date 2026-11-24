@@ -599,6 +599,142 @@
     color: var(--color-primary);
 }
 
+.avatar-product-size {
+    font-size: 0.82rem;
+    color: var(--color-gray);
+}
+
+/* === Medidas do usuario (MVC10) === */
+.provador-alerts {
+    padding-top: 18px;
+}
+
+.provador-alerts .alert {
+    border-radius: 0;
+}
+
+.provador-measures {
+    margin-top: 30px;
+    padding-top: 24px;
+    border-top: 1px solid var(--color-light-gray);
+}
+
+.provador-measures-lead {
+    color: var(--color-gray);
+    font-size: 0.92rem;
+    line-height: 1.55;
+    margin: 0 0 16px;
+    max-width: 44ch;
+}
+
+.provador-measures-form {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.provador-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.provador-field label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    color: var(--color-gray);
+}
+
+.provador-field input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--color-light-gray);
+    background: white;
+    color: var(--color-dark);
+    font-family: var(--font-primary);
+    font-size: 0.95rem;
+}
+
+.provador-field input:focus {
+    outline: 2px solid rgba(209, 0, 31, 0.18);
+    border-color: var(--color-primary);
+}
+
+.btn-measures {
+    grid-column: 1 / -1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 13px 22px;
+    background: var(--color-dark);
+    color: white;
+    border: 2px solid var(--color-dark);
+    font-family: var(--font-primary);
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    text-decoration: none !important;
+    cursor: pointer;
+    transition: background 0.25s, border-color 0.25s, color 0.25s;
+}
+
+.btn-measures:hover {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+}
+
+.provador-field-error {
+    margin: 10px 0 0;
+    color: var(--color-primary);
+    font-size: 0.85rem;
+}
+
+.provador-privacy {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 14px 0 0;
+    font-size: 0.78rem;
+    color: var(--color-gray);
+    line-height: 1.45;
+}
+
+.provador-privacy i {
+    color: var(--color-primary);
+    flex-shrink: 0;
+}
+
+.provador-size {
+    margin: 6px 0 0;
+    font-size: 0.9rem;
+    color: var(--color-gray);
+}
+
+.provador-size strong {
+    color: var(--color-dark);
+}
+
+.btn-skip {
+    background: none;
+    border: none;
+    color: var(--color-gray);
+    font-family: var(--font-primary);
+    font-size: 0.82rem;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 12px 4px;
+    transition: color 0.2s;
+}
+
+.btn-skip:hover {
+    color: var(--color-primary);
+}
+
 /* === Navegação inferior (barra fixa estilo) === */
 .provador-nav-bar {
     border-top: 1px solid var(--color-light-gray);
@@ -709,6 +845,14 @@
 
     .btn-capture,
     .btn-retake {
+        width: 100%;
+    }
+
+    .provador-measures-form {
+        grid-template-columns: 1fr;
+    }
+
+    .btn-skip {
         width: 100%;
     }
 

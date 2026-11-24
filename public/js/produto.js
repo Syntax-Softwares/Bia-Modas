@@ -10,6 +10,19 @@
     const estoque = document.querySelector('[data-size-stock]');
     const botoes = Array.from(opcoes.querySelectorAll('[data-size-id]'));
 
+    const linkProvador = document.querySelector('[data-provador-link]');
+    const baseProvador = linkProvador
+        ? (linkProvador.dataset.provadorBase || linkProvador.getAttribute('href') || '')
+        : '';
+
+    function atualizarLinkProvador(id) {
+        if (!linkProvador || !baseProvador) return;
+
+        linkProvador.href = id
+            ? baseProvador + '&tamanho=' + encodeURIComponent(id)
+            : baseProvador;
+    }
+
     function selecionar(botaoTamanho) {
         if (!botaoTamanho || botaoTamanho.disabled) return;
 
@@ -23,6 +36,8 @@
 
         if (botaoCarrinho) botaoCarrinho.dataset.produtoTamanhoId = id;
         if (rotulo) rotulo.textContent = nome;
+
+        atualizarLinkProvador(id);
 
         if (estoque) {
             if (quantidade <= 0) {
