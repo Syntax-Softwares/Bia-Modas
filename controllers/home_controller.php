@@ -27,11 +27,22 @@ class HomeController
         $resumo = $this->carrinho->resumoDe($comprador);
 
         $usuario = Auth::user();
+        $novidades = $this->repository->getNovidades(8);
+        $promocoes = $this->repository->getPromocoes(8);
+
+        [$paraVoce, $tituloParaVoce, $subtituloParaVoce] = $this->montarRecomendacoes(
+            $usuario !== null ? (int) $usuario['id_usuario'] : null,
+            $favoritosIds,
+            $novidades
+        );
 
         $data = [
             'categoriasHome' => $this->repository->categoriasComImagem(),
-            'novidades' => $this->repository->getNovidades(8),
-            'promocoes' => $this->repository->getPromocoes(8),
+            'novidades' => $novidades,
+            'promocoes' => $promocoes,
+            'paraVoce' => $paraVoce,
+            'tituloParaVoce' => $tituloParaVoce,
+            'subtituloParaVoce' => $subtituloParaVoce,
             'favoritosIds' => $favoritosIds,
             'favoritosTotal' => count($favoritosIds),
             'resumo' => $resumo,
@@ -44,5 +55,44 @@ class HomeController
         ];
 
         require __DIR__ . '/../views/index.php';
+    }
+
+    /**
+     * Monta a secao "Para Voce" com tres niveis de fallback:
+     * favoritos do usuario -> mais favoritados da loja -> novidades.
+     *
+     * @param array<int, int> $favoritosIds
+     * @param array<int, array<string, mixed>> $novidades
+     * @return array{0: array<int, array<string, mixed>>, 1: string, 2: string}
+     */
+    private function montarRecomendacoes(?int $usuarioId, array $favoritosIds, array $novidades): array
+    {
+        if ($usuarioId !== null && $favoritosIds !== []) {
+            $paraVoce = $this->repository->getParaVoce($usuarioId, 8);
+
+            if ($paraVoce !== []) {
+                return [
+                    $paraVoce,
+                    'Para Você',
+                    'Selecionados a partir das peças que você favoritou',
+                ];
+            }
+        }
+
+        $maisDesejados = $this->repository->getMaisDesejados(8);
+
+        if ($maisDesejados !== []) {
+            return [
+                $maisDesejados,
+                'Mais desejados',
+                'As peças que a loja mais está salvando',
+            ];
+        }
+
+        return [
+            $novidades,
+            'Novidades',
+            'O que acabou de chegar na loja',
+        ];
     }
 }

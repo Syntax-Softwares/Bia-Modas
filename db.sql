@@ -320,6 +320,24 @@ CREATE TABLE favoritos(
     REFERENCES produtos(id_produto) ON DELETE CASCADE
 );
 
+CREATE TABLE avaliacoes(
+  id_avaliacao BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  usuario_id BIGINT UNSIGNED NOT NULL,
+  produto_id BIGINT UNSIGNED NOT NULL,
+  nota TINYINT UNSIGNED NOT NULL,
+  comentario VARCHAR(500) NULL,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  alterado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deletado_em DATETIME NULL,
+  CONSTRAINT avaliacoes_usuario_produto_uk UNIQUE (usuario_id, produto_id),
+  CONSTRAINT avaliacoes_nota_ck CHECK (nota BETWEEN 1 AND 5),
+  CONSTRAINT avaliacoes_usuario_fk FOREIGN KEY (usuario_id)
+    REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
+  CONSTRAINT avaliacoes_produto_fk FOREIGN KEY (produto_id)
+    REFERENCES produtos(id_produto) ON DELETE CASCADE,
+  INDEX avaliacoes_produto_idx (produto_id, deletado_em)
+);
+
 CREATE TABLE itens_compra(
   id_item_compra BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   compra_id BIGINT UNSIGNED NOT NULL,

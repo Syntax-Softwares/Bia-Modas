@@ -173,3 +173,41 @@ function tamanho_texto(string $valor): int
 {
     return function_exists('mb_strlen') ? mb_strlen($valor, 'UTF-8') : strlen($valor);
 }
+
+/**
+ * Desenha 5 estrelas a partir de uma nota (aceita decimais: 4.3 -> 4 cheias
+ * e 1 pela metade).
+ */
+function estrelas(float $nota, string $classe = ''): string
+{
+    $nota = max(0.0, min(5.0, $nota));
+    $cheias = (int) floor($nota);
+    $resto = $nota - $cheias;
+
+    $meia = $resto >= 0.25 && $resto < 0.75;
+
+    if ($resto >= 0.75) {
+        $cheias++;
+        $meia = false;
+    }
+
+    $html = '<span class="estrelas' . ($classe !== '' ? ' ' . e($classe) : '') . '" role="img" aria-label="'
+        . e(number_format($nota, 1, ',', '.')) . ' de 5 estrelas">';
+
+    for ($i = 1; $i <= 5; $i++) {
+        if ($i <= $cheias) {
+            $estado = 'estrela-cheia';
+            $glifo = '★';
+        } elseif ($meia && $i === $cheias + 1) {
+            $estado = 'estrela-meia';
+            $glifo = '★';
+        } else {
+            $estado = 'estrela-vazia';
+            $glifo = '☆';
+        }
+
+        $html .= '<span class="' . $estado . '" aria-hidden="true">' . $glifo . '</span>';
+    }
+
+    return $html . '</span>';
+}

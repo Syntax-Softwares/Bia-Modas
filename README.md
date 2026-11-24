@@ -146,7 +146,7 @@ O diagrama abaixo representa os atores e os casos de uso do sistema. Os atores s
 
 # 4. Modelo do banco de dados
 
-O modelo físico atual está implementado no [`db.sql`](https://github.com/Syntax-Softwares/Bia-Modas/blob/integracao_backend/db.sql) da branch **`integracao_backend`** e possui **17 tabelas**. As imagens das seções 5.1 e 5.2 continuam sendo a visão conceitual/lógica do MVP.
+O modelo físico atual está implementado no [`db.sql`](https://github.com/Syntax-Softwares/Bia-Modas/blob/integracao_backend/db.sql) da branch **`integracao_backend`** e possui **18 tabelas**. As imagens das seções 5.1 e 5.2 continuam sendo a visão conceitual/lógica do MVP.
 
 | Tabela | Principais colunas | Chaves e relações |
 |---|---|---|
@@ -165,6 +165,7 @@ O modelo físico atual está implementado no [`db.sql`](https://github.com/Synta
 | `imagens` | `id_imagem`, `produto_id`, `caminho_imagem` | FK `produto_id` → `produtos` (CASCADE) |
 | `itens_carrinho` | `id_item_carrinho`, `carrinho_id`, `produto_id`, `quantidade`, `valor_unitario` | FKs para `carrinhos` e `produtos`; único por carrinho/produto |
 | `favoritos` | `id_favorito`, `usuario_id`, `sessao_id`, `produto_id` | FK `produto_id`; único por usuário/produto e por sessão/produto |
+| `avaliacoes` | `id_avaliacao`, `usuario_id`, `produto_id`, `nota`, `comentario` | única por usuário/produto; FKs para `usuarios` e `produtos` (CASCADE); `nota` entre 1 e 5 |
 | `itens_compra` | `id_item_compra`, `compra_id`, `produto_id`, `quantidade`, `valor_unitario`, `valor_total` | FKs para `compras` e `produtos` |
 | `codigos_recuperacao_senha` | `id_codigo`, `usuario_id`, `codigo_hash`, `tentativas`, `expira_em`, `usado_em` | FK `usuario_id` → `usuarios` (CASCADE); código armazenado como hash |
 
@@ -176,6 +177,7 @@ O modelo físico atual está implementado no [`db.sql`](https://github.com/Synta
 - `compras` tem **1:N** `itens_compra` e `pagamentos`; pode referenciar um `endereco` e um `cupom`.
 - `produtos` tem relação **N:N** com `categorias` via `categorias_produtos`, **1:N** com `imagens`, **1:1** com `medidas_produtos` e **N:1** com `ofertas`.
 - `favoritos` liga um usuário (ou uma sessão anônima) a produtos.
+- `avaliacoes` liga um usuário a um produto, com nota de 1 a 5 e comentário opcional; há no máximo uma avaliação por par e a remoção é soft delete.
 - `codigos_recuperacao_senha` liga um usuário a códigos temporários com hash, tentativas e expiração.
 
 ### Convenções do schema
@@ -204,7 +206,7 @@ O modelo físico atual está implementado no [`db.sql`](https://github.com/Synta
 
 # 6. Diagrama de classes
 <img src="./imgReadme/DiagramaDeClasses.png" />
- **Observações:** no schema físico, a relação Produto–Categoria é N:N por `categorias_produtos`; `Avaliacao` ainda não possui tabela física; `enderecos` e `cupons` são tabelas do schema físico que não aparecem no diagrama conceitual do MVP.
+ **Observações:** no schema físico, a relação Produto–Categoria é N:N por `categorias_produtos`; `Avaliacao` é implementada pela tabela `avaliacoes`; `enderecos` e `cupons` são tabelas do schema físico que não aparecem no diagrama conceitual do MVP.
 
 # 7. Estudo de Viabilidade
 

@@ -6,6 +6,8 @@ require_once __DIR__ . '/../core/html.php';
 require_once __DIR__ . '/../core/catalogo.php';
 require_once __DIR__ . '/../core/rate_limit.php';
 require_once __DIR__ . '/../repositories/catalogo_repository.php';
+require_once __DIR__ . '/../repositories/produto_repository.php';
+require_once __DIR__ . '/../repositories/avaliacao_repository.php';
 require_once __DIR__ . '/../repositories/favorito_repository.php';
 require_once __DIR__ . '/../repositories/carrinho_repository.php';
 
@@ -18,12 +20,16 @@ final class CatalogoController
     private const LIMITE_GET = 180;
 
     private CatalogoRepository $catalogo;
+    private ProdutoRepository $produtos;
+    private AvaliacaoRepository $avaliacoes;
     private FavoritoRepository $favoritos;
     private CarrinhoRepository $carrinho;
 
     public function __construct(private PDO $pdo)
     {
         $this->catalogo = new CatalogoRepository($pdo);
+        $this->produtos = new ProdutoRepository($pdo);
+        $this->avaliacoes = new AvaliacaoRepository($pdo);
         $this->favoritos = new FavoritoRepository($pdo);
         $this->carrinho = new CarrinhoRepository($pdo);
     }
@@ -154,6 +160,19 @@ final class CatalogoController
         $carrinhoIds = array_column($resumo['itens'], 'produto_id');
         $favoritosTotal = count($favoritosIds);
         $quantidadeCarrinho = $resumo['quantidade'];
+
+        $usuario = Sessao::usuario();
+        $usuarioId = $usuario !== null ? (int) $usuario['id_usuario'] : null;
+
+        $avaliacoes = $this->avaliacoes->listarPorProduto($id);
+        $resumoAvaliacoes = $this->avaliacoes->resumo($id);
+        $avaliacaoDoUsuario = $usuarioId !== null
+            ? $this->avaliacoes->doUsuario($id, $usuarioId)
+            : null;
+        $relacionados = $this->produtos->getRelacionados($id, 8);
+        $errors = Sessao::erros();
+        $old = Sessao::old();
+        $estaLogado = $usuario !== null;
 
         require __DIR__ . '/../views/produto_detalhe.php';
     }

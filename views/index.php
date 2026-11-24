@@ -2,6 +2,8 @@
 $estaLogado = $data['estaLogado'];
 $usuario = $data['usuario'];
 $contaHref = $data['contaHref'];
+$favoritosIds = $data['favoritosIds'] ?? [];
+$carrinhoIds = $data['carrinhoIds'] ?? [];
 $busca = '';
 ?>
 <!doctype html>
@@ -133,23 +135,32 @@ $busca = '';
     </section>
 
     <!-- Recomendados para Você -->
-    <section class="products-section" id="section-recomendados" style="display: none;">
+    <?php if (($data['paraVoce'] ?? []) !== []): ?>
+    <section class="products-section" id="section-recomendados">
         <div class="container">
             <div class="section-header">
                 <div class="section-header-meta">
                     <span class="section-number">★</span>
-                    <h2>Para Você</h2>
+                    <h2><?= e($data['tituloParaVoce'] ?? 'Para Você') ?></h2>
                 </div>
-                <span class="section-header-side">Selecionados com base no seu perfil</span>
+                <span class="section-header-side"><?= e($data['subtituloParaVoce'] ?? '') ?></span>
             </div>
             <div class="carousel-container">
                 <button class="carousel-btn prev" onclick="moveCarousel('recomendados', -1)" aria-label="Anterior"><i class="icon-chevron-left"></i></button>
-                <div class="carousel-track" id="carousel-recomendados"></div>
+                <div class="carousel-track" id="carousel-recomendados">
+                    <?php foreach ($data['paraVoce'] as $produto): ?>
+                        <?php
+                        $badge = null;
+                        require __DIR__ . '/partials/product_card.php';
+                        ?>
+                    <?php endforeach; ?>
+                </div>
                 <button class="carousel-btn next" onclick="moveCarousel('recomendados', 1)" aria-label="Próximo"><i class="icon-chevron-right"></i></button>
                 <div class="carousel-dots" id="dots-recomendados"></div>
             </div>
         </div>
     </section>
+    <?php endif; ?>
 
     <!-- Products - Novidades -->
     <section class="products-section">

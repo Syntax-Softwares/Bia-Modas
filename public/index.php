@@ -13,6 +13,7 @@ require_once __DIR__ . '/../core/database.php';
 require_once __DIR__ . '/../repositories/produto_repository.php';
 require_once __DIR__ . '/../repositories/usuario_repository.php';
 require_once __DIR__ . '/../repositories/favorito_repository.php';
+require_once __DIR__ . '/../repositories/avaliacao_repository.php';
 require_once __DIR__ . '/../repositories/carrinho_repository.php';
 require_once __DIR__ . '/../repositories/perfil_repository.php';
 require_once __DIR__ . '/../repositories/endereco_repository.php';
@@ -27,6 +28,7 @@ require_once __DIR__ . '/../controllers/catalogo_controller.php';
 require_once __DIR__ . '/../controllers/perfil_controller.php';
 require_once __DIR__ . '/../controllers/recuperacao_senha_controller.php';
 require_once __DIR__ . '/../controllers/favoritos_controller.php';
+require_once __DIR__ . '/../controllers/avaliacao_controller.php';
 require_once __DIR__ . '/../controllers/carrinho_controller.php';
 require_once __DIR__ . '/../controllers/checkout_controller.php';
 require_once __DIR__ . '/../controllers/pedidos_controller.php';
@@ -53,6 +55,7 @@ $catalogoController = new CatalogoController($pdo);
 $perfilController = new PerfilController($pdo);
 $recuperacaoSenhaController = new RecuperacaoSenhaController($pdo);
 $favoritosController = new FavoritosController($pdo);
+$avaliacaoController = new AvaliacaoController($pdo);
 $carrinhoController = new CarrinhoController($pdo);
 $checkoutController = new CheckoutController($pdo);
 $pedidosController = new PedidosController($pdo);
@@ -101,6 +104,10 @@ $router->post('/perfil/enderecos/principal', [$perfilController, 'definirPrincip
 $router->get('/favoritos', [$favoritosController, 'index']);
 $router->get('/favoritos/dados', [$favoritosController, 'dados']);
 $router->post('/favoritos/alternar', [$favoritosController, 'alternar']);
+
+// Avaliacoes de produto
+$router->post('/avaliacoes', [$avaliacaoController, 'salvar']);
+$router->post('/avaliacoes/remover', [$avaliacaoController, 'remover']);
 
 // Carrinho (MVC08)
 $router->get('/carrinho', [$carrinhoController, 'index']);

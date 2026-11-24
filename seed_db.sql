@@ -329,3 +329,95 @@ SELECT 'Cliente Teste', 'cliente@biamodas.local',
 WHERE NOT EXISTS (
     SELECT 1 FROM usuarios WHERE email = 'cliente@biamodas.local'
 );
+
+-- Avaliadoras de demonstracao.
+-- E-mails: ana@biamodas.test e carla@biamodas.test | Senha: demo123
+INSERT INTO usuarios (nome, email, senha_hash, telefone, is_admin)
+SELECT 'Ana Beatriz Ferreira', 'ana@biamodas.test',
+       '$2y$12$qpmUb7omNhMnJhcK6PEqCOKJxTtkrpHfkGiezUUBTaPDe32V2POKy',
+       '14999990001', FALSE
+WHERE NOT EXISTS (
+    SELECT 1 FROM usuarios WHERE email = 'ana@biamodas.test'
+);
+
+INSERT INTO usuarios (nome, email, senha_hash, telefone, is_admin)
+SELECT 'Carla Mendes', 'carla@biamodas.test',
+       '$2y$12$0fFWbs3RlCS43J4h3lWq0u903MGnXGWxXiFJmvMnP/je0DvzvNZay',
+       '14999990002', FALSE
+WHERE NOT EXISTS (
+    SELECT 1 FROM usuarios WHERE email = 'carla@biamodas.test'
+);
+
+-- Favoritos de demonstracao (alimentam "Para Voce" e "Mais desejados").
+INSERT INTO favoritos (usuario_id, produto_id, criado_em)
+SELECT u.id_usuario, p.id_produto, DATE_SUB(NOW(), INTERVAL 3 HOUR)
+FROM usuarios u INNER JOIN produtos p ON p.sku = 'BM-0002'
+WHERE u.email = 'ana@biamodas.test'
+ON DUPLICATE KEY UPDATE deletado_em = NULL;
+
+INSERT INTO favoritos (usuario_id, produto_id, criado_em)
+SELECT u.id_usuario, p.id_produto, DATE_SUB(NOW(), INTERVAL 2 HOUR)
+FROM usuarios u INNER JOIN produtos p ON p.sku = 'BM-0007'
+WHERE u.email = 'ana@biamodas.test'
+ON DUPLICATE KEY UPDATE deletado_em = NULL;
+
+INSERT INTO favoritos (usuario_id, produto_id, criado_em)
+SELECT u.id_usuario, p.id_produto, DATE_SUB(NOW(), INTERVAL 1 HOUR)
+FROM usuarios u INNER JOIN produtos p ON p.sku = 'BM-0001'
+WHERE u.email = 'ana@biamodas.test'
+ON DUPLICATE KEY UPDATE deletado_em = NULL;
+
+INSERT INTO favoritos (usuario_id, produto_id, criado_em)
+SELECT u.id_usuario, p.id_produto, DATE_SUB(NOW(), INTERVAL 3 HOUR)
+FROM usuarios u INNER JOIN produtos p ON p.sku = 'BM-0001'
+WHERE u.email = 'carla@biamodas.test'
+ON DUPLICATE KEY UPDATE deletado_em = NULL;
+
+INSERT INTO favoritos (usuario_id, produto_id, criado_em)
+SELECT u.id_usuario, p.id_produto, DATE_SUB(NOW(), INTERVAL 2 HOUR)
+FROM usuarios u INNER JOIN produtos p ON p.sku = 'BM-0012'
+WHERE u.email = 'carla@biamodas.test'
+ON DUPLICATE KEY UPDATE deletado_em = NULL;
+
+INSERT INTO favoritos (usuario_id, produto_id, criado_em)
+SELECT u.id_usuario, p.id_produto, DATE_SUB(NOW(), INTERVAL 1 HOUR)
+FROM usuarios u INNER JOIN produtos p ON p.sku = 'BM-0020'
+WHERE u.email = 'carla@biamodas.test'
+ON DUPLICATE KEY UPDATE deletado_em = NULL;
+
+-- Avaliacoes de demonstracao (idempotentes pela UNIQUE usuario+produto).
+INSERT INTO avaliacoes (usuario_id, produto_id, nota, comentario, criado_em)
+SELECT u.id_usuario, p.id_produto, 5,
+       'Caimento perfeito, comprei o P e serviu como uma luva.',
+       DATE_SUB(NOW(), INTERVAL 2 DAY)
+FROM usuarios u
+INNER JOIN produtos p ON p.sku = 'BM-0002'
+WHERE u.email = 'ana@biamodas.test'
+ON DUPLICATE KEY UPDATE nota = VALUES(nota), comentario = VALUES(comentario), deletado_em = NULL;
+
+INSERT INTO avaliacoes (usuario_id, produto_id, nota, comentario, criado_em)
+SELECT u.id_usuario, p.id_produto, 4,
+       'Tecido leve e confortável, só achei um pouco longo.',
+       DATE_SUB(NOW(), INTERVAL 5 DAY)
+FROM usuarios u
+INNER JOIN produtos p ON p.sku = 'BM-0002'
+WHERE u.email = 'carla@biamodas.test'
+ON DUPLICATE KEY UPDATE nota = VALUES(nota), comentario = VALUES(comentario), deletado_em = NULL;
+
+INSERT INTO avaliacoes (usuario_id, produto_id, nota, comentario, criado_em)
+SELECT u.id_usuario, p.id_produto, 5,
+       'Conjunto impecável, recebi elogios o dia todo.',
+       DATE_SUB(NOW(), INTERVAL 3 DAY)
+FROM usuarios u
+INNER JOIN produtos p ON p.sku = 'BM-0001'
+WHERE u.email = 'carla@biamodas.test'
+ON DUPLICATE KEY UPDATE nota = VALUES(nota), comentario = VALUES(comentario), deletado_em = NULL;
+
+INSERT INTO avaliacoes (usuario_id, produto_id, nota, comentario, criado_em)
+SELECT u.id_usuario, p.id_produto, 4,
+       'Chegou rápido e é lindo. Usei num casamento.',
+       DATE_SUB(NOW(), INTERVAL 9 DAY)
+FROM usuarios u
+INNER JOIN produtos p ON p.sku = 'BM-0003'
+WHERE u.email = 'ana@biamodas.test'
+ON DUPLICATE KEY UPDATE nota = VALUES(nota), comentario = VALUES(comentario), deletado_em = NULL;
