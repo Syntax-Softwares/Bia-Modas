@@ -7,6 +7,23 @@
         "php": ">=8.4",
         "phpmailer/phpmailer": "^7.2"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^12.0"
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test:dox": "phpunit --testdox",
+        "test:debug": "phpunit --debug",
+        "test:list": "phpunit --list-tests",
+        "test:coverage": "phpunit --coverage-html build/coverage"
+    },
+    "scripts-descriptions": {
+        "test": "Executa a suite de testes unitarios.",
+        "test:dox": "Executa os testes listando o nome de cada caso.",
+        "test:debug": "Executa os testes exibindo inicio e fim de cada caso.",
+        "test:list": "Lista os testes disponiveis sem executa-los.",
+        "test:coverage": "Executa os testes gerando o relatorio de cobertura em build/coverage."
+    },
     "config": {
         "platform": {
             "php": "8.4.0"

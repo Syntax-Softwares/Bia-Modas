@@ -4,6 +4,11 @@
 .env
 *.log
 
+# Testes
+/.phpunit.cache/
+/build/
+.phpunit.result.cache
+
 # Editores
 .vscode/
 .idea/
