@@ -14,6 +14,10 @@ if (isset($errors['medidas'])) {
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8" />
+    <link rel="icon" href="<?= asset('/favicon.ico') ?>" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?= asset('/img/favicon-32x32.png') ?>">
+    <link rel="icon" type="image/png" sizes="192x192" href="<?= asset('/img/favicon-192x192.png') ?>">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= asset('/img/apple-touch-icon.png') ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Crie sua conta na Bia Modas e tenha uma experiência personalizada." />
     <title>Criar Conta | Bia Modas</title>
